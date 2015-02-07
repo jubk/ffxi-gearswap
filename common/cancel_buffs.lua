@@ -16,7 +16,7 @@ function cancel_buffs(spell)
         return false;
     end
 
-    s = spell_to_buff_map[spell.name];
+    s = spell_to_buff_map[spell.english];
     if s == nil then
         return false
     end

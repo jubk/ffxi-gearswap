@@ -115,97 +115,99 @@ function get_sets()
     -- sets
     sets.elemental = {}
     sets.elemental['Standard'] = {
-        head = "Laksamana's Hat +1",
-        neck = "Stoicheion medal",
-        ear1 = "Volley Earring",
-        ear2 = "Hecate's Earring",
-        body = "Lanun Frac",
-        hands = "Lak. Gants",
-        ring1 = "Solemn Ring",
-        ring2 = "Sattva Ring",
-        back = "Navarch's Mantle",
-        waist = "Aquiline Belt",
-        legs = "Lak. Trews +1",
-        feet = "Iuitl Gaiters",
+        main="Eminent Scimitar",
+        range="Eminent Gun",
+        ammo="Bullet",
+        head="Wayfarer Circlet",
+        body="Wayfarer Robe",
+        hands="Wayfarer Cuffs",
+        legs="Wayfarer Slops",
+        feet="Wayfarer Clogs",
+        neck="Spike Necklace",
+        waist="Life Belt",
+        left_ear="Loquac. Earring",
+        right_ear="Suppanomimi",
+        left_ring="Barataria Ring",
+        right_ring="Warp Ring",
     };
     sets.elemental['QuickDraw'] = set_combine(
         sets.elemental['Standard'],
         {
-            neck = "Stoicheion medal",
-            ear1 = "Moldavite Earring",
-            ear2 = "Hecate's Earring",
-            body = "Navarch's Frac +2",
-            hands = "Schutzen Mittens",
-            ring1 = "Demon's Ring",
+            -- neck = "Stoicheion medal",
+            -- ear1 = "Moldavite Earring",
+            -- ear2 = "Hecate's Earring",
+            -- body = "Navarch's Frac +2",
+            -- hands = "Schutzen Mittens",
+            -- ring1 = "Demon's Ring",
             -- Need a new matk+ ring - strendu is not for COR
             --ring2 = "Strendu Ring",
-            waist = "Aquiline Belt",
-            feet = "Navarch's Bottes +2",
-            back = "Forban Cape",
+            -- waist = "Aquiline Belt",
+            -- feet = "Navarch's Bottes +2",
+            -- back = "Forban Cape",
         }
     );
 
     sets.elemental['WildFire'] = set_combine(
         sets.elemental['QuickDraw'],
         {
-            head = "Imp. Wing Hair. +1",
-            body = "Lanun Frac",
+            -- head = "Imp. Wing Hair. +1",
+            -- body = "Lanun Frac",
             -- Remove when lak. gants are upgraded
-            hands = "Schutzen Mittens",
-            ring1 = "Solemn Ring",
-            ring2 = "Sattva Ring",
-            feet = "Vanir Boots",
+            -- hands = "Schutzen Mittens",
+            -- ring1 = "Solemn Ring",
+            -- ring2 = "Sattva Ring",
+            -- feet = "Vanir Boots",
         }
     );
 
     sets.elemental['WildFireBrew'] = set_combine(
         sets.elemental['QuickDraw'],
         {
-            body = "Navarch's Frac +2",
-            ring1 = "Demon's Ring",
-            ring2 = "Strendu Ring",
+            -- body = "Navarch's Frac +2",
+            -- ring1 = "Demon's Ring",
+            -- ring2 = "Strendu Ring",
         }
     );
 
     sets.elemental['Idle'] = set_combine(
         sets.elemental['Standard'], {
-            feet = "Hermes' Sandals",
+            -- feet = "Hermes' Sandals",
         }
     );
 
     sets.elemental['Resting'] = set_combine(
-        sets.elemental['Standard'], {}
+        -- sets.elemental['Standard'], {}
     );
 
     sets.elemental['ratk'] = set_combine(
         sets.elemental['Standard'],
         {
-            ear1 = "Drone earring",
-            ear2 = "Drone earring",
-            back = "Amemet Mantle +1",
-            ring1 = "Solemn Ring",
-            ring2 = "Jalzahn's Ring",
-            feet = "Navarch's Bottes +2",
+            -- ear1 = "Drone earring",
+            -- ear2 = "Drone earring",
+            -- back = "Amemet Mantle +1",
+            -- ring1 = "Solemn Ring",
+            -- ring2 = "Jalzahn's Ring",
+            -- feet = "Navarch's Bottes +2",
         }
     );
 
     sets.elemental['racc'] = set_combine(
         sets.elemental['Standard'],
         {
-            neck = "Spectacles",
-            ring1 = "Behemoth Ring",
-            ring2 = "Jalzahn's Ring",
-            feet = "Navarch's Bottes +2",
+            -- neck = "Spectacles",
+            -- ring1 = "Behemoth Ring",
+            -- ring2 = "Jalzahn's Ring",
+            -- feet = "Navarch's Bottes +2",
         }
     );
 
     sets.elemental['ws'] = set_combine(
         sets.elemental['Standard'],
         {
-            ring1 = "Spiral Ring",
-            ring2 = "Ruby Ring",
-            back = "Amemet Mantle +1",
-            feet = "Navarch's Bottes +2",
+            -- ring1 = "Spiral Ring",
+            -- ring2 = "Ruby Ring",
+            -- back = "Amemet Mantle +1",
+            -- feet = "Navarch's Bottes +2",
         }
     );
 
