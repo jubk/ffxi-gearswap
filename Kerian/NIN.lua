@@ -6,7 +6,7 @@ function get_sets()
     -- sets
     sets.base = {
         ammo = "Happo shuriken",
-        body = "Hachiryu haramaki",
+        body = "Koga Chainmail +2",
         neck = "Ej necklace",
         ear1 = "Suppanomimi",
         ear2 = "Brutal earring",
@@ -138,7 +138,7 @@ function status_change(new,old)
         equip(set_combine(SituationalGear, sets.resting))
     elseif "Engaged" == new then
         -- TODO: Make dynamic
-        equip(set_combine(SituationalGear, sets.melee['Acc']))
+        equip(set_combine(SituationalGear, sets.base))
     end
 end
 
