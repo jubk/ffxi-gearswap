@@ -9,12 +9,16 @@ function get_sets()
         body = "Koga Chainmail +2",
         neck = "Ej necklace",
         ear1 = "Suppanomimi",
-        ear2 = "Brutal earring",
-        hands = "Iga tekko +1",
+--        ear2 = "Brutal earring",
+        ear2 = "Steelflash earring",
+--        hands = "Iga tekko +1",
+        hands = "Sasuke tekko",
         ring1 = "Rajas ring",
         ring2 = "Keen ring",
-        back = "Blithe mantle",
-        waist = "Cetl belt",
+--        back = "Blithe mantle",
+        back = "Attacker's mantle",
+--        waist = "Cetl belt",
+        waist = "Anguinus belt",
         legs = "Mochizuki hakama",
         feet = "Hachiya kyahan",
     }
@@ -169,11 +173,11 @@ function precast(spell)
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
     elseif '/weaponskill' == spell.prefix then
-        local specific = sets.melee.Ws[spell.english];
+        local specific = sets.ws[spell.english];
         if specific == nil then
             equip(specific)
         else
-            equip(sets.melee.Ws['Base'])
+            equip(sets.ws['Base'])
         end
     elseif '/jobability' == spell.prefix  then
         local toEquip = {}
