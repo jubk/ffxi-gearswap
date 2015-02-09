@@ -369,7 +369,6 @@ function status_change(new,old)
 end
 
 function filtered_action(spell)
-    add_to_chat(128, "FA " .. spell.name);
     -- Trigger updateammo by trying to cast Thunder IV
     if(spell.name == "Thunder IV") then
         cancel_spell();

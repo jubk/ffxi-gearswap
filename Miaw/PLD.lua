@@ -1,6 +1,7 @@
 include("remove_silence");
 include("cancel_buffs");
 include("elemental_obis");
+include("cyclable_sets");
 
 function get_sets()
     -- sets
@@ -205,4 +206,11 @@ function aftercast(spell)
         set_combine(SituationalGear, sets.melee.Tanking),
         AfterCastGear
     ));
+end
+
+function filtered_action(spell)
+    if(spell.name == "Thunder IV") then
+        cancel_spell();
+        return;
+    end
 end
