@@ -1,6 +1,7 @@
 include("remove_silence");
 include("cancel_buffs");
 include("elemental_obis");
+include("cyclable_sets");
 
 function get_sets()
     -- sets
@@ -29,7 +30,7 @@ function get_sets()
             ring1 = "Odium Ring",
             ring2 = "Sattva Ring",
             waist = "Creed Baudrier",
-            back = "Valor Cape",
+            back = "Fravashi Mantle",
         }
     );
 
@@ -48,6 +49,7 @@ function get_sets()
         {
             head = "Rev. Coronet +1",
             body = "Cab. Surcoat +1",
+            ear1 = "Nourish. Earring",
             ring1 = "Solemn Ring",
             ring2 = "Diamond Ring"
         }
@@ -204,4 +206,11 @@ function aftercast(spell)
         set_combine(SituationalGear, sets.melee.Tanking),
         AfterCastGear
     ));
+end
+
+function filtered_action(spell)
+    if(spell.name == "Thunder IV") then
+        cancel_spell();
+        return;
+    end
 end
