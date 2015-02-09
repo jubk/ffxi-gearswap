@@ -29,7 +29,7 @@ function get_sets()
             ring1 = "Odium Ring",
             ring2 = "Sattva Ring",
             waist = "Creed Baudrier",
-            back = "Valor Cape",
+            back = "Fravashi Mantle",
         }
     );
 
@@ -48,6 +48,7 @@ function get_sets()
         {
             head = "Rev. Coronet +1",
             body = "Cab. Surcoat +1",
+            ear1 = "Nourish. Earring",
             ring1 = "Solemn Ring",
             ring2 = "Diamond Ring"
         }

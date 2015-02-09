@@ -140,6 +140,7 @@ function get_sets()
             -- Need a new matk+ ring - strendu is not for COR
             --ring2 = "Strendu Ring",
             waist = "Aquiline Belt",
+            -- +20 damage from matching element for 15 seconds
             feet = "Navarch's Bottes +2",
             back = "Forban Cape",
         }
@@ -303,6 +304,7 @@ function precast(spell)
                 local rollEquip = {
                     hands = "Navarch's Gants +2",
                     head = "Comm. Tricorne",
+                    ring1 = "Luzaf's Ring",
                     ring2 = "Barataria Ring"
                 }
 
