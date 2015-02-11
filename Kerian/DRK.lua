@@ -6,22 +6,18 @@ include("elemental_obis");
 function get_sets()
     -- sets
     sets.base = {
-        ammo = "Happo shuriken",
-        body = "Koga Chainmail +2",
+        ammo = "Hasty pinion +1",
+        body = "Mikinaak breastplate",
         neck = "Asperity necklace",
-        ear1 = "Suppanomimi",
+        ear1 = "Centaurus earring",
         ear2 = "Brutal earring",
-        --ear2 = "Steelflash earring",
-        hands = "Iga tekko +1",
-        --hands = "Sasuke tekko",
+        hands = "Bale gauntlets +1",
         ring1 = "Rajas ring",
-        ring2 = "Patricius ring",
-        back = "Blithe mantle",
-        --back = "Attacker's mantle",
+        ring2 = "Keen ring",
+        back = "Attacker's mantle",
         waist = "Cetl belt",
-        --waist = "Anguinus belt",
-        legs = "Mochizuki hakama",
-        feet = "Hachiya kyahan",
+        legs = "Mikinaak Cuisses",
+        feet = "Ignominy sollerets",
     }
     
     sets.melee = {}
@@ -29,10 +25,11 @@ function get_sets()
         sets.base,
         {
             ear2 = "Steelflash Earring",
-            hands = "Sasuke tekko",
+            hands = "Bale gauntlets +1",
             waist = "Anguinus belt",
             back = "Attacker's Mantle",
-            neck = "Ej necklace",
+            neck = "Chivalrous Chain",
+            ring2 = "Patricious Ring",
         }
     );
     
@@ -45,12 +42,11 @@ function get_sets()
         sets.base,
         {
             neck = "Light gorget",
-            back = "Amemet mantle +1",
---            hands = "Ochimusha kote",
-            ring2 ="Thunder ring",
+            back = "Abyss cape",
             waist = "Light belt",
             ear1 = "Coral earring",
             ear2 = "Centaurus Earring",
+            legs = "Mikinaak cuisses",
         }
     );
     
@@ -66,6 +62,11 @@ function get_sets()
         sets.base,
         {
             ear2 = "Loquacious earring",
+            hands = "Abyss gauntlets +2",
+            back = "Toro cape",
+            legs = "Bale flanchard +1",
+            ring1 = "Fenrir ring",
+            ring2 = "Acumen ring",
         }
     );
 
