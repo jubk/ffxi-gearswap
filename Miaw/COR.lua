@@ -120,7 +120,7 @@ function get_sets()
         neck = "Stoicheion medal",
         ear1 = "Volley Earring",
         ear2 = "Hecate's Earring",
-        body = "Lanun Frac",
+        body = "Lanun Frac +1",
         hands = "Lak. Gants",
         ring1 = "Solemn Ring",
         ring2 = "Sattva Ring",
@@ -151,7 +151,7 @@ function get_sets()
         sets.elemental['QuickDraw'],
         {
             head = "Imp. Wing Hair. +1",
-            body = "Lanun Frac",
+            body = "Lanun Frac +1",
             -- Remove when lak. gants are upgraded
             hands = "Schutzen Mittens",
             ring1 = "Solemn Ring",
