@@ -284,6 +284,10 @@ function precast(spell)
         if stop_wasting_bullets() then
             return;
         end
+
+        -- Fall back to cheap ammo after shooting
+        AfterCastGear.ammo = CheapAmmo
+
         equip(set_combine(sets.elemental.ratk, { ammo = SlugWinderAmmo }));
     elseif '/magic' == spell.prefix  then
         -- Show recast for any spell
@@ -324,6 +328,7 @@ function precast(spell)
                 'Lucky: ' .. CurrentLucky .. ', ' ..
                 'Unlucky: ' .. CurrentUnlucky
             );
+            equip({ ring2 = "Barataria Ring" });
         elseif string.endswith(spell.name, ' Shot') then
             local qdEquip = { ammo = QuickDrawAmmo };
 
@@ -369,7 +374,6 @@ function status_change(new,old)
 end
 
 function filtered_action(spell)
-    add_to_chat(128, "FA " .. spell.name);
     -- Trigger updateammo by trying to cast Thunder IV
     if(spell.name == "Thunder IV") then
         cancel_spell();
@@ -410,4 +414,3 @@ function self_command(command)
         add_to_chat(128, "- Cheap Ammo:       " .. CheapAmmo);
     end
 end
-
