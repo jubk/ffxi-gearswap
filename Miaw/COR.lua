@@ -328,6 +328,7 @@ function precast(spell)
                 'Lucky: ' .. CurrentLucky .. ', ' ..
                 'Unlucky: ' .. CurrentUnlucky
             );
+            equip({ ring2 = "Barataria Ring" });
         elseif string.endswith(spell.name, ' Shot') then
             local qdEquip = { ammo = QuickDrawAmmo };
 
