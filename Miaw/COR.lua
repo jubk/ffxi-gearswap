@@ -138,8 +138,7 @@ function get_sets()
             body = "Navarch's Frac +2",
             hands = "Schutzen Mittens",
             ring1 = "Demon's Ring",
-            -- Need a new matk+ ring - strendu is not for COR
-            --ring2 = "Strendu Ring",
+            ring2 = "Arvina Ringlet +1",
             waist = "Aquiline Belt",
             -- +20 damage from matching element for 15 seconds
             feet = "Navarch's Bottes +2",
@@ -155,7 +154,7 @@ function get_sets()
             -- Remove when lak. gants are upgraded
             hands = "Schutzen Mittens",
             ring1 = "Solemn Ring",
-            ring2 = "Sattva Ring",
+            ring2 = "Arvina Ringlet +1",
             feet = "Vanir Boots",
         }
     );
@@ -284,6 +283,10 @@ function precast(spell)
         if stop_wasting_bullets() then
             return;
         end
+
+        -- Fall back to cheap ammo after shooting
+        AfterCastGear.ammo = CheapAmmo
+
         equip(set_combine(sets.elemental.ratk, { ammo = SlugWinderAmmo }));
     elseif '/magic' == spell.prefix  then
         -- Show recast for any spell
