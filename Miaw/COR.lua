@@ -31,7 +31,7 @@ function get_sets()
         "Corsair Bullet",
         "Steel Bullet",
         "Orichalc. Bullet",
-        "Eminent Bullet"
+        "Eminent Bullet",
     };
 
     -- SlugwinderAmmo defaults to HighDamAmmo, but uses these if available:
@@ -41,14 +41,15 @@ function get_sets()
     -- QuickDrawAmmo defaults to HighDamAmmo, but uses these if available:
     QuickDrawAmmoList = {
         "Orichalc. Bullet",
-        "Eminent Bullet"
+        "Eminent Bullet",
+        "Animikii Bullet",
     };
 
 
     DontWasteBullets = {
         "Oberon's Bullet",
-        "Orichalc. Bullet",
-        "Eminent Bullet"
+        "Eminent Bullet",
+        "Animikii Bullet",
     };
 
     -- Fallbacks for unconfigured ammo
