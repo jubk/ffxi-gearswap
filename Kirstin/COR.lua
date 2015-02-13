@@ -124,11 +124,11 @@ function get_sets()
         legs="Wayfarer Slops",
         feet="Wayfarer Clogs",
         neck="Spike Necklace",
-        waist="Life Belt",
-        left_ear="Loquac. Earring",
-        right_ear="Suppanomimi",
+        waist="Sveltesse Gouriz",
+        left_ear="Suppanomimi",
+        right_ear="Loquac. Earring",
         left_ring="Barataria Ring",
-        right_ring="Warp Ring",
+        right_ring="Iota Ring",
     };
     sets.elemental['QuickDraw'] = set_combine(
         sets.elemental['Standard'],
