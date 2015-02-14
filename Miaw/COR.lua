@@ -121,13 +121,13 @@ function get_sets()
         ear1 = "Volley Earring",
         ear2 = "Hecate's Earring",
         body = "Lanun Frac +1",
-        hands = "Lak. Gants",
+        hands = "Lak. Gants +1",
         ring1 = "Solemn Ring",
         ring2 = "Sattva Ring",
         back = "Navarch's Mantle",
         waist = "Aquiline Belt",
         legs = "Lak. Trews +1",
-        feet = "Iuitl Gaiters",
+        feet = "Vanir Boots",
     };
     sets.elemental['QuickDraw'] = set_combine(
         sets.elemental['Standard'],
