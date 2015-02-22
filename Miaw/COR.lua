@@ -140,7 +140,7 @@ function get_sets()
             ring1 = "Demon's Ring",
             ring2 = "Arvina Ringlet +1",
             waist = "Aquiline Belt",
-            -- +20 damage from matching element for 15 seconds
+            -- +20% damage from matching element for 15 seconds
             feet = "Navarch's Bottes +2",
             back = "Forban Cape",
         }
@@ -151,7 +151,6 @@ function get_sets()
         {
             head = "Imp. Wing Hair. +1",
             body = "Lanun Frac +1",
-            -- Remove when lak. gants are upgraded
             hands = "Schutzen Mittens",
             ring1 = "Solemn Ring",
             ring2 = "Arvina Ringlet +1",
@@ -210,6 +209,22 @@ function get_sets()
         }
     );
 
+end
+
+function get_roll_equipment(spellname)
+    local rollEquip = {
+        hands = "Navarch's Gants +2",
+        head = "Comm. Tricorne",
+        ring2 = "Barataria Ring"
+    }
+
+    if "Courser's Roll" == spellname then
+        rollEquip.feet = "Navarch's Bottes +2";
+    elseif "Tactician's Roll" == spellname  then
+        rollEquip.body = "Navarch's Frac +2"
+    end
+
+    return rollEquip;
 end
 
 function stop_wasting_bullets()
@@ -293,9 +308,9 @@ function precast(spell)
         send_command('input /recast "' .. spell.name .. '"');
     elseif '/jobability' == spell.prefix  then
         if string.endswith(spell.name, ' Roll') then
-            local rollData = LuckyRolls[spell.name];
+            local rollData = LuckyRolls[spell.english];
             if rollData then
-                CurrentRoll = spell.name;
+                CurrentRoll = spell.english;
                 CurrentLucky = rollData.lucky
                 CurrentUnlucky = rollData.unlucky
 
@@ -305,20 +320,7 @@ function precast(spell)
                     'Unlucky: ' .. CurrentUnlucky
                 ));
 
-                local rollEquip = {
-                    hands = "Navarch's Gants +2",
-                    head = "Comm. Tricorne",
-                    ring1 = "Luzaf's Ring",
-                    ring2 = "Barataria Ring"
-                }
-
-                if "Courser's Roll" == spell.name then
-                    rollEquip.feet = "Navarch's Bottes +2";
-                elseif "Tactician's Roll" == spell.name  then
-                    rollEquip.body = "Navarch's Frac +2"
-                end
-
-                equip(rollEquip);
+                equip(get_roll_equipment(spell.english));
             else
                 add_to_chat(128, 'Unknown roll ' .. spell.name);
             end
@@ -328,7 +330,7 @@ function precast(spell)
                 'Lucky: ' .. CurrentLucky .. ', ' ..
                 'Unlucky: ' .. CurrentUnlucky
             );
-            equip({ ring2 = "Barataria Ring" });
+            equip(get_roll_equipment(CurrentRoll));
         elseif string.endswith(spell.name, ' Shot') then
             local qdEquip = { ammo = QuickDrawAmmo };
 
@@ -341,10 +343,11 @@ function precast(spell)
                 qdEquip.waist = obi;
             end
 
-            -- Use Zodiac ring on non dark/light days
-            if not 'Dark' == world.day_element and
-                not 'Light' == spell.day_element then
-                sqEquip.ring1 = 'Zodiac Ring';
+            -- Use Zodiac ring on non dark/light days when matching day
+            if spell.element == world.day_element and
+                not 'Dark' == world.day_element and
+                not 'Light' == world.day_element then
+                qdEquip.ring1 = 'Zodiac Ring';
             end
 
             equip(set_combine(sets.elemental.QuickDraw, qdEquip))

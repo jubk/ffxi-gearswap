@@ -41,14 +41,15 @@ function get_sets()
     -- QuickDrawAmmo defaults to HighDamAmmo, but uses these if available:
     QuickDrawAmmoList = {
         "Orichalc. Bullet",
-        "Eminent Bullet"
+        "Eminent Bullet",
+        "Animikii Bullet",
     };
 
 
     DontWasteBullets = {
         "Oberon's Bullet",
-        "Orichalc. Bullet",
-        "Eminent Bullet"
+        "Eminent Bullet",
+        "Animikii Bullet",
     };
 
     -- Fallbacks for unconfigured ammo
@@ -115,16 +116,15 @@ function get_sets()
     -- sets
     sets.elemental = {}
     sets.elemental['Standard'] = {
-        main="Eminent Scimitar",
-        range="Eminent Gun",
-        ammo="Bullet",
-        head="Wayfarer Circlet",
-        body="Wayfarer Robe",
-        hands="Wayfarer Cuffs",
-        legs="Wayfarer Slops",
+        head="Laksamana's hat",
+        body="Lak. Frac +1",
+        hands="Lak. Gants",
+        legs="Lak. Trews",
+        -- legs="Kaabnax Trousers",
         feet="Wayfarer Clogs",
         neck="Spike Necklace",
         waist="Sveltesse Gouriz",
+        back = "Gunslinger's Cape",
         left_ear="Suppanomimi",
         right_ear="Loquac. Earring",
         left_ring="Barataria Ring",
@@ -143,7 +143,6 @@ function get_sets()
             --ring2 = "Strendu Ring",
             -- waist = "Aquiline Belt",
             -- feet = "Navarch's Bottes +2",
-            -- back = "Forban Cape",
         }
     );
 
@@ -176,7 +175,7 @@ function get_sets()
     );
 
     sets.elemental['Resting'] = set_combine(
-        -- sets.elemental['Standard'], {}
+        sets.elemental['Standard'], {}
     );
 
     sets.elemental['ratk'] = set_combine(
@@ -211,6 +210,22 @@ function get_sets()
         }
     );
 
+end
+
+function get_roll_equipment(spellname)
+    local rollEquip = {
+        hands = "Navarch's Gants +2",
+        head = "Comm. Tricorne",
+        ring2 = "Barataria Ring"
+    }
+
+    if "Courser's Roll" == spellname then
+        rollEquip.feet = "Navarch's Bottes +2";
+    elseif "Tactician's Roll" == spellname  then
+        rollEquip.body = "Navarch's Frac +2"
+    end
+
+    return rollEquip;
 end
 
 function stop_wasting_bullets()
@@ -294,9 +309,9 @@ function precast(spell)
         send_command('input /recast "' .. spell.name .. '"');
     elseif '/jobability' == spell.prefix  then
         if string.endswith(spell.name, ' Roll') then
-            local rollData = LuckyRolls[spell.name];
+            local rollData = LuckyRolls[spell.english];
             if rollData then
-                CurrentRoll = spell.name;
+                CurrentRoll = spell.english;
                 CurrentLucky = rollData.lucky
                 CurrentUnlucky = rollData.unlucky
 
@@ -306,19 +321,7 @@ function precast(spell)
                     'Unlucky: ' .. CurrentUnlucky
                 ));
 
-                local rollEquip = {
-                    hands = "Navarch's Gants +2",
-                    head = "Comm. Tricorne",
-                    ring2 = "Barataria Ring"
-                }
-
-                if "Courser's Roll" == spell.name then
-                    rollEquip.feet = "Navarch's Bottes +2";
-                elseif "Tactician's Roll" == spell.name  then
-                    rollEquip.body = "Navarch's Frac +2"
-                end
-
-                equip(rollEquip);
+                equip(get_roll_equipment(spell.english));
             else
                 add_to_chat(128, 'Unknown roll ' .. spell.name);
             end
@@ -328,7 +331,7 @@ function precast(spell)
                 'Lucky: ' .. CurrentLucky .. ', ' ..
                 'Unlucky: ' .. CurrentUnlucky
             );
-            equip({ ring2 = "Barataria Ring" });
+            equip(get_roll_equipment(CurrentRoll));
         elseif string.endswith(spell.name, ' Shot') then
             local qdEquip = { ammo = QuickDrawAmmo };
 
@@ -341,10 +344,11 @@ function precast(spell)
                 qdEquip.waist = obi;
             end
 
-            -- Use Zodiac ring on non dark/light days
-            if not 'Dark' == world.day_element and
-                not 'Light' == spell.day_element then
-                sqEquip.ring1 = 'Zodiac Ring';
+            -- Use Zodiac ring on non dark/light days when matching day
+            if spell.element == world.day_element and
+                not 'Dark' == world.day_element and
+                not 'Light' == world.day_element then
+                qdEquip.ring1 = 'Zodiac Ring';
             end
 
             equip(set_combine(sets.elemental.QuickDraw, qdEquip))
