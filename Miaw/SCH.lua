@@ -7,19 +7,23 @@ function get_sets()
     setup_spellcost_map(player);
 
     sets.standard = {
-        ammo = "Phtm. Tathlum",
-        head = "Scholar's M.board",
-        neck = "Savant's Chain",
-        left_ear = "Morion Earring",
-        right_ear = "Morion Earring",
-        body = "Savant's Gown +2",
-        hands = "Scholar's Bracers",
-        legs = "Savant's Pants +2",
-        left_ring = "Spiral Ring",
-        right_ring = "Diamond Ring",
-        back = "Eloquence Cape",
-        waist = "Penitent's Rope",
-        feet = "Scholar's Loafers",
+        ammo="Phtm. Tathlum",
+        head="Kaabnax Hat",
+        body="Savant's Gown +2",
+        hands="Otomi Gloves",
+        legs="Nisse Slacks",
+        feet="Svnt. Loafers +2",
+        neck="Jeweled Collar",
+        waist="Penitent's Rope",
+        left_ear="Hecate's Earring",
+        right_ear="Moldavite Earring",
+        left_ring="Spiral Ring",
+        right_ring={
+            name="Diamond Ring", augments={
+                'Spell interruption rate down -4%',
+                '"Resist Silence"+2',
+            }
+        },
     };
 
     sets.standard_idle = set_combine(sets.standard, {});
