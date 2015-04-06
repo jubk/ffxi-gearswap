@@ -141,7 +141,7 @@ function get_sets()
             ring2 = "Arvina Ringlet +1",
             waist = "Aquiline Belt",
             -- +20% damage from matching element for 15 seconds
-            feet = "Navarch's Bottes +2",
+            feet = "Chasseur's Bottes",
             back = "Forban Cape",
         }
     );
@@ -185,7 +185,7 @@ function get_sets()
             back = "Amemet Mantle +1",
             ring1 = "Solemn Ring",
             ring2 = "Jalzahn's Ring",
-            feet = "Navarch's Bottes +2",
+            feet = "Chasseur's Bottes",
         }
     );
 
@@ -195,7 +195,7 @@ function get_sets()
             neck = "Spectacles",
             ring1 = "Behemoth Ring",
             ring2 = "Jalzahn's Ring",
-            feet = "Navarch's Bottes +2",
+            feet = "Chasseur's Bottes",
         }
     );
 
@@ -205,7 +205,7 @@ function get_sets()
             ring1 = "Spiral Ring",
             ring2 = "Ruby Ring",
             back = "Amemet Mantle +1",
-            feet = "Navarch's Bottes +2",
+            feet = "Chasseur's Bottes",
         }
     );
 
@@ -219,7 +219,7 @@ function get_roll_equipment(spellname)
     }
 
     if "Courser's Roll" == spellname then
-        rollEquip.feet = "Navarch's Bottes +2";
+        rollEquip.feet = "Chasseur's Bottes";
     elseif "Tactician's Roll" == spellname  then
         rollEquip.body = "Navarch's Frac +2"
     end

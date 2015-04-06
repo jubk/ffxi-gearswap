@@ -615,11 +615,19 @@ function downgrade_spell(player, spell)
 
     local cost_factor = get_mp_cost_factor(spell);
     local tier_table = spellcost_map[s['basename']];
+    if not tier_table then
+        return false
+    end
     local tier = s['tier'];
-    local cost = tier_table[tier] * cost_factor;
+    local cost = tier_table[tier];
+    if cost == nil then
+        return false
+    else
+        cost = cost * cost_factor
+    end
     while tier > 0 and cost > player.mp do
-        tier = tier - 1;
         cost = tier_table[tier] * cost_factor;
+        tier = tier - 1;
     end
     if tier > 0 and tier < s['tier'] then
         local newSpellName = s['basename'] .. tier_postfix[tier];

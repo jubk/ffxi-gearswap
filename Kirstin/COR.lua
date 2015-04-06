@@ -113,6 +113,8 @@ function get_sets()
         ["Wizard's Roll"]       = { lucky = 5, unlucky = 9 }
     }
 
+    -- TODO: Imp wing hairpin
+
     -- sets
     sets.elemental = {}
     sets.elemental['Standard'] = {
@@ -120,9 +122,8 @@ function get_sets()
         body="Lak. Frac +1",
         hands="Lak. Gants +1",
         legs="Lak. Trews +1",
-        -- legs="Kaabnax Trousers",
-        feet="Lak. Bottes",
-        neck="Spike Necklace",
+        feet="Lak. Bottes +1",
+        neck="Malison Medallion",
         waist="Sveltesse Gouriz",
         back = "Gunslinger's Cape",
         left_ear="Suppanomimi",
@@ -136,13 +137,13 @@ function get_sets()
             -- neck = "Stoicheion medal",
             -- ear1 = "Moldavite Earring",
             -- ear2 = "Hecate's Earring",
-            -- body = "Navarch's Frac +2",
+            body = "Navarch's Frac +2",
             -- hands = "Schutzen Mittens",
             -- ring1 = "Demon's Ring",
             -- Need a new matk+ ring - strendu is not for COR
             --ring2 = "Strendu Ring",
             -- waist = "Aquiline Belt",
-            -- feet = "Navarch's Bottes +2",
+            feet = "Chasseur's Bottes",
         }
     );
 
@@ -220,7 +221,7 @@ function get_roll_equipment(spellname)
     }
 
     if "Courser's Roll" == spellname then
-        rollEquip.feet = "Navarch's Bottes +2";
+        rollEquip.feet = "Chasseur's Bottes";
     elseif "Tactician's Roll" == spellname  then
         rollEquip.body = "Navarch's Frac +2"
     end

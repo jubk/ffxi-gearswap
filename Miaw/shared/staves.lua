@@ -1,0 +1,32 @@
+miaw_staves = {
+    nuking = {
+        Ice = { main = "Vourukasha I", sub = "Raptor Strap +1" },
+        Dark = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Thunder = { main = "Apamajas I", sub = "Raptor Strap +1" },
+        Light = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Wind = { main = "Marin Staff", sub = "Raptor Strap +1" },
+        Fire = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Earth = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Water = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+    },
+    accuracy = {
+        Ice = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Dark = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Thunder = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Light = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Wind = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Fire = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Earth = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+        Water = { main = "Chatoyant Staff", sub = "Raptor Strap +1" },
+    },
+    fastcast = {
+        Ice = { main = "Vourukasha I", sub = "Raptor Strap +1" },
+        Dark = { main = "Marin Staff", sub = "Raptor Strap +1" },
+        Thunder = { main = "Apamajas I", sub = "Raptor Strap +1" },
+        Light = { main = "Marin Staff", sub = "Raptor Strap +1" },
+        Wind = { main = "Marin Staff", sub = "Raptor Strap +1" },
+        Fire = { main = "Marin Staff", sub = "Raptor Strap +1" },
+        Earth = { main = "Marin Staff", sub = "Raptor Strap +1" },
+        Water = { main = "Marin Staff", sub = "Raptor Strap +1" },
+    },
+}

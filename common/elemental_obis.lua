@@ -9,10 +9,24 @@ elemental_obi_table = {
     Water = "Suirin Obi"
 }
 
+element_to_storm_buff = {
+    Ice = "Hailstorm",
+    Thunder = "Thunderstorm",
+    Fire = "Firestorm",
+    Dark = "Voidstorm",
+    Light = "Aurorastorm",
+    Wind = "Windstorm",
+    Earth = "Sandstorm",
+    Water = "Rainstorm"
+}
+
 function get_obi(spell)
-    if spell.element == world.day_element or
-        spell.element == world.weather_element then
-        return elemental_obi_table[spell.element]
+    local stormBuff = element_to_storm_buff[spell.element] or false;
+
+    if (stormBuff and buffactive[stormBuff]) or
+       spell.element == world.day_element or
+       spell.element == world.weather_element then
+        return elemental_obi_table[spell.element];
     end
     return nil;
 end

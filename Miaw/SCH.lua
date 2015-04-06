@@ -1,29 +1,45 @@
 include("remove_silence");
 include("cancel_buffs");
 include("elemental_obis");
-include("spelltools")
+include("spelltools");
+include("shared/staves");
 
 function get_sets()
     setup_spellcost_map(player);
 
     sets.standard = {
+        --ammo="Phtm. Tathlum",
+        --head="Kaabnax Hat",
+        --body="Savant's Gown +2",
+        --hands="Otomi Gloves",
+        --legs="Nisse Slacks",
+        --feet="Svnt. Loafers +2",
+        --neck="Jeweled Collar",
+        --waist="Penitent's Rope",
+        --left_ear="Hecate's Earring",
+        --right_ear="Moldavite Earring",
+        --left_ring="Spiral Ring",
+        --right_ring={
+        --    name="Diamond Ring", augments={
+        --        'Spell interruption rate down -4%',
+        --        '"Resist Silence"+2',
+        --    }
+        --},
+        main="Terra's Staff",
+        sub="Raptor Strap +1",
         ammo="Phtm. Tathlum",
-        head="Kaabnax Hat",
-        body="Savant's Gown +2",
-        hands="Otomi Gloves",
-        legs="Nisse Slacks",
-        feet="Svnt. Loafers +2",
-        neck="Jeweled Collar",
-        waist="Penitent's Rope",
+        head="Acad. Mortar. +1",
+        body="Acad. Gown +1",
+        hands="Acad. Bracers +1",
+        legs="Academic's Pants +1",
+        feet="Acad. Loafers +1",
+        neck="Stoicheion Medal",
+        waist="Austerity Belt",
         left_ear="Hecate's Earring",
         right_ear="Moldavite Earring",
         left_ring="Spiral Ring",
-        right_ring={
-            name="Diamond Ring", augments={
-                'Spell interruption rate down -4%',
-                '"Resist Silence"+2',
-            }
-        },
+        right_ring={ name="Diamond Ring", augments={'MND+3',}},
+        back="Bookworm's Cape",
     };
 
     sets.standard_idle = set_combine(sets.standard, {});
@@ -31,19 +47,19 @@ function get_sets()
         sets.idle,
         {
             main = "Siriti",
+            head="Acad. Mortar. +1",
             sub = "Avalon Shield",
-            head = "Scholar's M.board",
             body = "Argute Gown",
             left_ear = "Savant's Earring",
         }
     );
-    sets.idle = sets.idle_standard
+    sets.idle = sets.standard_idle
 
-
-    -- TODO: rmp staff
     sets.resting = set_combine(
         sets.standard,
         {
+            main = "Chatoyant Staff",
+            sub = "Raptor Strap +1",
             ammo = "Clarus Stone",
             body = "Errant Hpl.",
             neck = "Eidolon Pendant",
@@ -59,19 +75,18 @@ function get_sets()
             left_ear = "Hecate's Earring",
             right_ear = "Moldavite Earring",
             body = "Savant's Gown +2",
-            hands = "Svnt. Bracers +2",
+            hands = "Otomi Gloves",
             waist = "Cognition Belt",
-            legs = "Nisse Slacks",
-            feet = "Savant's Loafers +2",
         }
     );
 
     sets.fastcast = {
         head = "Argute M.board",
         neck = "Jeweled Collar",
+        hands = "Gendewitha Gages",
         ammo = "Incantor Stone",
-        back = "Veela Cape",
-        feet = "Scholar's Loafers",
+        back = "Swith Cape",
+        feet="Acad. Loafers +1",
     }
 
     sets.darkmagic = set_combine(sets.nuking, {});
@@ -81,7 +96,6 @@ function get_sets()
         {
             waist = "Cognition Belt",
             legs = "Nisse Slacks",
-            feet = "Savant's Loafers +2",
         }
     );
 
@@ -90,20 +104,22 @@ function get_sets()
         {
             head = "Argute M.board",
             body = "Savant's Gown +2",
-            hands = "Svnt. Bracers +2",
+            hands = "Otomi Gloves",
             waist = "Penitent's Rope",
             left_ring = "Solemn Ring",
         }
     );
 
-    -- TODO:             main = "$LightStaff",
     sets.healing = set_combine(
         sets.standard,
         {
             head = "Argute M.board",
-            hands = "Svnt. Bracers +2",
+            hands = "Otomi Gloves",
             waist = "Penitent's Rope",
             feet = "Argute Loafers",
+            back = "Swith Cape",
+            left_ring="Solemn Ring",
+            right_ring={ name="Diamond Ring", augments={'MND+3',}},
         }
     );
 
@@ -113,15 +129,15 @@ function get_sets()
             head = "Savant's Bonnet +2",
             hands = "Svnt. Bracers +2",
             waist = "Penitent's Rope",
+            back = "Swith Cape",
+            feet = "Regal Pumps",
+            left_ring="Solemn Ring",
         }
     );
 
-    -- TODO: main = "$WaterStaff",
     sets.stoneskin = set_combine(
         sets.enhancing,
-        {
-            left_ring = "Solemn Ring",
-        }
+        {}
     );
 
     MidcastGear = {}
@@ -165,7 +181,8 @@ function filtered_action(spell)
     -- spell on the whole party.
     if "Enstone II" == spell.english or
        "Phalanx II" == spell.english or
-       "Shellra V" == spell.english
+       "Shellra V" == spell.english or
+       "Tactician's Roll" == spell.english
     then
         if not buffactive["Accession"] then
             if buffactive["Light Arts"] then
@@ -183,6 +200,8 @@ function filtered_action(spell)
                 send_command('input /ma "Stoneskin" <me>');
             elseif "Phalanx II" == spell.english then
                 send_command('input /ma "Phalanx" <me>');
+            elseif "Tactician's Roll" == spell.english then
+                send_command('input /ma "Adloquium" <me>');
             end
             cancel_spell();
             return;
@@ -191,6 +210,16 @@ function filtered_action(spell)
 end
 
 function pretarget(spell)
+    if "Drain II" == spell.english or
+       "Dread Spikes" == spell.english or
+       "Enstone II" == spell.english or
+       "Phalanx II" == spell.english or
+       "Shellra V" == spell.english or
+       "Tactician's Roll" == spell.english then
+        cancel_spell();
+        return filtered_action(spell)
+    end
+
     if buffactive["Sublimation: Activated"] then
         sets.idle = sets.sublimation_idle;
     else
@@ -225,11 +254,21 @@ function precast(spell)
         local precast_extra = {}
 
         if "Healing Magic" == spell.skill then
-            MidcastGear = set_combine(sets.healing, {});
+            local extraGear = {}
+            local obi = get_obi(spell);
+            if obi ~= nil then
+                extraGear['waist'] = obi
+            end
+
+            MidcastGear = set_combine(
+                sets.healing,
+                miaw_staves.nuking[spell.element],
+                extraGear
+            );
 
             -- Use Savant's Bonnet +2 during rapture
             if buffactive["Rapture"] then
-                extraGear.head = "Savant's Bonnet +2";
+                precast_extra.head = "Savant's Bonnet +2";
             end
         elseif "Enhancing Magic" == spell.skill then
             if "Stoneskin" == spell.name then
@@ -238,43 +277,73 @@ function precast(spell)
                 MidcastGear = set_combine(sets.enhancing, {});
             end
         elseif "Elemental Magic" == spell.skill then
-            local extraGear = {};
-            -- TODO: Staff changes
-            -- TODO: Obi changes
-            if buffactive["Ebullience"] then
-                extraGear.head = "Savant's Bonnet +2";
+            local extraGear = {}
+            local obi = get_obi(spell);
+            if obi ~= nil then
+                extraGear['waist'] = obi
             end
-            MidcastGear = set_combine(sets.nuking, extraGear);
+            if buffactive["Ebullience"] then
+                precast_extra.head = "Savant's Bonnet +2";
+            end
+            -- Straight 10% damage buff if we have klimaform active
+            if buffactive["Klimaform"] then
+                extraGear.feet = "Savant's Loafers +2"
+            end
+            MidcastGear = set_combine(
+                sets.nuking,
+                extraGear,
+                miaw_staves.nuking[spell.element]
+            );
         elseif "Enfeebling Magic" == spell.skill then
+            local extraGear = {}
+            local obi = get_obi(spell);
+            if obi ~= nil then
+                extraGear['waist'] = obi
+            end
+
             -- Replace dia 2 with bio 2 when subbing BLM (for pulling)
             if "Dia II" == spell.english and "BLM" == player.sub_job then
                 send_command('input /ma "Bio II" <t>');
                 cancel_spell();
                 return;
             end
-            local extraGear = {};
             if buffactive["Ebullience"] then
-                extraGear.head = "Savant's Bonnet +2";
+                precast_extra.head = "Savant's Bonnet +2";
             end
-            -- TODO: Staff stuff
-            -- TODO: Obi stuff
             if "BlackMagic" == spell.type then
-                MidcastGear = set_combine(sets.enfeeble_dark, extraGear);
+                MidcastGear = set_combine(
+                    sets.enfeeble_dark,
+                    extraGear,
+                    miaw_staves.accuracy[spell.element]
+                );
             else
-                MidcastGear = set_combine(sets.enfeeble_light, extraGear);
+                MidcastGear = set_combine(
+                    sets.enfeeble_light,
+                    extraGear,
+                    miaw_staves.accuracy[spell.element]
+                );
             end
         elseif "Dark Magic" == spell.skill then
-            local extraGear = {};
-            -- TODO: Staff stuff
-            -- TODO: Obi stuff
-            MidcastGear = set_combine(sets.darkmagic, extraGear);
+            local extraGear = {}
+            local obi = get_obi(spell);
+            if obi ~= nil then
+                extraGear['waist'] = obi
+            end
+            MidcastGear = set_combine(
+                sets.darkmagic,
+                extraGear,
+                miaw_staves.nuking[spell.element]
+            );
         end
         if (buffactive["Celerity"] or buffactive["Alacrity"]) and
             spell.element == world.weather_element then
             precast_extra.feet = "Argute Loafers";
         end
-        -- TODO: Staff for precast?
-        equip(set_combine(sets.fastcast, precast_extra));
+        equip(set_combine(
+            sets.fastcast,
+            precast_extra,
+            miaw_staves.fastcast[spell.element]
+        ));
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
     end
