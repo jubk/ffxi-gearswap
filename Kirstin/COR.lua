@@ -142,7 +142,7 @@ function get_sets()
             -- ring1 = "Demon's Ring",
             -- Need a new matk+ ring - strendu is not for COR
             --ring2 = "Strendu Ring",
-            -- waist = "Aquiline Belt",
+            waist = "Aquiline Belt",
             feet = "Chasseur's Bottes",
         }
     );

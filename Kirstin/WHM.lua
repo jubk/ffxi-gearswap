@@ -59,6 +59,7 @@ function get_sets()
     sets.resting = set_combine(base, {
         main="Dark Staff",
         body="Errant Hpl.",
+        neck="Eidolon Pendant",
         hands="Oracle's Gloves",
         legs="Orsn. Pantaln. +1",
         feet="Oracle's Pigaches",

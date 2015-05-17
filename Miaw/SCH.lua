@@ -25,9 +25,9 @@ function get_sets()
         --        '"Resist Silence"+2',
         --    }
         --},
-        main="Terra's Staff",
+        main="Terra's staff",
         sub="Raptor Strap +1",
-        ammo="Phtm. Tathlum",
+        ammo="Ghastly Tathlum",
         head="Acad. Mortar. +1",
         body="Acad. Gown +1",
         hands="Acad. Bracers +1",
@@ -48,7 +48,7 @@ function get_sets()
         {
             main = "Siriti",
             head="Acad. Mortar. +1",
-            sub = "Avalon Shield",
+            sub = "Sors Shield",
             body = "Argute Gown",
             left_ear = "Savant's Earring",
         }
@@ -77,6 +77,7 @@ function get_sets()
             body = "Savant's Gown +2",
             hands = "Otomi Gloves",
             waist = "Cognition Belt",
+            legs="Hagondes Pants +1",
         }
     );
 
@@ -334,16 +335,25 @@ function precast(spell)
                 extraGear,
                 miaw_staves.nuking[spell.element]
             );
+            if "Stun" == spell.english then
+                MidcastGear = set_combine(
+                    sets.fastcast,
+                    miaw_staves.accuracy[spell.element]
+                );
+            end
         end
         if (buffactive["Celerity"] or buffactive["Alacrity"]) and
             spell.element == world.weather_element then
             precast_extra.feet = "Argute Loafers";
         end
+
+
         equip(set_combine(
             sets.fastcast,
             precast_extra,
             miaw_staves.fastcast[spell.element]
         ));
+
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
     end
