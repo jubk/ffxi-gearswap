@@ -636,7 +636,7 @@ function downgrade_spell(player, spell)
             "Downgraded " .. spell.english .. " to " .. newSpellName
         );
         send_command(
-            'input /ma "' .. newSpellName .. '" "' .. spell.target.name .. '"'
+            'input /ma "' .. newSpellName .. '" ' .. spell.target.raw
         );
         cancel_spell();
         return true;
