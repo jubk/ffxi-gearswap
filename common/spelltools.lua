@@ -648,4 +648,6 @@ function downgrade_spell(player, spell)
         cancel_spell();
         return true;
     end
+
+    return false
 end
