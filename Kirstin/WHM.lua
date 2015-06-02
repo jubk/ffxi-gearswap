@@ -15,7 +15,7 @@ end
 
 function get_sets()
     local base = {
-        main="Ababinili",
+        main="Ababinili +1",
         sub="Achaq Grip",
         ammo="Incantor Stone",
         head="Orison Cap +2",

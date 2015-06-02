@@ -7,7 +7,14 @@ roman_numerics = {
     ['VI'] = 6
 };
 
-tier_postfix = { "", " II", " III", "IV", "V", "VI" };
+tier_postfix = {
+    "",
+    " II",
+    " III",
+    " IV",
+    " V",
+    " VI"
+};
 
 spell_mp_costs = {
     WHM = {
