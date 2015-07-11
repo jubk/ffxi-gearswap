@@ -18,8 +18,8 @@ function get_sets()
         main="Ababinili +1",
         sub="Achaq Grip",
         ammo="Incantor Stone",
-        head="Orison Cap +2",
-        body="Orison Bliaud +1",
+        head="Piety Cap +1",
+        body="Piety Briault +1", -- "Orison Bliaud +1",
         hands="Theophany Mitts",
         legs="Assiduity pants",
         feet="Regal Pumps",
@@ -47,6 +47,7 @@ function get_sets()
     });
 
     sets.curepotency = set_combine(base, {
+        head="Orison Cap +2",
         body="Noble's Tunic",
         hands="Serpentes Cuffs",
         legs="Orsn. Pantaln. +1",
@@ -87,6 +88,9 @@ function midcast(spell)
     cancel_buffs(spell);
     if 'Healing Magic' == spell.skill then
         equip(set_combine(sets.curepotency, time_specific_gear()));
+        if buffactive['Afflatus Solace'] then
+            equip({ body = "Orison Bliaud +1" })
+        end
     end
 end
 
