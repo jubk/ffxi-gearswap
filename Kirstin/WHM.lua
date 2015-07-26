@@ -28,7 +28,7 @@ function get_sets()
         left_ear="Nourish. Earring",
         right_ear="Orison Earring",
         left_ring="Tamas Ring",
-        right_ring="Sirona's Ring",
+        right_ring="Janniston Ring",
         back="Mending Cape",
     }
 
