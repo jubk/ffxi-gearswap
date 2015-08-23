@@ -1,5 +1,6 @@
 include("remove_silence");
 include("cancel_buffs");
+include("shared/staves");
 
 -- Gear TODO:
 -- orison locket [neck]
@@ -14,23 +15,23 @@ function time_specific_gear()
 end
 
 function get_sets()
-    local base = {
-        main="Ababinili +1",
-        sub="Achaq Grip",
-        ammo="Incantor Stone",
-        head="Piety Cap +1",
-        body="Piety Briault +1", -- "Orison Bliaud +1",
-        hands="Theophany Mitts",
-        legs="Assiduity pants",
-        feet="Regal Pumps",
-        neck="Malison Medallion",
-        waist="Austerity Belt",
-        left_ear="Nourish. Earring",
-        right_ear="Orison Earring",
-        left_ring="Tamas Ring",
-        right_ring="Janniston Ring",
-        back="Mending Cape",
-    }
+    local base = set_combine({
+            ammo="Incantor Stone",
+            head="Piety Cap +1",
+            body="Piety Briault +1", -- "Orison Bliaud +1",
+            hands="Theophany Mitts",
+            legs="Assiduity pants",
+            feet="Regal Pumps",
+            neck="Malison Medallion",
+            waist="Austerity Belt",
+            left_ear="Nourish. Earring",
+            right_ear="Orison Earring",
+            left_ring="Tamas Ring",
+            right_ring="Janniston Ring",
+            back="Mending Cape",
+        },
+        kirstin_staves.healing
+    )
 
     sets.idle = set_combine(base, {
         right_ear="Moonshade Earring",

@@ -1,44 +1,64 @@
 include("remove_silence");
 include("cancel_buffs");
-include("elemental_obis");
+include("day_and_weather");
 include("spelltools");
 include("shared/staves");
+
+-- TODO: Buy elder's grip +1 (5 mill)
+-- TODO: Farm Tengu-no-Obi
 
 function get_sets()
     setup_spellcost_map(player);
 
     sets.standard = {
-        --ammo="Phtm. Tathlum",
-        --head="Kaabnax Hat",
-        --body="Savant's Gown +2",
-        --hands="Otomi Gloves",
-        --legs="Nisse Slacks",
-        --feet="Svnt. Loafers +2",
-        --neck="Jeweled Collar",
-        --waist="Penitent's Rope",
-        --left_ear="Hecate's Earring",
-        --right_ear="Moldavite Earring",
-        --left_ring="Spiral Ring",
-        --right_ring={
-        --    name="Diamond Ring", augments={
-        --        'Spell interruption rate down -4%',
-        --        '"Resist Silence"+2',
-        --    }
-        --},
+        -- pdt -20%
         main="Terra's staff",
+
+        -- MND +2
         sub="Raptor Strap +1",
+
+        -- mdam +10, INT 2-6
         ammo="Ghastly Tathlum",
+
+        -- Sublimation +2, haste +6%, matk +10, macc +10, int 27, mnd 27
         head="Acad. Mortar. +1",
+
+        -- Refresh +2, haste +3%, int 34, mnd 29
+        -- Dark arts +20
         body="Acad. Gown +1",
+
+        -- Haste +3%, Fast Cast +5%, int 19, mnd 33
         hands="Acad. Bracers +1",
-        legs="Academic's Pants +1",
+
+        -- haste +5%, int 34, mnd 29
+        -- Light Arts +20
+        legs="Acad. Pants +1",
+
+        -- Casting time -8%, haste +3%, Enmity -6, int 22, mnd 19
         feet="Acad. Loafers +1",
+
+        -- macc +2, matk +8, elem.cast.time -3%
         neck="Stoicheion Medal",
+
+        -- Conserver mp 8, rmp 4
         waist="Austerity Belt",
-        left_ear="Hecate's Earring",
+
+        -- Refresh +1, matk +4
+        left_ear={ name="Moonshade Earring", augments={
+            '"Mag.Atk.Bns."+4','Latent effect: "Refresh"+1',}
+        },
+
+        -- matk
         right_ear="Moldavite Earring",
-        left_ring="Spiral Ring",
-        right_ring={ name="Diamond Ring", augments={'MND+3',}},
+
+        -- dam.taken -10
+        left_ring="Defending Ring",
+
+        -- dam.taken -7
+        right_ring="Vocane Ring",
+
+        -- matk +10, mdam +10, elem.skill +8, dark.skill +8, int +1, mnd +2,
+        -- helix.duration +20
         back="Bookworm's Cape",
     };
 
@@ -46,10 +66,19 @@ function get_sets()
     sets.sublimation_idle = set_combine(
         sets.idle,
         {
+            -- Sublimation +1
             main = "Siriti",
+
+            -- Sublimation +2
             head="Acad. Mortar. +1",
+
+            -- defense / shield blocks
             sub = "Sors Shield",
-            body = "Argute Gown",
+
+            -- Sublimation +2
+            body = "Pedagogy Gown",
+
+            -- Sublimation +1
             left_ear = "Savant's Earring",
         }
     );
@@ -58,13 +87,28 @@ function get_sets()
     sets.resting = set_combine(
         sets.standard,
         {
+            -- rmp +10
             main = "Chatoyant Staff",
+
+            -- mnd +2
             sub = "Raptor Strap +1",
+
+            -- rmp +2
             ammo = "Clarus Stone",
+
+            -- rmp +5
             body = "Errant Hpl.",
+
+            -- rmp +4
             neck = "Eidolon Pendant",
+
+            -- rmp +4
             waist = "Austerity Belt",
+
+            -- rmp +4
             legs = "Nisse Slacks",
+
+            -- rmp +3
             back = "Felicitas Cape",
         }
     );
@@ -72,22 +116,60 @@ function get_sets()
     sets.nuking = set_combine(
         sets.standard,
         {
-            left_ear = "Hecate's Earring",
-            right_ear = "Moldavite Earring",
-            body = "Savant's Gown +2",
+            -- matk +7, matk +19 (aug)
+            head = "Helios Band",
+
+            -- matk +25, macc+7, intterrupt.down 8%
+            body = "Psycloth Vest",
+
+            -- matk +13, macc +13, mdam +10
             hands = "Otomi Gloves",
+
+            -- matk +6, mcrit +3
+            left_ear="Hecate's Earring",
+
+            -- matk +5
+            right_ear="Moldavite Earring",
+
+            -- int +7
             waist = "Cognition Belt",
+
+            -- int +32, matk +25, mdam +10, haste +5%
             legs="Hagondes Pants +1",
+
+            -- macc +2, matk +4
+            left_ring="Strendu Ring",
+
+            -- macc +3, matk +3
+            right_ring="Arvina Ringlet +1",
+
+            -- matk +7, macc +7
+            feet="Helios Boots",
         }
     );
 
     sets.fastcast = {
+        -- Cast time -5%, recast time -5%
         head = "Argute M.board",
+
+        -- Fast cast +3
+        body = "Helios Jacket",
+
+        -- Fast cast +3
         neck = "Jeweled Collar",
+
+        -- Fast cast +7
         hands = "Gendewitha Gages",
+
+        -- Fast cast +2
         ammo = "Incantor Stone",
+
+        -- Fast cast +3
         back = "Swith Cape",
-        feet="Acad. Loafers +1",
+
+        -- Fast cast +5
+        -- Note: Uses Acad. Loafers +1 with grimoire for cast time -8%
+        feet = "Peda. Loafers"
     }
 
     sets.darkmagic = set_combine(sets.nuking, {});
@@ -95,31 +177,78 @@ function get_sets()
     sets.enfeeble_dark = set_combine(
         sets.standard,
         {
+            -- macc +15
+            head = "Kaabnax Hat",
+
+            -- macc +15
+            -- Note: Using Acad body +1 for +20 skill during dark arts
+            body = "Arbatel Gown",
+
+            -- macc +15
+            hands = "Gendewitha Gages",
+
+            -- int +7
             waist = "Cognition Belt",
-            legs = "Nisse Slacks",
+
+            -- macc +3
+            left_ring="Arvina Ringlet +1",
+
+            -- macc +2
+            right_ring = "Strendu Ring",
+
+            -- macc +7
+            feet="Helios Boots"
         }
     );
 
     sets.enfeeble_light = set_combine(
         sets.standard,
         {
-            head = "Argute M.board",
-            body = "Savant's Gown +2",
-            hands = "Otomi Gloves",
+            -- macc +15
+            head = "Kaabnax Hat",
+
+            -- macc +15
+            body = "Arbatel Gown",
+
+            -- macc +15
+            hands = "Gendewitha Gages",
+
+            -- TODO: Tengu-no-Obi
             waist = "Penitent's Rope",
-            left_ring = "Solemn Ring",
+
+            -- macc +3
+            left_ring="Arvina Ringlet +1",
+
+            -- macc +2
+            right_ring = "Strendu Ring",
+
+            -- matk +7, macc +7
+            feet="Helios Boots"
         }
     );
 
     sets.healing = set_combine(
         sets.standard,
         {
-            head = "Argute M.board",
-            hands = "Otomi Gloves",
+            -- MND +18, healing.skill +12
+            body = "Pedagogy Gown",
+
+            -- cure.pot +10%, MND +33
+            hands="Telchine Gloves",
+
+            -- MND +5
             waist = "Penitent's Rope",
-            feet = "Argute Loafers",
-            back = "Swith Cape",
+
+            -- Healing magic skill +14, mnd+12
+            feet = "Peda. Loafers",
+
+            -- MND +8
+            back = "Pahtli Cape",
+
+            -- MND +5
             left_ring="Solemn Ring",
+
+            -- MND +3
             right_ring={ name="Diamond Ring", augments={'MND+3',}},
         }
     );
@@ -127,11 +256,26 @@ function get_sets()
     sets.enhancing = set_combine(
         sets.standard,
         {
-            head = "Savant's Bonnet +2",
-            hands = "Svnt. Bracers +2",
+            -- Enh.magic +12, regen +10
+            head="Arbatel Bonnet",
+
+            -- Enh.magic +12, regen dur +12, haste +3
+            body = "Telchine Chas.",
+
+            -- MND +33, converserve mp 4%
+            hands="Acad. Bracers +1",
+
+            -- MND +5, INT +5
             waist = "Penitent's Rope",
-            back = "Swith Cape",
+
+            -- MND +8
+            back="Pahtli Cape",
+
+            -- Enh.magic +10
             feet = "Regal Pumps",
+
+
+            -- MND +5
             left_ring="Solemn Ring",
         }
     );
@@ -141,11 +285,35 @@ function get_sets()
         {}
     );
 
-    MidcastGear = {}
+    MidcastGear = {};
     AfterCastGear = {};
+    Grimoire = nil;
 end
 
 function self_command(command)
+end
+
+function jobabilities_cancels_acad_feet()
+    if buffactive["Alacrity"] then return true end;
+    if buffactive["Manifestation"] then return true end;
+    if buffactive["Celerity"] then return true end;
+    if buffactive["Accession"] then return true end;
+    return false;
+end
+
+
+function grimoire_is_active(spell)
+    if spell.type == "BlackMagic" then
+        if buffactive["Dark Arts"] or buffactive["Addendum: Black"] then
+            return true;
+        end
+    elseif spell.type == "WhiteMagic" then
+        if buffactive["Light Arts"] or buffactive["Addendum: White"] then
+            return true;
+        end
+    end
+
+    return false;
 end
 
 function filtered_action(spell)
@@ -227,8 +395,9 @@ function pretarget(spell)
         sets.idle = sets.standard_idle;
     end
 
-    MidcastGear = {}
+    MidcastGear = {};
     AfterCastGear = {};
+    Grimoire = nil;
 end
 
 function precast(spell)
@@ -241,6 +410,8 @@ function precast(spell)
         return;
     end
 
+    
+
     if '/jobability' == spell.prefix then
         -- Change idle set dependant on sublimation status
         if "Sublimation" == spell.english then
@@ -251,26 +422,30 @@ function precast(spell)
                 sets.idle = sets.sublimation_idle;
             end
         end
+        if "Enlightenment" == spell.english then
+            equip({
+                body = "Pedagogy Gown"
+            });
+        end
     elseif '/magic' == spell.prefix then
         local precast_extra = {}
 
         if "Healing Magic" == spell.skill then
-            local extraGear = {}
-            local obi = get_obi(spell);
-            if obi ~= nil then
-                extraGear['waist'] = obi
-            end
+            local extraGear = get_day_and_weather_gear(spell) or {}
 
             MidcastGear = set_combine(
                 sets.healing,
-                miaw_staves.nuking[spell.element],
+                miaw_staves.healing,
                 extraGear
             );
 
-            -- Use Savant's Bonnet +2 during rapture
+            -- Use Arbatel Bonnet during rapture
             if buffactive["Rapture"] then
-                precast_extra.head = "Savant's Bonnet +2";
+                precast_extra.head = "Arbatel Bonnet";
             end
+
+            -- Use Pahtli cape for cure casting time
+            precast_extra.back = "Pahtli Cape"
         elseif "Enhancing Magic" == spell.skill then
             if "Stoneskin" == spell.name then
                 MidcastGear = set_combine(sets.stoneskin, {});
@@ -278,17 +453,14 @@ function precast(spell)
                 MidcastGear = set_combine(sets.enhancing, {});
             end
         elseif "Elemental Magic" == spell.skill then
-            local extraGear = {}
-            local obi = get_obi(spell);
-            if obi ~= nil then
-                extraGear['waist'] = obi
-            end
+            local extraGear = get_day_and_weather_gear(spell) or {}
+
             if buffactive["Ebullience"] then
-                precast_extra.head = "Savant's Bonnet +2";
+                precast_extra.head = "Arbatel Bonnet";
             end
             -- Straight 10% damage buff if we have klimaform active
             if buffactive["Klimaform"] then
-                extraGear.feet = "Savant's Loafers +2"
+                extraGear.feet = "Arbatel Loafers"
             end
             MidcastGear = set_combine(
                 sets.nuking,
@@ -296,11 +468,7 @@ function precast(spell)
                 miaw_staves.nuking[spell.element]
             );
         elseif "Enfeebling Magic" == spell.skill then
-            local extraGear = {}
-            local obi = get_obi(spell);
-            if obi ~= nil then
-                extraGear['waist'] = obi
-            end
+            local extraGear = get_day_and_weather_gear(spell) or {}
 
             -- Replace dia 2 with bio 2 when subbing BLM (for pulling)
             if "Dia II" == spell.english and "BLM" == player.sub_job then
@@ -309,9 +477,21 @@ function precast(spell)
                 return;
             end
             if buffactive["Ebullience"] then
-                precast_extra.head = "Savant's Bonnet +2";
+                precast_extra.head = "Arbatel Bonnet";
             end
+
+            -- This should give more acc, even on light arts, as it gives
+            -- enf +10 and macc +21.
+            if grimoire_is_active(spell) then
+                extraGear.legs = "Arbatel Pants"
+            end
+
             if "BlackMagic" == spell.type then
+                -- +20 enf. skill from Dark Arts
+                if grimoire_is_active(spell) then
+                   extraGear.body = "Acad. Gown +1";
+                end
+
                 MidcastGear = set_combine(
                     sets.enfeeble_dark,
                     extraGear,
@@ -342,11 +522,31 @@ function precast(spell)
                 );
             end
         end
-        if (buffactive["Celerity"] or buffactive["Alacrity"]) and
-            spell.element == world.weather_element then
-            precast_extra.feet = "Argute Loafers";
+
+        -- Use Acad loafers for -8% casting time if grimoire is actiave
+        -- and we are not using one of the JAs that cancels it.
+        if grimoire_is_active(spell) and
+            not jobabilities_cancels_acad_feet() then
+            precast_extra.feet = "Acad. Loafers +1";
         end
 
+        if (buffactive["Celerity"] or buffactive["Alacrity"]) then
+            local stormBuff = element_to_storm_buff[spell.element] or "";
+
+            if spell.element == world.weather_element or
+               (stormBuff and buffactive[stormBuff]) then
+                precast_extra.feet = "Peda. Loafers";
+                MidcastGear.feet = "Peda. Loafers";
+            end
+        end
+
+        if (buffactive["Perpetuance"] or buffactive["Immanence"]) then
+            MidcastGear.hands = "Arbatel Bracers";
+        end
+
+        if (buffactive["Penury"] or buffactive["Parsimony"]) then
+            MidcastGear.legs = "Arbatel Pants";
+        end
 
         equip(set_combine(
             sets.fastcast,
@@ -362,10 +562,12 @@ end
 function midcast(spell)
     cancel_buffs(spell);
     equip(MidcastGear);
+    MidcastGear = {};
 end
 
 function aftercast(spell)
     equip(set_combine(sets.idle, AfterCastGear));
+    AfterCastGear = {};
 end
 
 function status_change(new,old)

@@ -19,7 +19,8 @@ function get_sets()
         "Paktong Bullet",
         "Iron Bullet",
         "Bronze Bullet",
-        "Tin Bullet"
+        "Tin Bullet",
+        "Eminent Bullet",
     };
 
     HighDamageAmmoList = {
@@ -48,7 +49,6 @@ function get_sets()
 
     DontWasteBullets = {
         "Oberon's Bullet",
-        "Eminent Bullet",
         "Animikii Bullet",
     };
 
@@ -337,10 +337,11 @@ function precast(spell)
             -- Equip cheap ammo afterwards
             AfterCastGear.ammo = CheapAmmo
 
+            -- TODO: test if this works!
             -- Check for elemental obi
-            obi = get_obi(spell);
-            if obi then
-                qdEquip.waist = obi;
+            daw_gear = get_day_and_weather_gear(spell);
+            if daw_gear then
+                qdEquip = set_combine(qdEquip, daw_gear)
             end
 
             -- Use Zodiac ring on non dark/light days when matching day

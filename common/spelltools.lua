@@ -413,12 +413,14 @@ addendum_map = {
     ["Celerity"] = "Addendum: White",
     ["Rapture"] = "Addendum: White",
     ["Accession"] = "Addendum: White",
+    ["Perpetuance"] = "Addendum: White",
     ["Addendum: White"] = "Addendum: White",
 
     ["Parsimony"] = "Addendum: Black",
     ["Alacrity"] = "Addendum: Black",
     ["Ebullience"] = "Addendum: Black",
     ["Manifestation"] = "Addendum: Black",
+    ["Immanence"] = "Addendum: Black",
     ["Addendum: Black"] = "Addendum: Black"
 };
 downgrade_map = nil;
