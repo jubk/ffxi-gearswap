@@ -116,12 +116,14 @@ function get_sets()
     sets.nuking = set_combine(
         sets.standard,
         {
-            -- matk +7, matk +19 (aug)
+            -- matk +7, matk +23 (aug)
             head = "Helios Band",
 
-            -- matk +25, macc+7, intterrupt.down 8%
+            -- matk +25, macc+10, intterrupt.down 8%
             body = "Psycloth Vest",
 
+            -- TODO: Amalric Gages/Vexed Gages/4mill/
+            --       Venerian abjuration: hands/Met T1 EschaNM
             -- matk +13, macc +13, mdam +10
             hands = "Otomi Gloves",
 
@@ -131,8 +133,8 @@ function get_sets()
             -- matk +5
             right_ear="Moldavite Earring",
 
-            -- int +7
-            waist = "Cognition Belt",
+            -- int +7, macc +5
+            waist = "Porous Robe",
 
             -- int +32, matk +25, mdam +10, haste +5%
             legs="Hagondes Pants +1",
@@ -143,14 +145,15 @@ function get_sets()
             -- macc +3, matk +3
             right_ring="Arvina Ringlet +1",
 
-            -- matk +7, macc +7
+            -- TODO: Amalric nails/Vexed Nails/9mill
+            -- matk +7, macc +7, (aug)matk +23
             feet="Helios Boots",
         }
     );
 
     sets.fastcast = {
         -- Cast time -5%, recast time -5%
-        head = "Argute M.board",
+        head = "Peda. M.Board",
 
         -- Fast cast +3
         body = "Helios Jacket",
@@ -187,8 +190,8 @@ function get_sets()
             -- macc +15
             hands = "Gendewitha Gages",
 
-            -- int +7
-            waist = "Cognition Belt",
+            -- int +7, macc +5
+            waist = "Porous Robe",
 
             -- macc +3
             left_ring="Arvina Ringlet +1",
@@ -214,7 +217,8 @@ function get_sets()
             hands = "Gendewitha Gages",
 
             -- TODO: Tengu-no-Obi
-            waist = "Penitent's Rope",
+            -- mnd +7, macc +5
+            waist = "Porous Robe",
 
             -- macc +3
             left_ring="Arvina Ringlet +1",
@@ -288,6 +292,8 @@ function get_sets()
     MidcastGear = {};
     AfterCastGear = {};
     Grimoire = nil;
+
+    set_has_hachirin_no_obi(true);
 end
 
 function self_command(command)
@@ -546,6 +552,10 @@ function precast(spell)
 
         if (buffactive["Penury"] or buffactive["Parsimony"]) then
             MidcastGear.legs = "Arbatel Pants";
+        end
+
+        if (buffactive["Altruism"] or buffactive["Focalization"]) then
+            MidcastGear.head = "Peda. M.Board";
         end
 
         equip(set_combine(

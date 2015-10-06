@@ -82,6 +82,12 @@ function use_obi(spell)
     end
 end
 
+_has_combined_obi = false;
+
+function set_has_hachirin_no_obi(new_value)
+    _has_combined_obi = new_value
+end
+
 function get_obi(spell)
     local stormBuff = element_to_storm_buff[spell.element] or false;
 
@@ -105,15 +111,25 @@ function get_twilight_cape(spell)
 end
 
 function get_day_and_weather_gear(spell)
-    local stormBuff = element_to_storm_buff[spell.element] or false;
+    if _has_combined_obi then
+        if use_obi(spell) then
+            return {
+                waist = "Hachirin-no-Obi",
+                back = "Twilight Cape"
+            }
+        end
+    else
+        local stormBuff = element_to_storm_buff[spell.element] or false;
 
-    if (stormBuff and buffactive[stormBuff]) or
-       spell.element == world.day_element or
-       spell.element == world.weather_element then
-        return {
-            waist = elemental_obi_table[spell.element],
-            back = "Twilight Cape"
-        };
+        if (stormBuff and buffactive[stormBuff]) or
+           spell.element == world.day_element or
+           spell.element == world.weather_element then
+            return {
+                waist = elemental_obi_table[spell.element],
+                back = "Twilight Cape"
+            };
+        end
     end
+
     return nil
 end

@@ -120,11 +120,12 @@ function get_sets()
         neck = "Stoicheion medal",
         ear1 = "Volley Earring",
         ear2 = "Hecate's Earring",
-        body = "Lanun Frac +1",
+        -- Matk +25, acc +15 (or more), +15 atk
+        body="Rawhide Vest",
         hands = "Lak. Gants +1",
         ring1 = "Solemn Ring",
         ring2 = "Sattva Ring",
-        back = "Navarch's Mantle",
+        back="Gunslinger's Cape",
         waist = "Aquiline Belt",
         legs = "Lak. Trews +1",
         feet = "Vanir Boots",
@@ -135,14 +136,16 @@ function get_sets()
             neck = "Stoicheion medal",
             ear1 = "Moldavite Earring",
             ear2 = "Hecate's Earring",
-            body = "Navarch's Frac +2",
-            hands = "Schutzen Mittens",
+            -- TODO: Carmine Fin. Ga./Shinryu Abjuration: Hands/
+            --       Bewitched finger gauntlets/7mill/Tenodera T1 EschaNM
+            hands="Pursuer's Cuffs",
+            -- hands = "Schutzen Mittens",
             ring1 = "Demon's Ring",
             ring2 = "Arvina Ringlet +1",
             waist = "Aquiline Belt",
             -- +20% damage from matching element for 15 seconds
             feet = "Chasseur's Bottes",
-            back = "Forban Cape",
+            back="Gunslinger's Cape",
         }
     );
 
@@ -150,10 +153,10 @@ function get_sets()
         sets.elemental['QuickDraw'],
         {
             head = "Imp. Wing Hair. +1",
-            body = "Lanun Frac +1",
             hands = "Schutzen Mittens",
             ring1 = "Solemn Ring",
             ring2 = "Arvina Ringlet +1",
+            -- TODO: Adhemar gamashes/Vexed Gamashes/8mill
             feet = "Vanir Boots",
         }
     );
@@ -161,7 +164,6 @@ function get_sets()
     sets.elemental['WildFireBrew'] = set_combine(
         sets.elemental['QuickDraw'],
         {
-            body = "Navarch's Frac +2",
             ring1 = "Demon's Ring",
             ring2 = "Strendu Ring",
         }
@@ -209,6 +211,7 @@ function get_sets()
         }
     );
 
+    set_has_hachirin_no_obi(true);
 end
 
 function get_roll_equipment(spellname)
@@ -354,6 +357,8 @@ function precast(spell)
             equip(set_combine(sets.elemental.QuickDraw, qdEquip))
         elseif 'Triple Shot' == spell.name then
             equip({ body = "Navarch's Frac +2" })
+        elseif 'Random Deal' == spell.english then
+            equip({ body = "Lanun Frac +1" })
         end
     end
 end
@@ -366,7 +371,11 @@ function midcast(spell)
 end
 
 function aftercast(spell)
-    equip(set_combine(sets.elemental.Standard, AfterCastGear));
+    if "Idle" == player.status then
+        equip(set_combine(sets.elemental.Idle, AfterCastGear));
+    else
+        equip(set_combine(sets.elemental.Standard, AfterCastGear));
+    end
 end
 
 function status_change(new,old)

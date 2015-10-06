@@ -17,12 +17,7 @@ function get_sets()
                 '"Drain" and "Aspir" potency +2',
             }
         },
-        body={
-            name="Helios Jacket",
-            augments={
-                'Magic crit. hit rate +4',
-            }
-        },
+        body="Vrikodara Jupon",
         hands="Psycloth Manillas",
         legs="Assiduity Pants",
         feet="Manabyss Pigaches",
@@ -57,6 +52,7 @@ function get_sets()
         {
             left_ear = "Hecate's Earring",
             right_ear = "Moldavite Earring",
+            body="Helios Jacket",
             hands = "Otomi Gloves",
             waist = "Cognition Belt",
             legs="Hagondes Pants +1",
@@ -101,6 +97,7 @@ function get_sets()
     sets.enhancing = set_combine(
         sets.standard,
         {
+            body="Telchine Chas.",
             waist = "Penitent's Rope",
             back = "Swith Cape",
             feet = "Regal Pumps",

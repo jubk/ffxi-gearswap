@@ -11,6 +11,9 @@ function get_sets()
         ammo = "Vanir Battery",
         -- mdef +2, haste +7, enmity +5, pdt -5%, cover eff dur +9
         head = "Rev. Coronet +1",
+
+        -- TODO: Souveran cuirass/Bushin abjuration: body/Pakecet T3 NM/
+        --       Bewitched cuirass/100k
         -- dt -10, mdef +4, enmity +8, haste +3, cover: dam-to-mp 35, +fealty
         body = "Cab. Surcoat +1",
         -- mdef +4, regen +1, refresh +1
@@ -29,8 +32,9 @@ function get_sets()
         back = "Weard Mantle",
         -- dt -3
         waist = "Nierenschutz",
-        -- mdef +3, haste +5, enmity +5, pdt -4
-        legs = "Rev. Breeches +1",
+        -- mdef +3, haste +5, acc+37, dam.taken -3%
+        legs="Souveran Diechlings",
+
         -- mdef +2, haste +3, enmity +6, sentinel +15, mdt -5
         feet = "Cab. Leggings +1"
     }
@@ -38,13 +42,14 @@ function get_sets()
     sets.melee['Enmity'] = set_combine(
         sets.melee['Tanking'],
         {
-            -- enmity +5
-            head = "Rev. Coronet +1",
+            -- enmity +7
+            head = "Cab. Coronet +1",
             -- enmity +5
             neck = "Invidia Torque",
             -- enmity +10
             body = "Creed Cuirass +2",
-            -- enmity +4
+            -- enmity +6
+            legs = "Cab. Breeches",
             -- TODO: ring1 = "Odium Ring",
             -- enmity +3
             ring2 = "Sattva Ring",
@@ -81,17 +86,45 @@ function get_sets()
         }
     );
 
-    sets.melee['Ws'] = set_combine(
-        sets.melee['Tanking'],
-        {
-            -- STR +5, VIT +5, INT +5
-            ring1 = "Spiral Ring",
-            -- STR +4
-            ring2 = "Ruby Ring",
-            -- Attack +20
-            back = "Atheling Mantle",
+    sets.melee['WS'] = {};
+    sets.melee['WS']['base'] = set_combine(
+        sets.melee['Tanking'], {
+            -- acc +25
+            body = "Twilight Mail",
+
+            -- acc +7
+            ring1 = "Yacaruna Ring",
+
+            -- acc +7
+            ring1 = "Patricius Ring",
         }
     );
+    sets.melee['WS']['Atonement'] = sets.melee['Enmity'];
+    sets.melee['WS']['Requiescat'] = set_combine(
+        sets.melee['WS']['base'], {
+            legs="Carmine Cuisses"
+        }
+    );
+    sets.melee['WS']['Burning Blade'] = set_combine(
+        sets.melee['WS']['base'], {
+            ammo="Ghastly Tathlum",
+            body="Cab. Surcoat +1",
+            legs="Carmine Cuisses",
+            neck="Stoicheion Medal",
+            left_ear="Hecate's Earring",
+            right_ear="Moldavite Earring",
+            left_ring="Arvina Ringlet +1",
+            right_ring={
+                name="Demon's Ring",
+                augments={
+                    '"Mag.Atk.Bns."+3',
+                    '"Resist Curse"+3',
+                    '"Resist Blind"+2',
+                }
+            },
+        }
+    );
+    sets.melee['WS']['Burning Blade'] = sets.melee['WS']['Red Lotus Blade'];
 
     sets.melee['Tp'] = set_combine(
         sets.melee['Tanking'],
@@ -118,7 +151,9 @@ function get_sets()
     );
 
     sets.melee['Idle'] = set_combine(
-        sets.melee['Tanking'], {}
+        sets.melee['Tanking'], {
+            legs="Carmine Cuisses"
+        }
     );
 
     EnmityJobabilities = {
@@ -137,6 +172,8 @@ function get_sets()
     }
     MidCastGear = {}
     AfterCastGear = {}
+
+    set_has_hachirin_no_obi(true);
 end
 
 function status_change(new,old)
@@ -160,7 +197,6 @@ function pretarget(spell)
     -- TODO: adjust situational gear
     MidCastGear = {}
     AfterCastGear = {}
-
 end
 
 function precast(spell)
@@ -185,7 +221,11 @@ function precast(spell)
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
     elseif '/weaponskill' == spell.prefix then
-        equip(sets.melee.Ws)
+        if sets.melee.WS[spell.english] then
+            equip(sets.melee.WS[spell.english]);
+        else
+            equip(sets.melee.WS.base);
+        end
     elseif '/jobability' == spell.prefix  then
         local toEquip = {}
         if table.contains(EnmityJobabilities, spell.name) then
@@ -208,7 +248,7 @@ function precast(spell)
             toEquip['hands'] = "Cab. Gauntlets +1"
             MidCastGear['hands'] = "Cab. Gauntlets +1"
         elseif "Rampart" == spell.english then
-            toEquip['head'] = "Valor Coronet"
+            toEquip['head'] = "Cab. Coronet +1"
         elseif "Invincible" == spell.english then
             toEquip['legs'] = "Cab. Breeches"
         end
@@ -224,10 +264,17 @@ function midcast(spell)
 end
 
 function aftercast(spell)
-    equip(set_combine(
-        set_combine(SituationalGear, sets.melee.Tanking),
-        AfterCastGear
-    ));
+    if player.status == "Idle" then
+        equip(set_combine(
+            set_combine(SituationalGear, sets.melee.Idle),
+            AfterCastGear
+        ));
+    else
+        equip(set_combine(
+            set_combine(SituationalGear, sets.melee.Tanking),
+            AfterCastGear
+        ));
+    end
 end
 
 function filtered_action(spell)

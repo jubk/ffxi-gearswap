@@ -19,7 +19,8 @@ function get_sets()
         "Paktong Bullet",
         "Iron Bullet",
         "Bronze Bullet",
-        "Tin Bullet"
+        "Tin Bullet",
+        "Eminent Bullet"
     };
 
     HighDamageAmmoList = {
@@ -48,7 +49,6 @@ function get_sets()
 
     DontWasteBullets = {
         "Oberon's Bullet",
-        "Eminent Bullet",
         "Animikii Bullet",
     };
 
@@ -136,8 +136,9 @@ function get_sets()
         {
             -- neck = "Stoicheion medal",
             -- ear1 = "Moldavite Earring",
-            -- ear2 = "Hecate's Earring",
+            ear2 = "Hecate's Earring",
             body = "Navarch's Frac +2",
+            hands="Pursuer's Cuffs",
             -- hands = "Schutzen Mittens",
             -- ring1 = "Demon's Ring",
             -- Need a new matk+ ring - strendu is not for COR
