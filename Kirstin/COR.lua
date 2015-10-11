@@ -119,8 +119,10 @@ function get_sets()
     sets.elemental = {}
     sets.elemental['Standard'] = {
         head="Lak. Hat +1",
-        body="Lak. Frac +1",
-        hands="Lak. Gants +1",
+        body="Rawhide Vest",
+        -- body="Lak. Frac +1",
+        hands="Pursuer's Cuffs",
+        -- hands="Lak. Gants +1",
         legs="Lak. Trews +1",
         feet="Lak. Bottes +1",
         neck="Malison Medallion",

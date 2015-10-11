@@ -10,8 +10,6 @@ function get_sets()
     CurrentLucky = 0;
     CurrentUnlucky = 0;
 
-    -- TODO: Write Elemental stuff include
-
     CheapAmmoList = {
         "Orichalc. Bullet",
         "Steel Bullet",
@@ -122,7 +120,8 @@ function get_sets()
         ear2 = "Hecate's Earring",
         -- Matk +25, acc +15 (or more), +15 atk
         body="Rawhide Vest",
-        hands = "Lak. Gants +1",
+        hands="Pursuer's Cuffs",
+        -- hands = "Lak. Gants +1",
         ring1 = "Solemn Ring",
         ring2 = "Sattva Ring",
         back="Gunslinger's Cape",
@@ -153,10 +152,10 @@ function get_sets()
         sets.elemental['QuickDraw'],
         {
             head = "Imp. Wing Hair. +1",
-            hands = "Schutzen Mittens",
+            -- hands = "Schutzen Mittens",
             ring1 = "Solemn Ring",
             ring2 = "Arvina Ringlet +1",
-            -- TODO: Adhemar gamashes/Vexed Gamashes/8mill
+            -- TODO: Adhemar gamashes/Vexed Gamashes/10mill
             feet = "Vanir Boots",
         }
     );
@@ -204,9 +203,6 @@ function get_sets()
     sets.elemental['ws'] = set_combine(
         sets.elemental['Standard'],
         {
-            ring1 = "Spiral Ring",
-            ring2 = "Ruby Ring",
-            back = "Amemet Mantle +1",
             feet = "Chasseur's Bottes",
         }
     );

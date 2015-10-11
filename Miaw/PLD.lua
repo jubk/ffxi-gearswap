@@ -22,8 +22,8 @@ function get_sets()
         ear1 = "Merman's Earring",
         -- mdt -2, atk +6
         ear2 = "Merman's Earring",
-        -- mdef +1, haste +4, enmity +7, shield bash +25
-        hands = "Cab. Gauntlets +1",
+        -- acc +25, atk +20, m.def.bonus 4, pdt -4, haste 4
+        hands="Redan Gloves",
         -- cure recieved +5, dt -7, knockback dist -2
         ring1 = "Vocane Ring",
         -- dt -10
@@ -48,9 +48,10 @@ function get_sets()
             neck = "Invidia Torque",
             -- enmity +10
             body = "Creed Cuirass +2",
+            -- mdef +1, haste +4, enmity +7, shield bash +25
+            hands = "Cab. Gauntlets +1",
             -- enmity +6
             legs = "Cab. Breeches",
-            -- TODO: ring1 = "Odium Ring",
             -- enmity +3
             ring2 = "Sattva Ring",
             -- enmity +5, mdef +4
@@ -102,6 +103,8 @@ function get_sets()
     sets.melee['WS']['Atonement'] = sets.melee['Enmity'];
     sets.melee['WS']['Requiescat'] = set_combine(
         sets.melee['WS']['base'], {
+            -- MND 29
+            hands = "Cab. Gauntlets +1",
             legs="Carmine Cuisses"
         }
     );
@@ -125,18 +128,6 @@ function get_sets()
         }
     );
     sets.melee['WS']['Burning Blade'] = sets.melee['WS']['Red Lotus Blade'];
-
-    sets.melee['Tp'] = set_combine(
-        sets.melee['Tanking'],
-        {
-            -- STR +5, VIT +5, INT +5
-            ring1 = "Spiral Ring",
-            -- STR +4
-            ring2 = "Ruby Ring",
-            -- Attack +20
-            back = "Atheling Mantle",
-        }
-    );
 
     sets.melee['Resting'] = set_combine(
         sets.melee['Tanking'],
@@ -194,7 +185,6 @@ function status_change(new,old)
 end
 
 function pretarget(spell)
-    -- TODO: adjust situational gear
     MidCastGear = {}
     AfterCastGear = {}
 end

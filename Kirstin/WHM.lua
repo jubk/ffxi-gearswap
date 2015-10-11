@@ -92,6 +92,8 @@ function get_sets()
         {
             -- cure pot 10
             head="Orison Cap +2",
+            -- Cure pot +5
+            neck="Nodens Gorget",
             -- cure pot 13
             body="Vrikodara Jupon",
             -- healing magic +17
@@ -144,6 +146,10 @@ function get_sets()
         right_ring="Janniston Ring",
         -- Enh. skill 8
         back="Mending Cape",
+    });
+    sets.stoneskin = set_combine(sets.enhancing_magic, {
+        -- Stoneskin +30
+        neck="Nodens Gorget",
     });
     sets.regen = set_combine(sets.enhancing_magic, {
         -- regen pot 36
@@ -272,6 +278,8 @@ function midcast(spell)
                 if buffactive['Afflatus Solace'] then
                     equip({ body = "Orison Bliaud +1" })
                 end
+            elseif "Stoneskin" == spell.english then
+                equip(sets.stoneskin);
             else
                 equip(sets.enhancing_magic);
             end

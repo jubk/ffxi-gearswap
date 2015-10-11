@@ -40,8 +40,8 @@ function get_sets()
         -- macc +2, matk +8, elem.cast.time -3%
         neck="Stoicheion Medal",
 
-        -- Conserver mp 8, rmp 4
-        waist="Austerity Belt",
+        -- macc +4, matk +10
+        waist="Refoccilation Stone",
 
         -- Refresh +1, matk +4
         left_ear={ name="Moonshade Earring", augments={
@@ -132,9 +132,6 @@ function get_sets()
 
             -- matk +5
             right_ear="Moldavite Earring",
-
-            -- int +7, macc +5
-            waist = "Porous Robe",
 
             -- int +32, matk +25, mdam +10, haste +5%
             legs="Hagondes Pants +1",
@@ -234,20 +231,23 @@ function get_sets()
     sets.healing = set_combine(
         sets.standard,
         {
+            -- Cure pot +5
+            neck="Nodens Gorget",
+
             -- MND +18, healing.skill +12
             body = "Pedagogy Gown",
 
             -- cure.pot +10%, MND +33
             hands="Telchine Gloves",
 
-            -- MND +5
-            waist = "Penitent's Rope",
-
             -- Healing magic skill +14, mnd+12
             feet = "Peda. Loafers",
 
             -- MND +8
             back = "Pahtli Cape",
+
+            -- mnd +7
+            waist = "Porous Robe",
 
             -- MND +5
             left_ring="Solemn Ring",
@@ -286,7 +286,10 @@ function get_sets()
 
     sets.stoneskin = set_combine(
         sets.enhancing,
-        {}
+        {
+            -- Stonesking +30
+            neck="Nodens Gorget",
+        }
     );
 
     MidcastGear = {};
