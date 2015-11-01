@@ -14,8 +14,8 @@ function get_sets()
         -- pdt -20%
         main="Terra's staff",
 
-        -- MND +2
-        sub="Raptor Strap +1",
+        -- dt -1
+        sub="Umbra Strap",
 
         -- mdam +10, INT 2-6
         ammo="Ghastly Tathlum",
@@ -48,8 +48,8 @@ function get_sets()
             '"Mag.Atk.Bns."+4','Latent effect: "Refresh"+1',}
         },
 
-        -- matk
-        right_ear="Moldavite Earring",
+        -- matk + 10
+        right_ear="Friomisi Earring",
 
         -- dam.taken -10
         left_ring="Defending Ring",
@@ -58,7 +58,7 @@ function get_sets()
         right_ring="Vocane Ring",
 
         -- matk +10, mdam +10, elem.skill +8, dark.skill +8, int +1, mnd +2,
-        -- helix.duration +20
+        -- helix.duration +19
         back="Bookworm's Cape",
     };
 
@@ -116,7 +116,7 @@ function get_sets()
     sets.nuking = set_combine(
         sets.standard,
         {
-            -- matk +7, matk +23 (aug)
+            -- matk +7, macc +25 (aug)
             head = "Helios Band",
 
             -- matk +25, macc+10, intterrupt.down 8%
@@ -130,11 +130,11 @@ function get_sets()
             -- matk +6, mcrit +3
             left_ear="Hecate's Earring",
 
-            -- matk +5
-            right_ear="Moldavite Earring",
+            -- matk + 10
+            right_ear="Friomisi Earring",
 
-            -- int +32, matk +25, mdam +10, haste +5%
-            legs="Hagondes Pants +1",
+            -- int +28, matk +40, haste +3%
+            legs="Gyve Trousers",
 
             -- macc +2, matk +4
             left_ring="Strendu Ring",
@@ -167,6 +167,9 @@ function get_sets()
         -- Fast cast +3
         back = "Swith Cape",
 
+        -- Fast cast +4
+        legs="Gyve Trousers",
+
         -- Fast cast +5
         -- Note: Uses Acad. Loafers +1 with grimoire for cast time -8%
         feet = "Peda. Loafers"
@@ -177,8 +180,8 @@ function get_sets()
     sets.enfeeble_dark = set_combine(
         sets.standard,
         {
-            -- macc +15
-            head = "Kaabnax Hat",
+            -- matk +7, macc +25 (aug)
+            head = "Helios Band",
 
             -- macc +15
             -- Note: Using Acad body +1 for +20 skill during dark arts
@@ -204,8 +207,8 @@ function get_sets()
     sets.enfeeble_light = set_combine(
         sets.standard,
         {
-            -- macc +15
-            head = "Kaabnax Hat",
+            -- matk +7, macc +25 (aug)
+            head = "Helios Band",
 
             -- macc +15
             body = "Arbatel Gown",
@@ -239,6 +242,9 @@ function get_sets()
 
             -- cure.pot +10%, MND +33
             hands="Telchine Gloves",
+
+            -- Cure.pot +10
+            legs="Gyve Trousers",
 
             -- Healing magic skill +14, mnd+12
             feet = "Peda. Loafers",
@@ -278,9 +284,15 @@ function get_sets()
             -- Enh.magic +10
             feet = "Regal Pumps",
 
-
             -- MND +5
             left_ring="Solemn Ring",
+        }
+    );
+
+    sets.regen = set_combine(
+        sets.enhancing,
+        {
+            back="Bookworm's Cape",
         }
     );
 
@@ -456,7 +468,9 @@ function precast(spell)
             -- Use Pahtli cape for cure casting time
             precast_extra.back = "Pahtli Cape"
         elseif "Enhancing Magic" == spell.skill then
-            if "Stoneskin" == spell.name then
+            if string.startswith(spell.english, "Regen") then
+                MidcastGear = set_combine(sets.regen, {});
+            elseif "Stoneskin" == spell.name then
                 MidcastGear = set_combine(sets.stoneskin, {});
             else
                 MidcastGear = set_combine(sets.enhancing, {});

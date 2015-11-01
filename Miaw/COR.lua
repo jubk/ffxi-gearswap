@@ -133,8 +133,8 @@ function get_sets()
         sets.elemental['Standard'],
         {
             neck = "Stoicheion medal",
-            ear1 = "Moldavite Earring",
-            ear2 = "Hecate's Earring",
+            left_ear="Friomisi Earring",
+            right_ear="Hecate's Earring",
             -- TODO: Carmine Fin. Ga./Shinryu Abjuration: Hands/
             --       Bewitched finger gauntlets/7mill/Tenodera T1 EschaNM
             hands="Pursuer's Cuffs",

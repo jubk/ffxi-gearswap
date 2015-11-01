@@ -1,13 +1,14 @@
 miaw_staves = {
     nuking = {
-        Ice = { main = "Keraunos", sub = "Willpower Grip" },
-        Dark = { main = "Keraunos", sub = "Willpower Grip" },
-        Lightning = { main = "Keraunos", sub = "Willpower Grip" },
-        Light = { main = "Keraunos", sub = "Willpower Grip" },
+        Ice = { main = "Akademos", sub = "Willpower Grip" },
+        Dark = { main = "Akademos", sub = "Willpower Grip" },
+        Lightning = { main = "Akademos", sub = "Willpower Grip" },
+        --Light = { main = "Akademos", sub = "Willpower Grip" },
         Wind = { main = "Marin Staff +1", sub = "Willpower Grip" },
-        Fire = { main = "Keraunos", sub = "Willpower Grip" },
-        Earth = { main = "Keraunos", sub = "Willpower Grip" },
-        Water = { main = "Keraunos", sub = "Willpower Grip" },
+        Wind = { main = "Akademos", sub = "Willpower Grip" },
+        Fire = { main = "Akademos", sub = "Willpower Grip" },
+        Earth = { main = "Akademos", sub = "Willpower Grip" },
+        Water = { main = "Akademos", sub = "Willpower Grip" },
     },
     accuracy = {
         Ice = { main = "Chatoyant Staff", sub = "Willpower Grip" },
