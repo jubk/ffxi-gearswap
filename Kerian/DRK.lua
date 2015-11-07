@@ -75,6 +75,20 @@ function get_sets()
         }
     );
 
+    sets.nuking = set_combine(
+        sets.base,
+        {
+            ear2 = "Hirudinea earring",
+            ear1 = "Halasz Earring",
+            hands = "Fallen's finger gauntlets",
+            body = "Lugra cloak +1",
+            back = "Toro cape",
+            legs = "Eschite cuisses",
+            feet = "Ignominy sollerets",
+            ring1 = "Fenrir ring",
+            ring2 = "Acumen ring",
+        }
+    )
 
     sets.idle = set_combine(
         sets.base,
@@ -96,32 +110,9 @@ function get_sets()
         {}
     );
 
-    EnmityJobabilities = {
-        "Provoke",
-        "Sentinel",
-        "Rampart",
-        "Shield Bash",
-        "Chivalry",
-        "Invincible",
-        "Animated Flourish"
-    }
-
     SituationalGear = {}
     
-    sets.MidCastGear = set_combine(
-        sets.base,
-        {
-            ear2 = "Hirudinea earring",
-            ear1 = "Halasz Earring",
-            hands = "Fallen's finger gauntlets",
-            body = "Lugra cloak +1",
-            back = "Toro cape",
-            legs = "Eschite cuisses",
-            feet = "Ignominy sollerets",
-            ring1 = "Fenrir ring",
-            ring2 = "Acumen ring",
-        }
-    );
+    MidCastGear = {}
     
     AfterCastGear = {}
 
@@ -213,6 +204,8 @@ function precast(spell)
             toEquip = set_combine(toEquip, sets.enmity)
         end
         equip(toEquip)
+    elseif '/magic' == spell.prefix then
+        MidCastGear = set_combine(MidCastGear, sets.nuking)
     end
 
 end
