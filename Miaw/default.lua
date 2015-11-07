@@ -2,6 +2,7 @@ include("remove_silence");
 include("cancel_buffs");
 
 function get_sets()
+    -- set_has_hachirin_no_obi(true);
 end
 
 function precast(spell)

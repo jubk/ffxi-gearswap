@@ -12,7 +12,7 @@ spell_to_buff_map = {
 
 function cancel_buffs(spell)
     -- We're only interested in spells that target ourselves.
-    if not spell.target.type == 'SELF' then
+    if 'SELF' ~= spell.target.type then
         return false;
     end
 

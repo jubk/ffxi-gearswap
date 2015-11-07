@@ -7,6 +7,15 @@ roman_numerics = {
     ['VI'] = 6
 };
 
+tier_postfix = {
+    "",
+    " II",
+    " III",
+    " IV",
+    " V",
+    " VI"
+};
+
 spell_mp_costs = {
     WHM = {
         {1,"Cure",8},
@@ -237,7 +246,7 @@ spell_mp_costs = {
         {25,"Barthunder",6},
         {25,"Invisible",15},
         {25,"Sleep",19},
-        {26,"Cure III",12},
+        {26,"Cure III",46},
         {27,"Enwater",12},
         {27,"Protect II",28},
         {29,"Thunder",37},
@@ -399,7 +408,21 @@ spell_mp_costs = {
 }
 
 spellcost_map = {};
-addendum_map = {};
+addendum_map = {
+    ["Penury"] = "Addendum: White",
+    ["Celerity"] = "Addendum: White",
+    ["Rapture"] = "Addendum: White",
+    ["Accession"] = "Addendum: White",
+    ["Perpetuance"] = "Addendum: White",
+    ["Addendum: White"] = "Addendum: White",
+
+    ["Parsimony"] = "Addendum: Black",
+    ["Alacrity"] = "Addendum: Black",
+    ["Ebullience"] = "Addendum: Black",
+    ["Manifestation"] = "Addendum: Black",
+    ["Immanence"] = "Addendum: Black",
+    ["Addendum: Black"] = "Addendum: Black"
+};
 downgrade_map = nil;
 
 function split_spell_basename_and_tier(spellname)
@@ -479,10 +502,18 @@ function setup_spellcost_map(player, spells_to_downgrade)
     -- Configure which spells to downgrade
     if spells_to_downgrade ~= nil then
         downgrade_map = {}
-        for _,sname in pairs(spells_to_downgrade) do
+        for i,sname in ipairs(spells_to_downgrade) do
             s = split_spell_basename_and_tier(sname);
             downgrade_map[s['basename']] = true;
         end
+    else
+        -- Copy full spellcost map
+        downgrade_map = {}
+        for k,v in pairs(spellcost_map) do
+            downgrade_map[k] = true;
+        end
+        -- But never downgrade Warp II
+        downgrade_map["Warp II"] = false;
     end
 end
 
@@ -493,26 +524,31 @@ function check_addendum(spellname)
         return false;
     end
 
+    -- Always have access to everything with Enlightenment buff
+    if buffactive["Enlightenment"] then
+        return false;
+    end
+
     if "Addendum: White" == buffneeded then
         if buffactive["Light Arts"] then
-            add_to_chat(128, "Auto-activating " .. buffneeded);
+            add_to_chat(128, "~~~~ Auto-enabling " .. buffneeded .. ' ~~~~');
             send_command('input /ja "' .. buffneeded .. '" <me>')
             cancel_spell();
             return true;
         else
-            add_to_chat(128, "Auto-activating Light Arts");
+            add_to_chat(128, '~~~~ Auto-enabling Light Arts ~~~~');
             send_command('input /ja "Light Arts" <me>')
             cancel_spell();
             return true;
         end
     elseif "Addendum: Black" == buffneeded then
         if buffactive["Dark Arts"] then
-            add_to_chat(128, "Auto-activating " .. buffneeded);
+            add_to_chat(128, "~~~~ Auto-enabling " .. buffneeded .. ' ~~~~');
             send_command('input /ja "' .. buffneeded .. '" <me>')
             cancel_spell();
             return true;
         else
-            add_to_chat(128, "Auto-activating Dark Arts");
+            add_to_chat(128, '~~~~ Auto-enabling Dark Arts ~~~~');
             send_command('input /ja "Dark Arts" <me>')
             cancel_spell();
             return true;
@@ -522,19 +558,98 @@ function check_addendum(spellname)
     return false;
 end
 
-function calculate_mp_cost(basecost)
-    
+function activate_light_arts()
+    if not (
+        buffactive["Light Arts"] or
+        buffactive["Addendum: White"] or
+        buffactive["Enlightenment"]
+    ) then
+        send_command('input /ja "Light Arts" <me>');
+        add_to_chat(128, '~~~~ Auto-enabling Light Arts ~~~~');
+        cancel_spell();
+        return true;
+    end
+    return false
 end
 
-function downgrade_spell(player, spellname)
+function activate_dark_arts()
+    if not (
+        buffactive["Dark Arts"] or
+        buffactive["Addendum: Black"] or
+        buffactive["Enlightenment"]
+    ) then
+        send_command('input /ja "Dark Arts" <me>');
+        add_to_chat(128, '~~~~ Auto-enabling Dark Arts ~~~~');
+        cancel_spell();
+        return true;
+    end
+    return false
+end
+
+function get_mp_cost_factor(spell)
+    if spell.type=="WhiteMagic" then
+        if buffactive["Penury"] then
+            return 0.5
+        elseif buffactive["Light Arts"] or buffactive["Addendum: White"] then
+            return 0.9
+        elseif buffactive["Dark Arts"] or buffactive["Addendum: Black"] then
+            return 1.1
+        end
+    elseif spell.type=="BlackMagic" then
+        if buffactive["Parsimony"] then
+            return 0.5
+        elseif buffactive["Dark Arts"] or buffactive["Addendum: Black"] then
+            return 0.9
+        elseif buffactive["Light Arts"] or buffactive["Addendum: White"] then
+            return 1.1
+        end
+    end
+    return 1
+end
+
+function downgrade_spell(player, spell)
     -- If no spells configured, do nothing
     if not downgrade_map then
         return false;
     end
 
-    s = split_spell_basename_and_tier(spellname);
+    local s = split_spell_basename_and_tier(spell.english);
     if not downgrade_map[s['basename']] then
-        return false
+        return false;
+    end
+
+    if not spell.mp_cost then
+        return false;
     end;
 
+    local cost_factor = get_mp_cost_factor(spell);
+    local tier_table = spellcost_map[s['basename']];
+    if not tier_table then
+        return false
+    end
+    local tier = s['tier'];
+    local cost = tier_table[tier];
+    if cost == nil then
+        return false
+    else
+        cost = cost * cost_factor
+    end
+    while tier > 0 and cost > player.mp do
+        cost = tier_table[tier] * cost_factor;
+        tier = tier - 1;
+    end
+    if tier > 0 and tier < s['tier'] then
+        local newSpellName = s['basename'] .. tier_postfix[tier];
+        add_to_chat(
+            128,
+            "Downgraded " .. spell.english .. " to " .. newSpellName
+        );
+        send_command(
+            'input /ma "' .. newSpellName .. '" ' .. spell.target.raw
+        );
+        cancel_spell();
+        return true;
+    end
+
+    return false
 end

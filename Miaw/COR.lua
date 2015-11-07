@@ -10,8 +10,6 @@ function get_sets()
     CurrentLucky = 0;
     CurrentUnlucky = 0;
 
-    -- TODO: Write Elemental stuff include
-
     CheapAmmoList = {
         "Orichalc. Bullet",
         "Steel Bullet",
@@ -19,7 +17,8 @@ function get_sets()
         "Paktong Bullet",
         "Iron Bullet",
         "Bronze Bullet",
-        "Tin Bullet"
+        "Tin Bullet",
+        "Eminent Bullet",
     };
 
     HighDamageAmmoList = {
@@ -31,7 +30,7 @@ function get_sets()
         "Corsair Bullet",
         "Steel Bullet",
         "Orichalc. Bullet",
-        "Eminent Bullet"
+        "Eminent Bullet",
     };
 
     -- SlugwinderAmmo defaults to HighDamAmmo, but uses these if available:
@@ -41,14 +40,14 @@ function get_sets()
     -- QuickDrawAmmo defaults to HighDamAmmo, but uses these if available:
     QuickDrawAmmoList = {
         "Orichalc. Bullet",
-        "Eminent Bullet"
+        "Eminent Bullet",
+        "Animikii Bullet",
     };
 
 
     DontWasteBullets = {
         "Oberon's Bullet",
-        "Orichalc. Bullet",
-        "Eminent Bullet"
+        "Animikii Bullet",
     };
 
     -- Fallbacks for unconfigured ammo
@@ -119,30 +118,33 @@ function get_sets()
         neck = "Stoicheion medal",
         ear1 = "Volley Earring",
         ear2 = "Hecate's Earring",
-        body = "Lanun Frac",
-        hands = "Lak. Gants",
+        -- Matk +25, acc +15 (or more), +15 atk
+        body="Rawhide Vest",
+        hands="Pursuer's Cuffs",
+        -- hands = "Lak. Gants +1",
         ring1 = "Solemn Ring",
         ring2 = "Sattva Ring",
-        back = "Navarch's Mantle",
+        back="Gunslinger's Cape",
         waist = "Aquiline Belt",
         legs = "Lak. Trews +1",
-        feet = "Iuitl Gaiters",
+        feet = "Vanir Boots",
     };
     sets.elemental['QuickDraw'] = set_combine(
         sets.elemental['Standard'],
         {
             neck = "Stoicheion medal",
-            ear1 = "Moldavite Earring",
-            ear2 = "Hecate's Earring",
-            body = "Navarch's Frac +2",
-            hands = "Schutzen Mittens",
+            left_ear="Friomisi Earring",
+            right_ear="Hecate's Earring",
+            -- TODO: Carmine Fin. Ga./Shinryu Abjuration: Hands/
+            --       Bewitched finger gauntlets/7mill/Tenodera T1 EschaNM
+            hands="Pursuer's Cuffs",
+            -- hands = "Schutzen Mittens",
             ring1 = "Demon's Ring",
-            -- Need a new matk+ ring - strendu is not for COR
-            --ring2 = "Strendu Ring",
+            ring2 = "Arvina Ringlet +1",
             waist = "Aquiline Belt",
-            -- +20 damage from matching element for 15 seconds
-            feet = "Navarch's Bottes +2",
-            back = "Forban Cape",
+            -- +20% damage from matching element for 15 seconds
+            feet = "Chasseur's Bottes",
+            back="Gunslinger's Cape",
         }
     );
 
@@ -150,11 +152,10 @@ function get_sets()
         sets.elemental['QuickDraw'],
         {
             head = "Imp. Wing Hair. +1",
-            body = "Lanun Frac",
-            -- Remove when lak. gants are upgraded
-            hands = "Schutzen Mittens",
+            -- hands = "Schutzen Mittens",
             ring1 = "Solemn Ring",
-            ring2 = "Sattva Ring",
+            ring2 = "Arvina Ringlet +1",
+            -- TODO: Adhemar gamashes/Vexed Gamashes/10mill
             feet = "Vanir Boots",
         }
     );
@@ -162,7 +163,6 @@ function get_sets()
     sets.elemental['WildFireBrew'] = set_combine(
         sets.elemental['QuickDraw'],
         {
-            body = "Navarch's Frac +2",
             ring1 = "Demon's Ring",
             ring2 = "Strendu Ring",
         }
@@ -186,7 +186,7 @@ function get_sets()
             back = "Amemet Mantle +1",
             ring1 = "Solemn Ring",
             ring2 = "Jalzahn's Ring",
-            feet = "Navarch's Bottes +2",
+            feet = "Chasseur's Bottes",
         }
     );
 
@@ -196,20 +196,34 @@ function get_sets()
             neck = "Spectacles",
             ring1 = "Behemoth Ring",
             ring2 = "Jalzahn's Ring",
-            feet = "Navarch's Bottes +2",
+            feet = "Chasseur's Bottes",
         }
     );
 
     sets.elemental['ws'] = set_combine(
         sets.elemental['Standard'],
         {
-            ring1 = "Spiral Ring",
-            ring2 = "Ruby Ring",
-            back = "Amemet Mantle +1",
-            feet = "Navarch's Bottes +2",
+            feet = "Chasseur's Bottes",
         }
     );
 
+    set_has_hachirin_no_obi(true);
+end
+
+function get_roll_equipment(spellname)
+    local rollEquip = {
+        hands = "Navarch's Gants +2",
+        head = "Comm. Tricorne",
+        ring2 = "Barataria Ring"
+    }
+
+    if "Courser's Roll" == spellname then
+        rollEquip.feet = "Chasseur's Bottes";
+    elseif "Tactician's Roll" == spellname  then
+        rollEquip.body = "Navarch's Frac +2"
+    end
+
+    return rollEquip;
 end
 
 function stop_wasting_bullets()
@@ -283,15 +297,19 @@ function precast(spell)
         if stop_wasting_bullets() then
             return;
         end
+
+        -- Fall back to cheap ammo after shooting
+        AfterCastGear.ammo = CheapAmmo
+
         equip(set_combine(sets.elemental.ratk, { ammo = SlugWinderAmmo }));
     elseif '/magic' == spell.prefix  then
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
     elseif '/jobability' == spell.prefix  then
         if string.endswith(spell.name, ' Roll') then
-            local rollData = LuckyRolls[spell.name];
+            local rollData = LuckyRolls[spell.english];
             if rollData then
-                CurrentRoll = spell.name;
+                CurrentRoll = spell.english;
                 CurrentLucky = rollData.lucky
                 CurrentUnlucky = rollData.unlucky
 
@@ -301,20 +319,7 @@ function precast(spell)
                     'Unlucky: ' .. CurrentUnlucky
                 ));
 
-                local rollEquip = {
-                    hands = "Navarch's Gants +2",
-                    head = "Comm. Tricorne",
-                    ring1 = "Luzaf's Ring",
-                    ring2 = "Barataria Ring"
-                }
-
-                if "Courser's Roll" == spell.name then
-                    rollEquip.feet = "Navarch's Bottes +2";
-                elseif "Tactician's Roll" == spell.name  then
-                    rollEquip.body = "Navarch's Frac +2"
-                end
-
-                equip(rollEquip);
+                equip(get_roll_equipment(spell.english));
             else
                 add_to_chat(128, 'Unknown roll ' .. spell.name);
             end
@@ -324,27 +329,32 @@ function precast(spell)
                 'Lucky: ' .. CurrentLucky .. ', ' ..
                 'Unlucky: ' .. CurrentUnlucky
             );
+            equip(get_roll_equipment(CurrentRoll));
         elseif string.endswith(spell.name, ' Shot') then
             local qdEquip = { ammo = QuickDrawAmmo };
 
             -- Equip cheap ammo afterwards
             AfterCastGear.ammo = CheapAmmo
 
+            -- TODO: test if this works!
             -- Check for elemental obi
-            obi = get_obi(spell);
-            if obi then
-                qdEquip.waist = obi;
+            daw_gear = get_day_and_weather_gear(spell);
+            if daw_gear then
+                qdEquip = set_combine(qdEquip, daw_gear)
             end
 
-            -- Use Zodiac ring on non dark/light days
-            if not 'Dark' == world.day_element and
-                not 'Light' == spell.day_element then
-                sqEquip.ring1 = 'Zodiac Ring';
+            -- Use Zodiac ring on non dark/light days when matching day
+            if spell.element == world.day_element and
+                not 'Dark' == world.day_element and
+                not 'Light' == world.day_element then
+                qdEquip.ring1 = 'Zodiac Ring';
             end
 
             equip(set_combine(sets.elemental.QuickDraw, qdEquip))
         elseif 'Triple Shot' == spell.name then
             equip({ body = "Navarch's Frac +2" })
+        elseif 'Random Deal' == spell.english then
+            equip({ body = "Lanun Frac +1" })
         end
     end
 end
@@ -357,7 +367,11 @@ function midcast(spell)
 end
 
 function aftercast(spell)
-    equip(set_combine(sets.elemental.Standard, AfterCastGear));
+    if "Idle" == player.status then
+        equip(set_combine(sets.elemental.Idle, AfterCastGear));
+    else
+        equip(set_combine(sets.elemental.Standard, AfterCastGear));
+    end
 end
 
 function status_change(new,old)
