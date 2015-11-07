@@ -9,19 +9,20 @@ function get_sets()
         ammo = "Happo shuriken",
         body = "Koga Chainmail +2",
         neck = "Asperity necklace",
-        ear1 = "Suppanomimi",
-        ear2 = "Brutal earring",
+        ear1 = "Bladeborn earring",
+        ear2 = "Steelflash earring",
         --ear2 = "Steelflash earring",
-        hands = "Iga tekko +1",
+        hands = "Hachiya tekko +1",
         --hands = "Sasuke tekko",
         ring1 = "Rajas ring",
-        ring2 = "Patricius ring",
-        back = "Blithe mantle",
+        ring2 = "Spiral ring",
+        back = "Yokaze mantle",
+--        back = "Aptitude mantle",
         --back = "Attacker's mantle",
         waist = "Cetl belt",
         --waist = "Anguinus belt",
-        legs = "Mochizuki hakama",
-        feet = "Hachiya kyahan",
+        legs = "Hachiya hakama +1",
+        feet = "Daihanshi habaki",
     }
     
     sets.melee = {}
@@ -31,7 +32,7 @@ function get_sets()
             ear2 = "Steelflash Earring",
             hands = "Sasuke tekko",
             waist = "Anguinus belt",
-            back = "Attacker's Mantle",
+  --          back = "Attacker's Mantle",
             neck = "Ej necklace",
         }
     );
@@ -47,10 +48,11 @@ function get_sets()
             neck = "Light gorget",
             back = "Amemet mantle +1",
 --            hands = "Ochimusha kote",
-            ring2 ="Thunder ring",
+            ring2 ="Karieyh ring",
             waist = "Light belt",
             ear1 = "Coral earring",
             ear2 = "Centaurus Earring",
+            feet = "Daihanshi habaki",
         }
     );
     
@@ -66,6 +68,7 @@ function get_sets()
         sets.base,
         {
             ear2 = "Loquacious earring",
+            feet = "Hattori kyahan",
         }
     );
 

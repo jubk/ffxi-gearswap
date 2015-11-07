@@ -7,29 +7,28 @@ function get_sets()
     -- sets
     sets.base = {
         ammo = "Hasty pinion +1",
-        body = "Mikinaak breastplate",
+        body = "Fallen's cuirass",
         neck = "Asperity necklace",
-        ear1 = "Centaurus earring",
-        ear2 = "Brutal earring",
-        hands = "Bale gauntlets +1",
-        ring1 = "Rajas ring",
-        ring2 = "Keen ring",
-        back = "Attacker's mantle",
-        waist = "Cetl belt",
-        legs = "Mikinaak Cuisses",
-        feet = "Ignominy sollerets",
+        ear1 = "Bladeborn earring",
+        ear2 = "Steelflash earring",
+        hands = "Heathen's gauntlets",
+        ring1 = "Karieyh ring",
+        ring2 = "Rajas ring",
+ --       back = "Aptitude mantle",
+        waist = "Grunfeld rope",
+        legs = "Acro breeches",
+        feet = "Argosy sollerets",
     }
     
     sets.melee = {}
     sets.melee['Acc'] = set_combine(
         sets.base,
         {
-            ear2 = "Steelflash Earring",
-            hands = "Bale gauntlets +1",
-            waist = "Anguinus belt",
+            hands = "Redan gloves",
+ --           waist = "Anguinus belt",
             back = "Attacker's Mantle",
             neck = "Chivalrous Chain",
-            ring2 = "Patricious Ring",
+            ring2 = "Patricius Ring",
         }
     );
     
@@ -42,11 +41,14 @@ function get_sets()
         sets.base,
         {
             neck = "Light gorget",
-            back = "Abyss cape",
-            waist = "Light belt",
-            ear1 = "Coral earring",
-            ear2 = "Centaurus Earring",
-            legs = "Mikinaak cuisses",
+            body = "Fallen's cuirass",
+            head = "Acro helm",
+            feet = "Acro leggings",
+            back = "Niht mantle",
+            waist = "Caudata belt",
+--            ear2 = "Coral earring",
+            ear1 = "Centaurus Earring",
+--            ring1 = "Karieyh ring",
         }
     );
     
@@ -61,10 +63,13 @@ function get_sets()
     sets.fastcast = set_combine(
         sets.base,
         {
-            ear2 = "Loquacious earring",
-            hands = "Abyss gauntlets +2",
+            ear2 = "Hirudinea earring",
+            ear1 = "Halasz Earring",
+            hands = "Fallen's finger gauntlets",
+            body = "Lugra cloak +1",
             back = "Toro cape",
-            legs = "Bale flanchard +1",
+            legs = "Eschite cuisses",
+            feet = "Ignominy sollerets",
             ring1 = "Fenrir ring",
             ring2 = "Acumen ring",
         }
@@ -102,7 +107,22 @@ function get_sets()
     }
 
     SituationalGear = {}
-    MidCastGear = {}
+    
+    sets.MidCastGear = set_combine(
+        sets.base,
+        {
+            ear2 = "Hirudinea earring",
+            ear1 = "Halasz Earring",
+            hands = "Fallen's finger gauntlets",
+            body = "Lugra cloak +1",
+            back = "Toro cape",
+            legs = "Eschite cuisses",
+            feet = "Ignominy sollerets",
+            ring1 = "Fenrir ring",
+            ring2 = "Acumen ring",
+        }
+    );
+    
     AfterCastGear = {}
 
     --melee_modes = {}
