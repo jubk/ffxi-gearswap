@@ -5,8 +5,7 @@ include("cyclable_sets");
 
 function get_sets()
     -- sets
-    sets.melee = {}
-    sets.melee['Tanking'] = {
+    sets.tanking = {
          -- mdef +4
         ammo = "Vanir Battery",
         -- mdef +2, haste +7, enmity +5, pdt -5%, cover eff dur +9
@@ -39,8 +38,8 @@ function get_sets()
         feet = "Cab. Leggings +1"
     }
 
-    sets.melee['Enmity'] = set_combine(
-        sets.melee['Tanking'],
+    sets.enmity = set_combine(
+        sets.tanking,
         {
             -- enmity +7
             head = "Cab. Coronet +1",
@@ -61,8 +60,8 @@ function get_sets()
         }
     );
 
-    sets.melee['FastCast'] = set_combine(
-        sets.melee['Tanking'],
+    sets.fastcast = set_combine(
+        sets.tanking,
         {
             -- cast time -2, recast -1
             ammo = "Incantor Stone",
@@ -75,11 +74,18 @@ function get_sets()
         }
     );
 
-    sets.melee['Healing'] = set_combine(
-        sets.melee['Enmity'],
+    sets.fastcast_cure = set_combine(
+        sets.fastcast,
         {
-            -- MND +19
-            body = "Cab. Surcoat +1",
+            -- cure spellcasting time -10%
+            body="Jumalik Mail",
+        }
+    );
+    sets.cure = set_combine(
+        sets.enmity,
+        {
+            -- cure potency +15, mnd+16
+            body="Jumalik Mail",
             -- Cure potency 5-6, MND +3
             ear1 = "Nourish. Earring",
             -- MND +5
@@ -87,9 +93,9 @@ function get_sets()
         }
     );
 
-    sets.melee['WS'] = {};
-    sets.melee['WS']['base'] = set_combine(
-        sets.melee['Tanking'], {
+    sets.ws = {};
+    sets.ws.base = set_combine(
+        sets.tanking, {
             -- acc +25
             body = "Twilight Mail",
 
@@ -100,16 +106,16 @@ function get_sets()
             ring1 = "Patricius Ring",
         }
     );
-    sets.melee['WS']['Atonement'] = sets.melee['Enmity'];
-    sets.melee['WS']['Requiescat'] = set_combine(
-        sets.melee['WS']['base'], {
+    sets.ws['Atonement'] = sets.enmity;
+    sets.ws['Requiescat'] = set_combine(
+        sets.ws.base, {
             -- MND 29
             hands = "Cab. Gauntlets +1",
             legs="Carmine Cuisses"
         }
     );
-    sets.melee['WS']['Burning Blade'] = set_combine(
-        sets.melee['WS']['base'], {
+    sets.ws['Burning Blade'] = set_combine(
+        sets.ws.base, {
             ammo="Ghastly Tathlum",
             body="Cab. Surcoat +1",
             legs="Carmine Cuisses",
@@ -127,10 +133,10 @@ function get_sets()
             },
         }
     );
-    sets.melee['WS']['Burning Blade'] = sets.melee['WS']['Red Lotus Blade'];
+    sets.ws['Burning Blade'] = sets.ws['Red Lotus Blade'];
 
-    sets.melee['Resting'] = set_combine(
-        sets.melee['Tanking'],
+    sets.resting = set_combine(
+        sets.tanking,
         {
             -- Refresh +2
             body = "Twilight Mail",
@@ -141,8 +147,8 @@ function get_sets()
         }
     );
 
-    sets.melee['Idle'] = set_combine(
-        sets.melee['Tanking'], {
+    sets.idle = set_combine(
+        sets.tanking, {
             legs="Carmine Cuisses"
         }
     );
@@ -160,6 +166,8 @@ function get_sets()
     SituationalGear = {
         -- Adjusted in status_change for twilight mail refresh
         body = nil,
+        -- For purity ring
+        right_ring = nil,
     }
     MidCastGear = {}
     AfterCastGear = {}
@@ -175,12 +183,12 @@ function status_change(new,old)
     end
 
     if "Idle" == new then
-        equip(set_combine(SituationalGear, sets.melee.Idle))
+        equip(set_combine(SituationalGear, sets.idle))
     elseif "Resting" == new then
-        equip(set_combine(SituationalGear, sets.melee.Resting))
+        equip(set_combine(SituationalGear, sets.resting))
     elseif "Engaged" == new then
         SituationalGear['body'] = nil
-        equip(set_combine(SituationalGear, sets.melee.Tanking))
+        equip(set_combine(SituationalGear, sets.tanking))
     end
 end
 
@@ -195,15 +203,23 @@ function precast(spell)
         return;
     end
 
+    if buffactive['Curse'] then
+        SituationalGear.right_ring = "Purity Ring"
+    else
+        SituationalGear.right_ring = nil
+    end
+
     if '/magic' == spell.prefix  then
-        local toEquip = set_combine(SituationalGear, sets.melee.FastCast);
+        local toEquip = set_combine(SituationalGear, sets.fastcast);
 
         if spell.skill == 'Healing Magic' then
+            -- Speed up cure spells with fastcast
+            toEquip = set_combine(SituationalGear, sets.fastcast_cure);
             -- Equip healing gear midcast for healing spells
-            MidCastGear = set_combine(MidCastGear, sets.melee.Healing)
+            MidCastGear = set_combine(MidCastGear, sets.cure)
         elseif "Flash" == spell.english or "Blind" == spell.english then
             -- Equip enmity gear for flash and blind spells
-            toEquip = set_combine(toEquip, sets.melee.Enmity)
+            toEquip = set_combine(toEquip, sets.enmity)
         end
 
         equip(toEquip)
@@ -211,15 +227,15 @@ function precast(spell)
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
     elseif '/weaponskill' == spell.prefix then
-        if sets.melee.WS[spell.english] then
-            equip(sets.melee.WS[spell.english]);
+        if sets.ws[spell.english] then
+            equip(sets.ws[spell.english]);
         else
-            equip(sets.melee.WS.base);
+            equip(sets.ws.base);
         end
     elseif '/jobability' == spell.prefix  then
         local toEquip = {}
         if table.contains(EnmityJobabilities, spell.name) then
-            toEquip = set_combine(toEquip, sets.melee.Enmity)
+            toEquip = set_combine(toEquip, sets.enmity)
         end
 
         if "Holy Circle" == spell.english then
@@ -254,14 +270,20 @@ function midcast(spell)
 end
 
 function aftercast(spell)
+    if buffactive['Curse'] then
+        SituationalGear.right_ring = "Purity Ring"
+    else
+        SituationalGear.right_ring = nil
+    end
+
     if player.status == "Idle" then
         equip(set_combine(
-            set_combine(SituationalGear, sets.melee.Idle),
+            set_combine(SituationalGear, sets.idle),
             AfterCastGear
         ));
     else
         equip(set_combine(
-            set_combine(SituationalGear, sets.melee.Tanking),
+            set_combine(SituationalGear, sets.tanking),
             AfterCastGear
         ));
     end

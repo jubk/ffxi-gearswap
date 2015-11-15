@@ -120,18 +120,16 @@ function get_sets()
     sets.elemental['Standard'] = {
         head="Lak. Hat +1",
         body="Rawhide Vest",
-        -- body="Lak. Frac +1",
         hands="Pursuer's Cuffs",
-        -- hands="Lak. Gants +1",
         legs="Lak. Trews +1",
         feet="Lak. Bottes +1",
         neck="Malison Medallion",
-        waist="Sveltesse Gouriz",
-        back = "Gunslinger's Cape",
-        left_ear="Suppanomimi",
+        waist="Aquiline Belt",
+        left_ear="Hecate's Earring",
         right_ear="Loquac. Earring",
         left_ring="Barataria Ring",
         right_ring="Iota Ring",
+        back="Gunslinger's Cape",
     };
     sets.elemental['QuickDraw'] = set_combine(
         sets.elemental['Standard'],

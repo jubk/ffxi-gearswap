@@ -90,9 +90,6 @@ function get_sets()
             -- rmp +10
             main = "Chatoyant Staff",
 
-            -- mnd +2
-            sub = "Raptor Strap +1",
-
             -- rmp +2
             ammo = "Clarus Stone",
 
@@ -399,6 +396,14 @@ function filtered_action(spell)
     end
 end
 
+function setup_idle_set()
+    if buffactive["Sublimation: Activated"] then
+        sets.idle = sets.sublimation_idle;
+    else
+        sets.idle = sets.standard_idle;
+    end
+end
+
 function pretarget(spell)
     if "Drain II" == spell.english or
        "Dread Spikes" == spell.english or
@@ -410,11 +415,7 @@ function pretarget(spell)
         return filtered_action(spell)
     end
 
-    if buffactive["Sublimation: Activated"] then
-        sets.idle = sets.sublimation_idle;
-    else
-        sets.idle = sets.standard_idle;
-    end
+    setup_idle_set()
 
     MidcastGear = {};
     AfterCastGear = {};
@@ -599,6 +600,7 @@ end
 
 function status_change(new,old)
     if "Idle" == new then
+        setup_idle_set()
         equip(sets.idle);
     elseif "Engaged" == new then
     elseif "Resting" == new then
