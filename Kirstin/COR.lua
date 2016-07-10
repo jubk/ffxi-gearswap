@@ -120,7 +120,7 @@ function get_sets()
     sets.elemental['Standard'] = {
         head="Lak. Hat +1",
         body="Rawhide Vest",
-        hands="Pursuer's Cuffs",
+        hands="Leyline Gloves",
         legs="Lak. Trews +1",
         feet="Lak. Bottes +1",
         neck="Malison Medallion",
@@ -138,7 +138,7 @@ function get_sets()
             -- ear1 = "Moldavite Earring",
             ear2 = "Hecate's Earring",
             body = "Navarch's Frac +2",
-            hands="Pursuer's Cuffs",
+            hands="Leyline Gloves",
             -- hands = "Schutzen Mittens",
             -- ring1 = "Demon's Ring",
             -- Need a new matk+ ring - strendu is not for COR

@@ -4,9 +4,6 @@ include("day_and_weather");
 include("spelltools");
 include("shared/staves");
 
--- TODO: Buy elder's grip +1 (5 mill)
--- TODO: Farm Tengu-no-Obi
-
 function get_sets()
     setup_spellcost_map(player);
 
@@ -113,16 +110,15 @@ function get_sets()
     sets.nuking = set_combine(
         sets.standard,
         {
-            -- matk +7, macc +25 (aug)
-            head = "Helios Band",
+            -- matk +28, macc +38 (aug), mdam+6
+            head = "Merlinic Hood",
 
-            -- matk +25, macc+10, intterrupt.down 8%
-            body = "Psycloth Vest",
 
-            -- TODO: Amalric Gages/Vexed Gages/4mill/
-            --       Venerian abjuration: hands/Met T1 EschaNM
-            -- matk +13, macc +13, mdam +10
-            hands = "Otomi Gloves",
+            -- matk + 39, macc +14, mdam +10
+            body = "Witching Robe",
+
+            -- macc +44, matk+52
+            hands = "Chironic Gloves",
 
             -- matk +6, mcrit +3
             left_ear="Hecate's Earring",
@@ -131,7 +127,7 @@ function get_sets()
             right_ear="Friomisi Earring",
 
             -- int +28, matk +40, haste +3%
-            legs="Gyve Trousers",
+            legs="Merlinic Shalwar",
 
             -- macc +2, matk +4
             left_ring="Strendu Ring",
@@ -142,21 +138,27 @@ function get_sets()
             -- TODO: Amalric nails/Vexed Nails/9mill
             -- matk +7, macc +7, (aug)matk +23
             feet="Helios Boots",
+
+            -- matk 8, mb bonus 10
+            neck="Mizu. Kubikazari",
         }
     );
 
     sets.fastcast = {
-        -- Cast time -5%, recast time -5%
-        head = "Peda. M.Board",
+        -- Fast cast +8
+        head = "Merlinic Hood",
 
-        -- Fast cast +3
+        -- Fast cast +5
         body = "Helios Jacket",
 
-        -- Fast cast +3
-        neck = "Jeweled Collar",
+        -- Fast cast +4
+        neck = "Voltsurge Torque",
+
+        -- Fast cast +2
+        waist="Channeler's Stone",
 
         -- Fast cast +7
-        hands = "Gendewitha Gages",
+        hands="Gende. Gages +1",
 
         -- Fast cast +2
         ammo = "Incantor Stone",
@@ -184,8 +186,8 @@ function get_sets()
             -- Note: Using Acad body +1 for +20 skill during dark arts
             body = "Arbatel Gown",
 
-            -- macc +15
-            hands = "Gendewitha Gages",
+            -- macc +44, matk+52
+            hands = "Chironic Gloves",
 
             -- int +7, macc +5
             waist = "Porous Robe",
@@ -210,8 +212,8 @@ function get_sets()
             -- macc +15
             body = "Arbatel Gown",
 
-            -- macc +15
-            hands = "Gendewitha Gages",
+            -- macc +44, matk+52
+            hands = "Chironic Gloves",
 
             -- TODO: Tengu-no-Obi
             -- mnd +7, macc +5
@@ -305,10 +307,112 @@ function get_sets()
     AfterCastGear = {};
     Grimoire = nil;
 
+    immanence_program = nil;
+
+    sc_programs = {
+        frag={
+            {0, '/party Fragmentation Skillchain start: Thunder and Wind', true},
+            {0, '/ja Immanence <me>', false},
+            {0, '/ma Blizzard <t>', false},
+            {2.5, '/ja Immanence <me>', false},
+            {0, '/ma Water <t>', false},
+            {2, '/party Fragmentation Skillchain GO: Thunder and Wind', false},
+        },
+        fusion={
+            {0, '/party Fusion Skillchain start: Fire and Light', true},
+            {0, '/ja Immanence <me>', false},
+            {0, '/ma Fire <t>', false},
+            {2.5, '/ja Immanence <me>', false},
+            {0, '/ma Thunder <t>', false},
+            {2, '/party Fusion Skillchain GO: Fire and Light', false},
+        },
+        grav={
+            {0, '/party Gravitation Skillchain start: Stone and Darkness', true},
+            {0, '/ja Immanence <me>', false},
+            {0, '/ma Aero <t>', false},
+            {2.5, '/ja Immanence <me>', false},
+            {0, '/ma Noctohelix <t>', false},
+            {3, '/party Gravitation Skillchain GO: Stone and Darkness', false},
+        },
+        dist={
+            {0, '/party Gravitation Skillchain start: Stone and Darkness', true},
+            {0, '/ja Immanence <me>', false},
+            {0, '/ma Aero <t>', false},
+            {2.5, '/ja Immanence <me>', false},
+            {0, '/ma Noctohelix <t>', false},
+            {3, '/party Gravitation Skillchain GO: Stone and Darkness', false},
+        },
+    }
+
+
     set_has_hachirin_no_obi(true);
 end
 
+function sc_tic()
+    if immanence_program then
+        -- add_to_chat(128, 'SC: performing tic');
+
+        sc_next = table.remove(immanence_program, 1)
+
+        while sc_next do
+            wait = ''
+            if sc_next[1] > 0 then
+                wait = "pause " .. sc_next[1] .. "; "
+            end
+            cmd = wait .. "input " .. sc_next[2]
+            -- add_to_chat(128, 'SC sending command: ' .. cmd);
+            send_command(cmd)
+
+            -- Check auto-continue flag
+            if sc_next[3] then
+                sc_next = table.remove(immanence_program, 1)
+            else
+                sc_next = nil
+            end
+        end
+
+        -- Reset program if we're done
+        if not immanence_program[1] then
+            immanence_program = nil
+        end
+    end
+end
+
+function eprint(s)
+  local bytes = {}
+  for i=1,#s do
+    local byte = string.byte(s, i)
+    if byte >= 32 and i <= 126 then
+      byte = string.char(byte)
+    else
+      byte = '\\' .. tostring(byte)
+    end
+    table.insert(bytes, byte)
+  end
+  return(table.concat(bytes))
+end
+
 function self_command(command)
+
+    add_to_chat(128, 'Command: ' .. command);
+    args = {}
+    for i in string.gmatch(command, "%S+") do
+        table.insert(args, i)
+    end
+    cmd = table.remove(args, 1)
+    if cmd == "sc" then
+        prog = sc_programs[args[1]]
+        if prog then
+            immanence_program = {}
+            for _, v in pairs(prog) do
+                table.insert(immanence_program, v)
+            end
+            sc_tic()
+        end
+    elseif cmd == "echo" then
+        -- print('Translation: ' .. eprint(args[1] or ""));
+        send_command('input /party \253\2\2\16\20\253')
+    end
 end
 
 function jobabilities_cancels_acad_feet()
@@ -596,6 +700,15 @@ end
 function aftercast(spell)
     equip(set_combine(sets.idle, AfterCastGear));
     AfterCastGear = {};
+    if immanence_program then
+        if spell.interrupted then
+            add_to_chat(128, 'Skillchain interrupted at: ' .. spell.english);
+            immanence_program = nil
+        else
+            -- add_to_chat(128, 'Ticking: ' .. spell.english);
+            sc_tic()
+        end
+    end
 end
 
 function status_change(new,old)

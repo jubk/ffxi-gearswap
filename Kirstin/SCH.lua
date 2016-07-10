@@ -50,19 +50,36 @@ function get_sets()
     sets.nuking = set_combine(
         sets.standard,
         {
-            left_ear = "Hecate's Earring",
-            right_ear = "Moldavite Earring",
-            body="Helios Jacket",
-            hands = "Otomi Gloves",
-            waist = "Cognition Belt",
-            legs="Hagondes Pants +1",
+            ammo="Incantor Stone",
+            head="Merlinic Hood",
+            body="Vanya Robe",
+            hands="Chironic Gloves",
+            legs="Merlinic Shalwar",
+            feet="Manabyss Pigaches",
+            neck="Sanctity Necklace",
+            waist="Refoccilation Stone",
+            left_ear="Hecate's Earring",
+            right_ear="Loquac. Earring",
+            left_ring="Tamas Ring",
+            right_ring="Janniston Ring",
+            back="Bookworm's Cape",
         }
     );
 
     sets.fastcast = {
-        hands = "Gendewitha Gages",
-        ammo = "Incantor Stone",
-        back = "Swith Cape",
+        ammo="Incantor Stone",
+        head={ name="Selenian Cap", augments={'MND+4','"Cure" potency +3%','MND+2','"Fast Cast"+2',}},
+        body="Vrikodara Jupon",
+        hands={ name="Psycloth Manillas", augments={'Mag. Acc.+7','Spell interruption rate down +8%','MND+4',}},
+        legs="Gyve Trousers",
+        feet="Regal Pumps",
+        neck="Sanctity Necklace",
+        waist="Channeler's Stone",
+        left_ear="Antivenom Earring",
+        right_ear="Loquac. Earring",
+        left_ring="Tamas Ring",
+        right_ring="Janniston Ring",
+        back={ name="Bookworm's Cape", augments={'INT+1','MND+3','Helix eff. dur. +20','"Regen" potency+8',}},
     }
 
     sets.darkmagic = set_combine(sets.nuking, {});

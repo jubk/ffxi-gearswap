@@ -21,8 +21,8 @@ function get_sets()
         ear1 = "Merman's Earring",
         -- mdt -2, atk +6
         ear2 = "Merman's Earring",
-        -- acc +25, atk +20, m.def.bonus 4, pdt -4, haste 4
-        hands="Redan Gloves",
+        -- acc +42, atk +31, m.def.bonus 1, mdt -2, pdt -3, haste 4
+        hands="Odyssean Gauntlets",
         -- cure recieved +5, dt -7, knockback dist -2
         ring1 = "Vocane Ring",
         -- dt -10
@@ -65,12 +65,14 @@ function get_sets()
         {
             -- cast time -2, recast -1
             ammo = "Incantor Stone",
-            -- fast cast +5
-            head = "Creed Armet +2",
-            -- fast cast +3
-            neck = "Jeweled Collar",
+            -- fast cast +6
+            head="Odyssean Helm",
+            -- fast cast +4
+            neck = "Voltsurge Torque",
             -- Occ. quickens spells
             ear2 = "Moonshade Earring",
+            -- Fast cast +10
+            feet="Odyssean Greaves"
         }
     );
 
@@ -88,22 +90,48 @@ function get_sets()
             body="Jumalik Mail",
             -- Cure potency 5-6, MND +3
             ear1 = "Nourish. Earring",
-            -- MND +5
-            ring1 = "Solemn Ring",
+            -- Cure effect recieved +5
+            left_ring="Vocane Ring",
+            -- Cure effect recieved +7
+            legs="Souveran Diechlings",
+            -- Cure potency +7
+            feet="Odyssean Greaves",
+            -- Cure potency +7
+            back="Solemnity Cape",
         }
     );
 
     sets.ws = {};
     sets.ws.base = set_combine(
         sets.tanking, {
-            -- acc +25
-            body = "Twilight Mail",
+            -- acc +34
+            head="Founder's Corona",
+
+            -- acc +7
+            left_ring="Patricius Ring",
+            -- acc +7
+            right_ring="Yacuruna Ring",
+
+            -- acc +35, matk +35, macc +35
+            body = "Found. Breastplate",
+
+            -- acc +5
+            neck = "Voltsurge Torque",
+
+            -- acc +8
+            left_ear="Steelflash Earring",
+
+            -- acc +20
+            waist="Olseni Belt",
 
             -- acc +7
             ring1 = "Yacaruna Ring",
 
             -- acc +7
             ring1 = "Patricius Ring",
+
+            -- Acc +25
+            feet="Founder's Greaves"
         }
     );
     sets.ws['Atonement'] = sets.enmity;
@@ -114,15 +142,23 @@ function get_sets()
             legs="Carmine Cuisses"
         }
     );
-    sets.ws['Burning Blade'] = set_combine(
+    sets.ws['magic'] = set_combine(
         sets.ws.base, {
+            -- mdam +10
             ammo="Ghastly Tathlum",
-            body="Cab. Surcoat +1",
-            legs="Carmine Cuisses",
-            neck="Stoicheion Medal",
+            -- matk/macc +35
+            body="Found. Breastplate",
+            -- matk/macc +34
+            feet="Founder's Greaves",
+            -- macc +10, matk +10
+            neck="Sanctity Necklace",
+            -- matk +6
             left_ear="Hecate's Earring",
-            right_ear="Moldavite Earring",
+            -- matk +10
+            right_ear="Friomisi Earring",
+            -- macc +3, matk +3
             left_ring="Arvina Ringlet +1",
+            -- matk +3
             right_ring={
                 name="Demon's Ring",
                 augments={
@@ -131,9 +167,30 @@ function get_sets()
                     '"Resist Blind"+2',
                 }
             },
+            -- macc +5, matk +10
+            back="Izdubar Mantle",
         }
     );
-    sets.ws['Burning Blade'] = sets.ws['Red Lotus Blade'];
+    sets.ws['Burning Blade'] = set_combine(
+        sets.ws.magic, { legs="Carmine Cuisses" }
+    );
+    sets.ws['Red Lotus Blade'] = sets.ws['Burning Blade'];
+    sets.ws['Shining Blade'] = sets.ws.magic
+    sets.ws['Seraph Blade'] = sets.ws.magic
+
+    sets.ws['Gust Slash'] = sets.ws.magic
+    sets.ws['Cyclone'] = sets.ws.magic
+    sets.ws['Aoelian Edge'] = sets.ws.magic
+
+    sets.ws['Frostbite'] = sets.ws.magic
+    sets.ws['Freezebite'] = sets.ws.magic
+
+    sets.ws['Shining Strike'] = sets.ws.magic
+    sets.ws['Seraph Strike'] = sets.ws.magic
+
+    sets.ws['Thunder Thrust'] = sets.ws.magic
+    sets.ws['Raiden Thrust'] = sets.ws.magic
+
 
     sets.resting = set_combine(
         sets.tanking,
