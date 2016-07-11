@@ -87,8 +87,7 @@ function get_sets()
             right_ring="Janniston Ring",
             -- cure pot 4
             back="Tempered Cape",
-        },
-        kirstin_staves.healing
+        }
     );
 
     sets.resting = set_combine(base, {

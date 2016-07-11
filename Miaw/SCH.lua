@@ -113,7 +113,6 @@ function get_sets()
             -- matk +28, macc +38 (aug), mdam+6
             head = "Merlinic Hood",
 
-
             -- matk + 39, macc +14, mdam +10
             body = "Witching Robe",
 
@@ -166,12 +165,15 @@ function get_sets()
         -- Fast cast +3
         back = "Swith Cape",
 
-        -- Fast cast +4
-        legs="Gyve Trousers",
+        -- Fast cast +5
+        legs="Artsieq Hose",
 
         -- Fast cast +5
         -- Note: Uses Acad. Loafers +1 with grimoire for cast time -8%
-        feet = "Peda. Loafers"
+        feet = "Peda. Loafers",
+
+        -- Fast cast +2
+        right_ear="Loquac. Earring",
     }
 
     sets.darkmagic = set_combine(sets.nuking, {});
@@ -195,8 +197,8 @@ function get_sets()
             -- macc +3
             left_ring="Arvina Ringlet +1",
 
-            -- macc +2
-            right_ring = "Strendu Ring",
+            -- macc +7
+            right_ring = "Etana Ring",
 
             -- macc +7
             feet="Helios Boots"
@@ -222,8 +224,8 @@ function get_sets()
             -- macc +3
             left_ring="Arvina Ringlet +1",
 
-            -- macc +2
-            right_ring = "Strendu Ring",
+            -- macc +7
+            right_ring = "Etana Ring",
 
             -- matk +7, macc +7
             feet="Helios Boots"

@@ -6,7 +6,7 @@ include("cyclable_sets");
 function get_sets()
     -- sets
     sets.tanking = {
-         -- mdef +4
+        -- mdef +4
         ammo = "Vanir Battery",
         -- mdef +2, haste +7, enmity +5, pdt -5%, cover eff dur +9
         head = "Rev. Coronet +1",
@@ -43,6 +43,8 @@ function get_sets()
         {
             -- enmity +7
             head = "Cab. Coronet +1",
+            -- enmity +2
+            ammo = "Sapience Orb",
             -- enmity +5
             neck = "Invidia Torque",
             -- enmity +10
@@ -69,8 +71,8 @@ function get_sets()
             head="Odyssean Helm",
             -- fast cast +4
             neck = "Voltsurge Torque",
-            -- Occ. quickens spells
-            ear2 = "Moonshade Earring",
+            -- Fast cast +2
+            right_ear="Loquac. Earring",
             -- Fast cast +10
             feet="Odyssean Greaves"
         }
