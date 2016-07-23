@@ -30,6 +30,13 @@
             ...
         end
 
+        function self_command(command)
+            if auto_sc.self_command(command) then
+                return
+            end
+            ...
+        end
+
 
     To activate a skillchain do:
 
