@@ -1,3 +1,53 @@
+--[[
+    System for automatic execution of Immanence skillchains.
+
+    To use include the following in your gearswap file:
+
+        -- Top of file
+        local AutoImmanence = require("AutoImmanence")
+
+        function get_sets()
+            ...
+            auto_sc = AutoImmanence()
+            ..
+        end
+
+        function precast(spell)
+            ...
+            auto_sc.precast(spell)
+            ...
+        end
+
+        function midcast(spell)
+            ...
+            auto_sc.midcast(spell)
+            ...
+        end
+
+        function aftercast(spell)
+            ...
+            auto_sc.aftercast(spell)
+            ...
+        end
+
+
+    To activate a skillchain do:
+
+        //gs c sc scission
+        //gs c sc fusion
+
+    Or use the created alias
+
+        //sc transfixion
+        //sc gravitation
+
+    Or you can use the name of the element you want to burst for single-
+    element WSes:
+
+        //sc water
+        //sc darkness
+
+]]
 local TRANSLATIONS = {
     fire="\253\2\2\27R\253",
     stone="\253\2\2\27X\253",
