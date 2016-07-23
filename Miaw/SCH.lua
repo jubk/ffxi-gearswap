@@ -3,6 +3,9 @@ include("cancel_buffs");
 include("day_and_weather");
 include("spelltools");
 include("shared/staves");
+-- include("dumper");
+
+local AutoImmanence = require("AutoImmanence");
 
 function get_sets()
     setup_spellcost_map(player);
@@ -138,8 +141,36 @@ function get_sets()
             -- matk +7, macc +7, (aug)matk +23
             feet="Helios Boots",
 
+            -- matk 10, macc 10
+            neck="Sanctity Necklace",
+        }
+    );
+
+    sets.skillchain = set_combine(
+        sets.nuking,
+        {
+            -- TODO: skillchain bonus +8
+            -- legs="Amalric Slops",
+
+            -- skillchain bonus +5
+            right_ring="Mujin Band",
+
+            -- skillchain bonus +10
+            back="Lugh's Cape",
+        }
+    );
+
+    sets.magicburst = set_combine(
+        sets.nuking,
+        {
             -- matk 8, mb bonus 10
             neck="Mizu. Kubikazari",
+
+            -- mb bonus augment (4%)
+            hands="Merlinic Dastanas",
+
+            -- skillchain bonus
+            right_ring="Mujin Band",
         }
     );
 
@@ -309,111 +340,19 @@ function get_sets()
     AfterCastGear = {};
     Grimoire = nil;
 
-    immanence_program = nil;
-
-    sc_programs = {
-        frag={
-            {0, '/party Fragmentation Skillchain start: Thunder and Wind', true},
-            {0, '/ja Immanence <me>', false},
-            {0, '/ma Blizzard <t>', false},
-            {2.5, '/ja Immanence <me>', false},
-            {0, '/ma Water <t>', false},
-            {2, '/party Fragmentation Skillchain GO: Thunder and Wind', false},
-        },
-        fusion={
-            {0, '/party Fusion Skillchain start: Fire and Light', true},
-            {0, '/ja Immanence <me>', false},
-            {0, '/ma Fire <t>', false},
-            {2.5, '/ja Immanence <me>', false},
-            {0, '/ma Thunder <t>', false},
-            {2, '/party Fusion Skillchain GO: Fire and Light', false},
-        },
-        grav={
-            {0, '/party Gravitation Skillchain start: Stone and Darkness', true},
-            {0, '/ja Immanence <me>', false},
-            {0, '/ma Aero <t>', false},
-            {2.5, '/ja Immanence <me>', false},
-            {0, '/ma Noctohelix <t>', false},
-            {3, '/party Gravitation Skillchain GO: Stone and Darkness', false},
-        },
-        dist={
-            {0, '/party Gravitation Skillchain start: Stone and Darkness', true},
-            {0, '/ja Immanence <me>', false},
-            {0, '/ma Aero <t>', false},
-            {2.5, '/ja Immanence <me>', false},
-            {0, '/ma Noctohelix <t>', false},
-            {3, '/party Gravitation Skillchain GO: Stone and Darkness', false},
-        },
-    }
-
+    auto_sc = AutoImmanence()
 
     set_has_hachirin_no_obi(true);
 end
 
-function sc_tic()
-    if immanence_program then
-        -- add_to_chat(128, 'SC: performing tic');
-
-        sc_next = table.remove(immanence_program, 1)
-
-        while sc_next do
-            wait = ''
-            if sc_next[1] > 0 then
-                wait = "pause " .. sc_next[1] .. "; "
-            end
-            cmd = wait .. "input " .. sc_next[2]
-            -- add_to_chat(128, 'SC sending command: ' .. cmd);
-            send_command(cmd)
-
-            -- Check auto-continue flag
-            if sc_next[3] then
-                sc_next = table.remove(immanence_program, 1)
-            else
-                sc_next = nil
-            end
-        end
-
-        -- Reset program if we're done
-        if not immanence_program[1] then
-            immanence_program = nil
-        end
-    end
-end
-
-function eprint(s)
-  local bytes = {}
-  for i=1,#s do
-    local byte = string.byte(s, i)
-    if byte >= 32 and i <= 126 then
-      byte = string.char(byte)
-    else
-      byte = '\\' .. tostring(byte)
-    end
-    table.insert(bytes, byte)
-  end
-  return(table.concat(bytes))
-end
 
 function self_command(command)
-
-    add_to_chat(128, 'Command: ' .. command);
-    args = {}
-    for i in string.gmatch(command, "%S+") do
-        table.insert(args, i)
-    end
-    cmd = table.remove(args, 1)
-    if cmd == "sc" then
-        prog = sc_programs[args[1]]
-        if prog then
-            immanence_program = {}
-            for _, v in pairs(prog) do
-                table.insert(immanence_program, v)
-            end
-            sc_tic()
-        end
-    elseif cmd == "echo" then
-        -- print('Translation: ' .. eprint(args[1] or ""));
-        send_command('input /party \253\2\2\16\20\253')
+    if auto_sc.self_command(command) then
+        return
+    elseif command == "echo" then
+        send_command('input /party ' .. "\253\2\2\30K\253")
+    elseif command == "test" then
+        print(DataDumper(windower.ffxi.get_ability_recasts()))
     end
 end
 
@@ -443,62 +382,8 @@ end
 function filtered_action(spell)
     -- Check whether we should activate arts/addendum instead of casting
     -- the spell.
-    if check_addendum(spell.english) then
+    if check_addendum(spell) then
         return;
-    end
-
-    if "Drain II" == spell.english or
-       "Dread Spikes" == spell.english then
-        if not (
-            buffactive["Manifestation"] or
-            buffactive["Enlightenment"]
-        ) then
-            send_command('input /ja "Manifestation"');
-            if buffactive["Dark Arts"] then
-                add_to_chat(128, '~~~~ Auto-enabling Manifestation ~~~~');
-            end
-            if "Dread Spikes" == spell.english then
-                send_command('input /macro set 8');
-                add_to_chat(128, 'Macro set 8: Debuffs');
-            end
-        else
-            if "Drain II" == spell.english then
-                send_command('input /ma "Klimaform" <me>');
-            end
-        end
-        cancel_spell();
-        return;
-    end
-
-    -- Some shortcut spells that can be spammed to cast the equivalent
-    -- spell on the whole party.
-    if "Enstone II" == spell.english or
-       "Phalanx II" == spell.english or
-       "Shellra V" == spell.english or
-       "Tactician's Roll" == spell.english
-    then
-        if not buffactive["Accession"] then
-            if buffactive["Light Arts"] then
-                add_to_chat(128, '~~~~ Auto-enabling Accession ~~~~');
-            end
-            send_command('input /ja "Accession"');
-            if "Shellra V" == spell.english then
-                send_command('input /macro set 10');
-                add_to_chat(128, 'Macro set 10: Buffs');
-            end
-            cancel_spell();
-            return;
-        else
-            if "Enstone II" == spell.english then
-                send_command('input /ma "Stoneskin" <me>');
-            elseif "Phalanx II" == spell.english then
-                send_command('input /ma "Phalanx" <me>');
-            elseif "Tactician's Roll" == spell.english then
-                send_command('input /ma "Adloquium" <me>');
-            end
-            cancel_spell();
-            return;
-        end
     end
 end
 
@@ -511,16 +396,6 @@ function setup_idle_set()
 end
 
 function pretarget(spell)
-    if "Drain II" == spell.english or
-       "Dread Spikes" == spell.english or
-       "Enstone II" == spell.english or
-       "Phalanx II" == spell.english or
-       "Shellra V" == spell.english or
-       "Tactician's Roll" == spell.english then
-        cancel_spell();
-        return filtered_action(spell)
-    end
-
     setup_idle_set()
 
     MidcastGear = {};
@@ -538,7 +413,7 @@ function precast(spell)
         return;
     end
 
-    
+    auto_sc.precast(spell)
 
     if '/jobability' == spell.prefix then
         -- Change idle set dependant on sublimation status
@@ -549,11 +424,12 @@ function precast(spell)
             else
                 sets.idle = sets.sublimation_idle;
             end
-        end
-        if "Enlightenment" == spell.english then
-            equip({
-                body = "Pedagogy Gown"
-            });
+        elseif "Enlightenment" == spell.english then
+            equip({body = "Pedagogy Gown"});
+        elseif "Tabula Rasa" == spell.english then
+            -- TODO: Need to get these
+            -- equip({body = "Argute Pants +2"});
+            -- equip({body = "Pedagody Pants +2"});
         end
     elseif '/magic' == spell.prefix then
         local precast_extra = {}
@@ -583,17 +459,23 @@ function precast(spell)
                 MidcastGear = set_combine(sets.enhancing, {});
             end
         elseif "Elemental Magic" == spell.skill then
+            local baseGear = sets.nuking
             local extraGear = get_day_and_weather_gear(spell) or {}
 
+            if buffactive["Immanence"] then
+                baseGear = sets.skillchain
+            else
+            end
+            -- +20% extra damage from Ebullience
             if buffactive["Ebullience"] then
-                precast_extra.head = "Arbatel Bonnet";
+                extraGear.head = "Arbatel Bonnet";
             end
             -- Straight 10% damage buff if we have klimaform active
             if buffactive["Klimaform"] then
                 extraGear.feet = "Arbatel Loafers"
             end
             MidcastGear = set_combine(
-                sets.nuking,
+                baseGear,
                 extraGear,
                 miaw_staves.nuking[spell.element]
             );
@@ -695,22 +577,15 @@ end
 
 function midcast(spell)
     cancel_buffs(spell);
+    auto_sc.midcast(spell)
     equip(MidcastGear);
     MidcastGear = {};
 end
 
 function aftercast(spell)
+    auto_sc.aftercast(spell)
     equip(set_combine(sets.idle, AfterCastGear));
     AfterCastGear = {};
-    if immanence_program then
-        if spell.interrupted then
-            add_to_chat(128, 'Skillchain interrupted at: ' .. spell.english);
-            immanence_program = nil
-        else
-            -- add_to_chat(128, 'Ticking: ' .. spell.english);
-            sc_tic()
-        end
-    end
 end
 
 function status_change(new,old)

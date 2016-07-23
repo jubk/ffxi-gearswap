@@ -517,8 +517,9 @@ function setup_spellcost_map(player, spells_to_downgrade)
     end
 end
 
-function check_addendum(spellname)
-    buffneeded = addendum_map[spellname];
+function check_addendum(spell)
+    local spellname = spell.english
+    local buffneeded = addendum_map[spellname];
 
     if buffneeded == nil or buffactive[buffneeded] then
         return false;
@@ -529,6 +530,8 @@ function check_addendum(spellname)
         return false;
     end
 
+    local allRecasts = windower.ffxi.get_ability_recasts()
+
     if "Addendum: White" == buffneeded then
         if buffactive["Light Arts"] then
             add_to_chat(128, "~~~~ Auto-enabling " .. buffneeded .. ' ~~~~');
@@ -536,9 +539,19 @@ function check_addendum(spellname)
             cancel_spell();
             return true;
         else
-            add_to_chat(128, '~~~~ Auto-enabling Light Arts ~~~~');
-            send_command('input /ja "Light Arts" <me>')
             cancel_spell();
+            -- check if ready
+            if (allRecasts[228] or 0) > 0 then
+                add_to_chat(128, '~~~~ Aborting Light Arts: Not ready ~~~~');
+                return true
+            end
+            add_to_chat(128, '~~~~ Auto-enabling Light Arts ~~~~');
+            cmd = (
+                'input /ja "Light Arts" <me>;' ..
+                'pause 2;' ..
+                'input /ma "' .. spell.english .. '" ' .. spell.target.raw
+            )
+            send_command(cmd)
             return true;
         end
     elseif "Addendum: Black" == buffneeded then
@@ -548,8 +561,18 @@ function check_addendum(spellname)
             cancel_spell();
             return true;
         else
+            -- check if ready
+            if (allRecasts[232] or 0) > 0 then
+                add_to_chat(128, '~~~~ Aborting Dark Arts: Not ready ~~~~');
+                return true
+            end
             add_to_chat(128, '~~~~ Auto-enabling Dark Arts ~~~~');
-            send_command('input /ja "Dark Arts" <me>')
+            cmd = (
+                'input /ja "Dark Arts" <me>;' ..
+                'pause 2;' ..
+                'input /ma "' .. spell.english .. '" ' .. spell.target.raw
+            )
+            send_command(cmd)
             cancel_spell();
             return true;
         end

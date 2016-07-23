@@ -4,6 +4,8 @@ include("elemental_obis");
 include("spelltools");
 include("shared/staves");
 
+local AutoImmanence = require("AutoImmanence");
+
 function get_sets()
     setup_spellcost_map(player);
 
@@ -55,7 +57,7 @@ function get_sets()
             body="Vanya Robe",
             hands="Chironic Gloves",
             legs="Merlinic Shalwar",
-            feet="Manabyss Pigaches",
+            feet="Medium's Sabots",
             neck="Sanctity Necklace",
             waist="Refoccilation Stone",
             left_ear="Hecate's Earring",
@@ -63,6 +65,22 @@ function get_sets()
             left_ring="Tamas Ring",
             right_ring="Janniston Ring",
             back="Bookworm's Cape",
+        }
+    );
+
+    sets.skillchain = set_combine(
+        sets.nuking,
+        {
+            -- skillchain bonus
+            right_ring="Mujin Band",
+        }
+    );
+
+    sets.magicburst = set_combine(
+        sets.nuking,
+        {
+            -- skillchain bonus
+            right_ring="Mujin Band",
         }
     );
 
@@ -129,84 +147,23 @@ function get_sets()
 
     MidcastGear = {}
     AfterCastGear = {};
+
+    auto_sc = AutoImmanence()
 end
 
 function self_command(command)
+    auto_sc.self_command(command)
 end
 
 function filtered_action(spell)
     -- Check whether we should activate arts/addendum instead of casting
     -- the spell.
-    if check_addendum(spell.english) then
+    if check_addendum(spell) then
         return;
-    end
-
-    if "Drain II" == spell.english or
-       "Dread Spikes" == spell.english then
-        if not (
-            buffactive["Manifestation"] or
-            buffactive["Enlightenment"]
-        ) then
-            send_command('input /ja "Manifestation"');
-            if buffactive["Dark Arts"] then
-                add_to_chat(128, '~~~~ Auto-enabling Manifestation ~~~~');
-            end
-            if "Dread Spikes" == spell.english then
-                send_command('input /macro set 8');
-                add_to_chat(128, 'Macro set 8: Debuffs');
-            end
-        else
-            if "Drain II" == spell.english then
-                send_command('input /ma "Klimaform" <me>');
-            end
-        end
-        cancel_spell();
-        return;
-    end
-
-    -- Some shortcut spells that can be spammed to cast the equivalent
-    -- spell on the whole party.
-    if "Enstone II" == spell.english or
-       "Phalanx II" == spell.english or
-       "Shellra V" == spell.english or
-       "Tactician's Roll" == spell.english
-    then
-        if not buffactive["Accession"] then
-            if buffactive["Light Arts"] then
-                add_to_chat(128, '~~~~ Auto-enabling Accession ~~~~');
-            end
-            send_command('input /ja "Accession"');
-            if "Shellra V" == spell.english then
-                send_command('input /macro set 10');
-                add_to_chat(128, 'Macro set 10: Buffs');
-            end
-            cancel_spell();
-            return;
-        else
-            if "Enstone II" == spell.english then
-                send_command('input /ma "Stoneskin" <me>');
-            elseif "Phalanx II" == spell.english then
-                send_command('input /ma "Phalanx" <me>');
-            elseif "Tactician's Roll" == spell.english then
-                send_command('input /ma "Adloquium" <me>');
-            end
-            cancel_spell();
-            return;
-        end
     end
 end
 
 function pretarget(spell)
-    if "Drain II" == spell.english or
-       "Dread Spikes" == spell.english or
-       "Enstone II" == spell.english or
-       "Phalanx II" == spell.english or
-       "Shellra V" == spell.english or
-       "Tactician's Roll" == spell.english then
-        cancel_spell();
-        return filtered_action(spell)
-    end
-
     if buffactive["Sublimation: Activated"] then
         sets.idle = sets.sublimation_idle;
     else
@@ -226,6 +183,8 @@ function precast(spell)
     if downgrade_spell(player, spell) then
         return;
     end
+
+    auto_sc.precast(spell)
 
     if '/jobability' == spell.prefix then
         -- Change idle set dependant on sublimation status
@@ -347,10 +306,14 @@ end
 
 function midcast(spell)
     cancel_buffs(spell);
+
+    auto_sc.midcast(spell)
+
     equip(MidcastGear);
 end
 
 function aftercast(spell)
+    auto_sc.aftercast(spell)
     equip(set_combine(sets.idle, AfterCastGear));
 end
 
@@ -362,5 +325,3 @@ function status_change(new,old)
         equip(sets.resting);
     end
 end
-
-
