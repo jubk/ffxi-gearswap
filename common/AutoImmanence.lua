@@ -181,6 +181,9 @@ local AutoImmanence = function()
     local currently_delayed = 0
     local spell_count = 0
     local injected_command = nil
+    local skillchain_started = os.clock()
+    local last_spell_started = os.clock()
+    local last_skillchain_timestamp = os.clock()
 
     local public = {
         -- Translations
@@ -376,6 +379,14 @@ local AutoImmanence = function()
             new_timeout = spell.cast_time + cc.time_elapsed + 2
             if new_timeout < cc.timeout then
                 cc.timeout = new_timeout
+
+                -- Re-schedule timeout check
+                if cc.timeout_handler then
+                    coroutine.close(cc.timeout_handler)
+                    coroutine.schedule(
+                        public.check_command_timeout, new_timeout
+                    )
+                end
             end
             cc.cast_time_set = true
         end
@@ -400,6 +411,13 @@ local AutoImmanence = function()
         public.finish_command()
     end
 
+    public.check_command_timeout = function()
+        if cc and (os.clock - cc.started) > cc.timeout then
+            public.abort("Timeout exeeded")
+            return true
+        end
+        return false
+    end
 
     public.execute_command = function(cmd, max_delay, timeout)
         if cc ~= nil then
@@ -410,31 +428,28 @@ local AutoImmanence = function()
                 "still active"
             )
         end
-        local ticker
-        ticker = function()
-            if cc then
-                -- advance time
-                cc.time_elapsed = cc.time_elapsed + 0.1
 
-                if cc.timeout and cc.time_elapsed >= cc.timeout then
-                    public.abort("Timeout exeeded")
-                else
-                    -- Set up next tic
-                    cc.timer = coroutine.schedule(ticker, 0.1)
-                end
-            end
-        end
         cc = {
-            time_elapsed=0,
+            started=os.clock(),
             input=cmd,
-            timer=coroutine.schedule(ticker, 0.1),
-            max_wait=max_wait,
+            max_delay=max_delay,
             timeout=timeout,
+            timeout_handler=coroutine.schedule(
+                public.check_command_timeout, timeout
+            )
         }
+
         -- send the actual command
         send_command(cc.input)
     end
 
+    public.command_delayed_too_long = function()
+        if cc and (os.clock() - cc.started) <= cc.max_delay then
+            return false
+        else
+            return true
+        end
+    end
 
     public.inject_command = function(cmd, max_delay, timeout, grace_delay)
         public.execute_command(cmd, max_delay, timeout)
@@ -444,7 +459,7 @@ local AutoImmanence = function()
 
     public.retry_command = function()
         if cc then
-            if cc.max_delay and cc.max_delay > cc.time_elapsed then
+            if public.command_delayed_too_long() then
                 public.abort("Waited too long while retrying")
             else
                 send_command(cc.input)
@@ -497,9 +512,9 @@ local AutoImmanence = function()
     public.cast_spell = function()
         local action = public.get_action()
         cmd = 'input /ma "' .. action.spell .. '" <t>'
-        -- 6 seconds timeout is a default and will be adjusted with actual
+        -- 8 seconds timeout is a default and will be adjusted with actual
         -- casting time in precast method.
-        public.execute_command(cmd, 1, 6)
+        public.execute_command(cmd, 1, 8)
         spell_count = spell_count + 1
         local msg = skillchain.name .. " skillchain spell #" .. spell_count
         send_command("input /party " .. msg)
@@ -512,6 +527,7 @@ local AutoImmanence = function()
             return public.abort("Already have active skillchain, aborting it")
         end
         skillchain = sc
+        skillchain_started = os.clock()
         index = 1
         local action = public.get_action()
         local method = public[action.method]
