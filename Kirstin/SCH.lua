@@ -85,19 +85,24 @@ function get_sets()
     );
 
     sets.fastcast = {
+        -- Fast cast +8
+        head = "Merlinic Hood",
+        -- fastcast +2
         ammo="Incantor Stone",
-        head={ name="Selenian Cap", augments={'MND+4','"Cure" potency +3%','MND+2','"Fast Cast"+2',}},
+        -- fastcast +5
         body="Vrikodara Jupon",
-        hands={ name="Psycloth Manillas", augments={'Mag. Acc.+7','Spell interruption rate down +8%','MND+4',}},
+        -- fastcast 4
         legs="Gyve Trousers",
+        -- fastcast 4-6
         feet="Regal Pumps",
-        neck="Sanctity Necklace",
+        -- fastcast +2
         waist="Channeler's Stone",
-        left_ear="Antivenom Earring",
+        -- fastcast +2
         right_ear="Loquac. Earring",
-        left_ring="Tamas Ring",
-        right_ring="Janniston Ring",
-        back={ name="Bookworm's Cape", augments={'INT+1','MND+3','Helix eff. dur. +20','"Regen" potency+8',}},
+        -- fastcast +2
+        left_ring="Prolix Ring",
+        -- fastcast +3
+        back="Swith Cape",
     }
 
     sets.darkmagic = set_combine(sets.nuking, {});

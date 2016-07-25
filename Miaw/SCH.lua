@@ -177,34 +177,27 @@ function get_sets()
     sets.fastcast = {
         -- Fast cast +8
         head = "Merlinic Hood",
-
         -- Fast cast +5
         body = "Helios Jacket",
-
         -- Fast cast +4
         neck = "Voltsurge Torque",
-
         -- Fast cast +2
         waist="Channeler's Stone",
-
         -- Fast cast +7
         hands="Gende. Gages +1",
-
         -- Fast cast +2
         ammo = "Incantor Stone",
-
         -- Fast cast +3
         back = "Swith Cape",
-
         -- Fast cast +5
         legs="Artsieq Hose",
-
         -- Fast cast +5
         -- Note: Uses Acad. Loafers +1 with grimoire for cast time -8%
         feet = "Peda. Loafers",
-
         -- Fast cast +2
         right_ear="Loquac. Earring",
+        -- Fast cast +2
+        left_ring="Prolix Ring",
     }
 
     sets.darkmagic = set_combine(sets.nuking, {});
