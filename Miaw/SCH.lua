@@ -333,7 +333,11 @@ function get_sets()
     AfterCastGear = {};
     Grimoire = nil;
 
-    auto_sc = AutoImmanence()
+    auto_sc = AutoImmanence({
+        gear_fastcast=32,
+        uses_academics_loafers=true,
+        uses_pedagogy_mortarboard=true,
+    })
 
     set_has_hachirin_no_obi(true);
 end
@@ -349,14 +353,13 @@ function self_command(command)
     end
 end
 
-function jobabilities_cancels_acad_feet()
+function jobabilities_cancels_grimoire_fastcast()
     if buffactive["Alacrity"] then return true end;
     if buffactive["Manifestation"] then return true end;
     if buffactive["Celerity"] then return true end;
     if buffactive["Accession"] then return true end;
     return false;
 end
-
 
 function grimoire_is_active(spell)
     if spell.type == "BlackMagic" then
@@ -528,11 +531,14 @@ function precast(spell)
             end
         end
 
-        -- Use Acad loafers for -8% casting time if grimoire is actiave
-        -- and we are not using one of the JAs that cancels it.
-        if grimoire_is_active(spell) and
-            not jobabilities_cancels_acad_feet() then
-            precast_extra.feet = "Acad. Loafers +1";
+        if grimoire_is_active(spell) then
+            -- Certain job abilites does not stack with grimoire fastcast gear
+            if not jobabilities_cancels_grimoire_fastcast() then
+                -- Grimoire cast time -8
+                precast_extra.feet = "Acad. Loafers +1";
+                -- Grimoire cast time -10
+                precast_extra.head = "Peda. M.Board"
+            end
         end
 
         if (buffactive["Celerity"] or buffactive["Alacrity"]) then
