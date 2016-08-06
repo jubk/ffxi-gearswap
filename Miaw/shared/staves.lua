@@ -21,14 +21,14 @@ miaw_staves = {
         Water = { main = "Chatoyant Staff", sub = "Willpower Grip" },
     },
     fastcast = {
-        Ice = { main = "Vourukasha I", sub = "Willpower Grip" },
-        Dark = { main = "Marin Staff +1", sub = "Willpower Grip" },
-        Lightning = { main = "Apamajas I", sub = "Willpower Grip" },
-        Light = { main = "Marin Staff +1", sub = "Willpower Grip" },
-        Wind = { main = "Marin Staff +1", sub = "Willpower Grip" },
-        Fire = { main = "Marin Staff +1", sub = "Willpower Grip" },
-        Earth = { main = "Marin Staff +1", sub = "Willpower Grip" },
-        Water = { main = "Marin Staff +1", sub = "Willpower Grip" },
+        Ice = { main = "Vourukasha I", sub = "Clerisy Strap" },
+        Dark = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Lightning = { main = "Apamajas I", sub = "Clerisy Strap" },
+        Light = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Wind = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Fire = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Earth = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Water = { main = "Marin Staff +1", sub = "Clerisy Strap" },
     },
     healing = { main = "Chatoyant Staff", sub = "Raptor Strap +1" }
 }

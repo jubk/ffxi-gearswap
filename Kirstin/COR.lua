@@ -10,8 +10,6 @@ function get_sets()
     CurrentLucky = 0;
     CurrentUnlucky = 0;
 
-    -- TODO: Write Elemental stuff include
-
     CheapAmmoList = {
         "Orichalc. Bullet",
         "Steel Bullet",
@@ -113,104 +111,115 @@ function get_sets()
         ["Wizard's Roll"]       = { lucky = 5, unlucky = 9 }
     }
 
-    -- TODO: Imp wing hairpin
-
     -- sets
-    sets.elemental = {}
-    sets.elemental['Standard'] = {
-        head="Lak. Hat +1",
-        body="Rawhide Vest",
-        hands="Leyline Gloves",
-        legs="Lak. Trews +1",
-        feet="Lak. Bottes +1",
-        neck="Malison Medallion",
-        waist="Aquiline Belt",
-        left_ear="Hecate's Earring",
-        right_ear="Loquac. Earring",
-        left_ring="Barataria Ring",
-        right_ring="Iota Ring",
+    sets.base = {
+        -- acc +42
+        head="Meghanada Visor +1",
+        -- acc +44
+        body="Meg. Cuirie +1",
+        -- acc +41
+        hands="Meg. Gloves +1",
+        -- acc +43
+        legs="Meg. Chausses +1",
+        -- acc +40
+        feet="Meg. Jam. +1",
+        -- acc +10
+        neck="Sanctity Necklace",
+        -- acc +15
+        waist="Eschan Stone",
+        -- dual wield +4, meva +8
+        left_ear="Eabani Earring",
+        -- acc +10
+        left_ring="Cacoethic Ring",
+        -- acc +7, mdt -5%
+        right_ring="Fortified Ring",
+        -- racc +20
         back="Gunslinger's Cape",
     };
-    sets.elemental['QuickDraw'] = set_combine(
-        sets.elemental['Standard'],
+
+    sets.quickdraw = set_combine(
+        sets.base,
         {
-            -- neck = "Stoicheion medal",
-            -- ear1 = "Moldavite Earring",
-            ear2 = "Hecate's Earring",
-            body = "Navarch's Frac +2",
+            -- quick draw +10
+            head="Lak. Hat +1",
+            -- matk +25
+            body="Rawhide Vest",
+            -- matk +30
             hands="Leyline Gloves",
-            -- hands = "Schutzen Mittens",
-            -- ring1 = "Demon's Ring",
-            -- Need a new matk+ ring - strendu is not for COR
-            --ring2 = "Strendu Ring",
-            waist = "Aquiline Belt",
-            feet = "Chasseur's Bottes",
+            -- matk +15
+            legs="Lak. Trews +1",
+            -- quick draw: mob elem damage taken +22%
+            feet="Chasseur's Bottes",
+            -- matk +10, macc +10
+            neck="Sanctity Necklace",
+            -- matk +7, macc +7
+            waist="Eschan Stone",
+            -- matk +10
+            left_ear="Friomisi Earring",
+            -- matk +6
+            right_ear="Hecate's Earring",
+            -- macc +4
+            left_ring="Balrahn's Ring",
+            -- agi +3
+            right_ring="Iota Ring",
+            -- matk +14, macc +10
+            back="Gunslinger's Cape",
         }
     );
 
-    sets.elemental['WildFire'] = set_combine(
-        sets.elemental['QuickDraw'],
+    sets.idle = set_combine(
+        sets.base, {
+            -- refresh +1
+            head="Rawhide Mask",
+            -- refresh +2
+            body="Mekosu. Harness",
+            -- latent (not engaged): refresh +1
+            left_ear="Moonshade Earring",
+        }
+    );
+
+    sets.resting = set_combine(sets.idle, {});
+
+    sets.ranged_accuracy = set_combine(
+        sets.base,
         {
-            -- head = "Imp. Wing Hair. +1",
-            -- body = "Lanun Frac",
-            -- Remove when lak. gants are upgraded
-            -- hands = "Schutzen Mittens",
-            -- ring1 = "Solemn Ring",
-            -- ring2 = "Sattva Ring",
-            -- feet = "Vanir Boots",
+            -- racc +42
+            head="Meghanada Visor +1",
+            -- racc +44
+            body="Meg. Cuirie +1",
+            -- racc +41
+            hands="Meg. Gloves +1",
+            -- racc +43
+            legs="Meg. Chausses +1",
+            -- racc +40
+            feet="Meg. Jam. +1",
+            -- racc +15
+            neck="Marked Gorget",
+            -- racc +15
+            waist="Eschan Stone",
+            -- racc +15
+            left_ring="Cacoethic Ring",
+            -- racc +20
+            back="Gunslinger's Cape",
         }
     );
 
-    sets.elemental['WildFireBrew'] = set_combine(
-        sets.elemental['QuickDraw'],
-        {
-            -- body = "Navarch's Frac +2",
-            -- ring1 = "Demon's Ring",
-            -- ring2 = "Strendu Ring",
-        }
-    );
+    sets.ranged_attack = set_combine(sets.ranged_accuracy,{});
 
-    sets.elemental['Idle'] = set_combine(
-        sets.elemental['Standard'], {
-            -- feet = "Hermes' Sandals",
-        }
-    );
+    sets.ranged_ws = set_combine(sets.ranged_accuracy, {});
 
-    sets.elemental['Resting'] = set_combine(
-        sets.elemental['Standard'], {}
-    );
-
-    sets.elemental['ratk'] = set_combine(
-        sets.elemental['Standard'],
-        {
-            -- ear1 = "Drone earring",
-            -- ear2 = "Drone earring",
-            -- back = "Amemet Mantle +1",
-            -- ring1 = "Solemn Ring",
-            -- ring2 = "Jalzahn's Ring",
-            -- feet = "Navarch's Bottes +2",
+    sets.magic_ws = set_combine(
+        sets.quickdraw, {
+            -- macc +14
+            feet="Lak. Bottes +1",
         }
-    );
+    )
 
-    sets.elemental['racc'] = set_combine(
-        sets.elemental['Standard'],
-        {
-            -- neck = "Spectacles",
-            -- ring1 = "Behemoth Ring",
-            -- ring2 = "Jalzahn's Ring",
-            -- feet = "Navarch's Bottes +2",
-        }
-    );
+    sets.wildfire = set_combine(sets.quickdraw, {});
 
-    sets.elemental['ws'] = set_combine(
-        sets.elemental['Standard'],
-        {
-            -- ring1 = "Spiral Ring",
-            -- ring2 = "Ruby Ring",
-            -- back = "Amemet Mantle +1",
-            -- feet = "Navarch's Bottes +2",
-        }
-    );
+    sets.leaden_salute = set_combine(sets.wildfire, {});
+
+    sets.wildfirebrew = set_combine(sets.wildfire, {});
 
 end
 
@@ -256,7 +265,7 @@ function precast(spell)
     end
 
     if '/weaponskill' == spell.prefix then
-        local chosenSet = sets.elemental.ratk
+        local chosenSet = sets.ranged_ws
 
         -- Handle all weaponskill stuff
         if table.contains(marksmanship_ws, spell.name) then
@@ -270,7 +279,7 @@ function precast(spell)
             local chosenAmmo = CheapAmmo;
 
             if 'Slug Shot' == spell.name then
-                chosenSet = sets.elemental.racc
+                chosenSet = sets.ranged_accuracy
                 chosenAmmo = SlugWinderAmmo
             elseif 'Wildfire' == spell.name then
                 if "Fire" == world.weather_element or
@@ -280,21 +289,21 @@ function precast(spell)
 
                 if buffactive['transcendency'] then
                     chosenAmmo = "Orichalc. Bullet";
-                    chosenSet = sets.elemental.WildFireBrew
+                    chosenSet = sets.wildfirebrew
                     if "Fire" == world.day_element then
                         MidCastGear.ring1 = 'Zodiac Ring'
                     end
                 else
-                    chosenSet = sets.elemental.WildFire
+                    chosenSet = sets.wildfire
                 end
             elseif 'Leaden Salute' == spell.name then
-                chosenSet = sets.elemental.WildFire
+                chosenSet = sets.leaden_salute
             else
                 chosenAmmo = HighDamAmmo
             end
             chosenSet = set_combine(chosenSet, { ammo = chosenAmmo });
         else
-            chosenSet = sets.elemental.ws;
+            chosenSet = sets.magic_ws;
         end
         equip(chosenSet);
     elseif '/range' == spell.prefix then
@@ -305,7 +314,7 @@ function precast(spell)
         -- Fall back to cheap ammo after shooting
         AfterCastGear.ammo = CheapAmmo
 
-        equip(set_combine(sets.elemental.ratk, { ammo = SlugWinderAmmo }));
+        equip(set_combine(sets.ranged_accuracy, { ammo = SlugWinderAmmo }));
     elseif '/magic' == spell.prefix  then
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
@@ -353,7 +362,7 @@ function precast(spell)
                 qdEquip.ring1 = 'Zodiac Ring';
             end
 
-            equip(set_combine(sets.elemental.QuickDraw, qdEquip))
+            equip(set_combine(sets.quickdraw, qdEquip))
         elseif 'Triple Shot' == spell.name then
             equip({ body = "Navarch's Frac +2" })
         end
@@ -368,14 +377,14 @@ function midcast(spell)
 end
 
 function aftercast(spell)
-    equip(set_combine(sets.elemental.Standard, AfterCastGear));
+    equip(set_combine(sets.base, AfterCastGear));
 end
 
 function status_change(new,old)
     if "Idle" == new then
-        equip(sets.elemental.Idle);
+        equip(sets.idle);
     elseif "Resting" == new then
-        equip(sets.elemental.resting);
+        equip(sets.resting);
     end
 end
 
@@ -391,24 +400,32 @@ end
 function self_command(command)
     if "updateammo" == command then
         for i, ammo in ipairs(CheapAmmoList) do
-            if player.inventory[ammo] or player.wardrobe[ammo] then
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
                 CheapAmmo = ammo;
             end
         end
         for i, ammo in ipairs(HighDamageAmmoList) do
-            if player.inventory[ammo] or player.wardrobe[ammo] then
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
                 HighDamAmmo = ammo;
             end
         end
         SlugWinderAmmo = HighDamAmmo;
         for i, ammo in ipairs(SlugWinderAmmoList) do
-            if player.inventory[ammo] or player.wardrobe[ammo] then
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
                 SlugWinderAmmo = ammo;
             end
         end
         QuickDrawAmmo = HighDamAmmo;
         for i, ammo in ipairs(QuickDrawAmmoList) do
-            if player.inventory[ammo] or player.wardrobe[ammo] then
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
                 QuickDrawAmmo = ammo;
             end
         end

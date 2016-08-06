@@ -53,17 +53,37 @@ function get_sets()
         sets.standard,
         {
             ammo="Incantor Stone",
-            head="Merlinic Hood",
-            body="Vanya Robe",
+            -- matk +50 (aug), macc +40 (aug)
+            head={
+                name="Merlinic Hood",
+                augments={
+                    'Mag. Acc.+25 "Mag.Atk.Bns."+25',
+                    'Magic Damage +2',
+                    'AGI+9',
+                    '"Mag.Atk.Bns."+15',
+                }
+            },
+            -- macc 28, matk 28
+            body="Jhakri Robe",
+            -- macc 48 (aug), matk 50 (aug)
             hands="Chironic Gloves",
+            -- macc 40 (aug), matk 13 (aug), mdam 13
             legs="Merlinic Shalwar",
-            feet="Medium's Sabots",
+            -- macc 36, matk 36
+            feet="Jhakri Pigaches +1",
+            -- macc 10, matk 10
             neck="Sanctity Necklace",
+            -- macc 4, matk 10
             waist="Refoccilation Stone",
+            -- matk 6
             left_ear="Hecate's Earring",
-            right_ear="Loquac. Earring",
-            left_ring="Tamas Ring",
-            right_ring="Janniston Ring",
+            -- matk 10
+            right_ear="Friomisi Earring",
+            -- macc 4
+            left_ring="Balrahn's Ring",
+            -- enmity -3
+            right_ring="Tamas Ring",
+            -- matk 10, mdam 10, elem skill +8
             back="Bookworm's Cape",
         }
     );
@@ -79,6 +99,33 @@ function get_sets()
     sets.magicburst = set_combine(
         sets.nuking,
         {
+            -- matk 8, mb bonus 10
+            neck="Mizu. Kubikazari",
+
+            head={
+                name="Merlinic Hood",
+                augments={
+                    'Mag. Acc.+18 "Mag.Atk.Bns."+18',
+                    'Magic burst mdg.+9%',
+                    '"Mag.Atk.Bns."+5',
+                }
+            },
+            hands={
+                name="Merlinic Dastanas",
+                augments={
+                    '"Mag.Atk.Bns."+19',
+                    'Magic burst mdg.+10%',
+                    'MND+10',
+                }
+            },
+            legs={
+                name="Merlinic Shalwar",
+                augments={
+                    'Mag. Acc.+20',
+                    'Magic burst mdg.+10%',
+                    '"Mag.Atk.Bns."+13',
+                }
+            },
             -- skillchain bonus
             right_ring="Mujin Band",
         }
@@ -228,29 +275,31 @@ function precast(spell)
                 MidcastGear = set_combine(sets.enhancing, {});
             end
         elseif "Elemental Magic" == spell.skill then
-            local extraGear = {}
-            local obi = get_obi(spell);
-            if obi ~= nil then
-                extraGear['waist'] = obi
+            local baseGear = sets.nuking
+            local extraGear = get_day_and_weather_gear(spell) or {}
+
+            if buffactive["Immanence"] then
+                baseGear = sets.skillchain
+            elseif auto_sc.in_mb_window(spell) then
+                baseGear = sets.magicburst
             end
+
+            -- +20% extra damage from Ebullience
             if buffactive["Ebullience"] then
-                precast_extra.head = "Savant's Bonnet +2";
+                extraGear.head = "Savant's Bonnet +2";
             end
             -- Straight 10% damage buff if we have klimaform active
             if buffactive["Klimaform"] then
                 extraGear.feet = "Savant's Loafers +2"
             end
+
             MidcastGear = set_combine(
                 sets.nuking,
                 extraGear,
                 kirstin_staves.nuking[spell.element]
             );
         elseif "Enfeebling Magic" == spell.skill then
-            local extraGear = {}
-            local obi = get_obi(spell);
-            if obi ~= nil then
-                extraGear['waist'] = obi
-            end
+            local extraGear = get_day_and_weather_gear(spell) or {}
 
             -- Replace dia 2 with bio 2 when subbing BLM (for pulling)
             if "Dia II" == spell.english and "BLM" == player.sub_job then
@@ -259,7 +308,7 @@ function precast(spell)
                 return;
             end
             if buffactive["Ebullience"] then
-                precast_extra.head = "Savant's Bonnet +2";
+                extraGear.head = "Savant's Bonnet +2";
             end
             if "BlackMagic" == spell.type then
                 MidcastGear = set_combine(

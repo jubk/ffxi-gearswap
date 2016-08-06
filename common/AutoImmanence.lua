@@ -95,14 +95,13 @@ local ANNOUNCE_END = { method='announce_end' }
 local USE_IMMANENCE = {
     method='use_immanence',
     needs_forced_delay=true,
-    advance_delay=1,
 }
 local CAST_SPELL = function(spellname)
     return {
         method='cast_spell',
         spell=spellname,
         needs_forced_delay=true,
-        advance_delay=2,
+        on_finish='on_spell_finish',
     }
 end
 local FINISH = { method='finish' }
@@ -168,19 +167,60 @@ SKILLCHAINS["blizzard"]=SKILLCHAINS["induration"]
 SKILLCHAINS["thunder"]=SKILLCHAINS["impaction"]
 SKILLCHAINS["fire"]=SKILLCHAINS["liquefaction"]
 
+local SPELL_FORCED_DELAY = 2.3
+local JA_FORCED_DELAY = 0
+
+local MIN_SC_WINDOW = 3
+local MAX_SC_WINDOW = 10
+
 local alias_initialized = false
+local spell_cache = {}
 
+local res = require("resources")
 
-local AutoImmanence = function()
+local calculate_fast_cast = function(options)
+    local job_and_gear = options['gear_fastcast'] or 0
+
+    -- 10% gear fastcast might be specified as 10 instead of 0.1. If so
+    -- convert it.
+    if job_and_gear > 1 then
+        job_and_gear = job_and_gear * 0.01
+    end
+
+    if player.sub_job == "RDM" then
+        if player.sub_job_level >= 35 then
+            job_and_gear = job_and_gear + 0.15
+        elseif player.sub_job_level >= 15 then
+            job_and_gear = job_and_gear + 0.1
+        end
+    end
+
+    local grimoire = 0.1
+    if options['uses_academics_loafers'] then
+        grimoire = grimoire + 0.05
+    elseif options['uses_scholars_loafers'] then
+        grimoire = grimoire + 0.08
+    end
+    if options['uses_pedagogy_mortarboard'] then
+        grimoire = grimoire + 0.1
+    end
+
+    return 1 * (1 - job_and_gear) * (1 - grimoire)
+end
+
+local AutoImmanence = function(options)
 
     local index = -1
     local skillchain = nil
     local expected_next = ''
     local cc = nil
-    local advance_delay = 0
-    local currently_delayed = 0
+    local forced_delay = 0
     local spell_count = 0
     local injected_command = nil
+    local last_spell_cast_time = nil
+    local last_action_finished = os.clock()
+    local last_skillchain_finished = os.clock() - 10
+    local fastcast = calculate_fast_cast(options or {})
 
     local public = {
         -- Translations
@@ -230,21 +270,18 @@ local AutoImmanence = function()
         end
         
         if (next_action.needs_forced_delay and
-            advance_delay and
-            advance_delay > 0 and
-            currently_delayed < advance_delay) then
+            forced_delay and
+            forced_delay > 0) then
 
-            -- Start corouting to advance after advance_delay seconds
-            local delay_fn = function()
-                currently_delayed = advance_delay
-                public.advance()
+            local dt = os.clock() - last_action_finished
+
+            if (dt + 0.05) < forced_delay then
+                -- Start corouting to advance after forced_delay seconds
+                coroutine.schedule(public.advance, forced_delay - dt)
+                return
             end
-            coroutine.schedule(delay_fn, advance_delay)
-
-            return
         end
 
-        currently_delayed = 0
         index = index + 1
 
         local method = public[next_action.method]
@@ -262,21 +299,18 @@ local AutoImmanence = function()
         end
 
         if (action.needs_forced_delay and
-            advance_delay and
-            advance_delay > 0 and
-            currently_delayed < advance_delay) then
+            forced_delay and
+            forced_delay > 0) then
 
-            -- Start corouting to advance after advance_delay seconds
-            local delay_fn = function()
-                currently_delayed = advance_delay
-                public.resubmit()
+            local dt = os.clock() - last_action_finished
+
+            if dt < forced_delay then
+                add_to_chat(128, "Forced delay: " .. (forced_delay - dt))
+                -- Start corouting to advance after forced_delay seconds
+                coroutine.schedule(public.advance, forced_delay - dt)
+                return
             end
-            coroutine.schedule(delay_fn, advance_delay)
-
-            return
         end
-
-        currently_delayed = 0
 
         local method = public[action.method]
         if method then
@@ -327,9 +361,9 @@ local AutoImmanence = function()
         skillchain = nil
         index = -1
         expected_next = ''
-        advance_delay = 0
-        currently_delayed = 0
+        forced_delay = 0
         spell_count = 0
+        last_spell_cast_time = nil
 
         if cc and cc.timer then
             coroutine.close(cc.timer)
@@ -340,6 +374,7 @@ local AutoImmanence = function()
 
     public.finish = function()
         public.reset()
+        last_skillchain_finished = os.clock()
     end
 
     public.abort = function(message)
@@ -371,13 +406,8 @@ local AutoImmanence = function()
         if public.check_interrupt(spell) then
             return
         end
-        -- Adjust total timeout to fit with casting time of spell
-        if cc and spell.cast_time and not cc.cast_time_set then
-            new_timeout = spell.cast_time + cc.time_elapsed + 2
-            if new_timeout < cc.timeout then
-                cc.timeout = new_timeout
-            end
-            cc.cast_time_set = true
+        if cc then
+            cc.gearswap_spell = spell
         end
     end
 
@@ -400,6 +430,18 @@ local AutoImmanence = function()
         public.finish_command()
     end
 
+    public.check_command_timeout = function()
+        if not cc or cc.finished then
+            return false
+        end
+        if (os.clock() - cc.started) > cc.timeout then
+            public.abort(
+                "Timeout exeeded (" .. cc.timeout .. "): " .. cc.input
+            )
+            return true
+        end
+        return false
+    end
 
     public.execute_command = function(cmd, max_delay, timeout)
         if cc ~= nil then
@@ -410,26 +452,15 @@ local AutoImmanence = function()
                 "still active"
             )
         end
-        local ticker
-        ticker = function()
-            if cc then
-                -- advance time
-                cc.time_elapsed = cc.time_elapsed + 0.1
-
-                if cc.timeout and cc.time_elapsed >= cc.timeout then
-                    public.abort("Timeout exeeded")
-                else
-                    -- Set up next tic
-                    cc.timer = coroutine.schedule(ticker, 0.1)
-                end
-            end
-        end
         cc = {
+            started=os.clock(),
             time_elapsed=0,
             input=cmd,
-            timer=coroutine.schedule(ticker, 0.1),
             max_wait=max_wait,
             timeout=timeout,
+            timer=coroutine.schedule(
+                public.check_command_timeout, timeout + 0.01
+            ),
         }
         -- send the actual command
         send_command(cc.input)
@@ -438,16 +469,23 @@ local AutoImmanence = function()
 
     public.inject_command = function(cmd, max_delay, timeout, grace_delay)
         public.execute_command(cmd, max_delay, timeout)
-        advance_delay = grace_delay
+        forced_delay = grace_delay
         cc.injected = true
     end
 
     public.retry_command = function()
         if cc then
-            if cc.max_delay and cc.max_delay > cc.time_elapsed then
-                public.abort("Waited too long while retrying")
+            local time_elapsed = os.clock() - cc.started
+            if cc.max_delay and cc.max_delay > time_elapsed then
+                public.abort(
+                    "Waited too long while retrying " .. cc.input
+                )
             else
-                send_command(cc.input)
+                add_to_chat(128, "Retrying " .. cc.input)
+                local retry_fn = function()
+                    send_command(cc.input)
+                end
+                coroutine.schedule(retry_fn, 0.3)
             end
         else
             public.abort("No current command while trying to retry")
@@ -456,10 +494,13 @@ local AutoImmanence = function()
 
     public.finish_command = function()
         if cc then
-            if cc.timer then
-                coroutine.close(cc.timer)
-            end
+            cc.finished = true
+            last_action_finished = os.clock()
             local injected = cc.injected
+            local action = public.get_action()
+            if action.on_finish then
+                public[action.on_finish](cc)
+            end
             cc = nil
             expected_next = ''
             if injected then
@@ -471,6 +512,83 @@ local AutoImmanence = function()
     end
 
     public.use_immanence = function()
+        -- We can not completely rely on buffactive, so check if we recently
+        -- casted a spell as well.
+        if (buffactive["Immanence"] and
+            not (
+                last_spell_cast_time ~= nil and
+                (os.clock() - last_spell_cast_time) <= 3
+            )) then
+            forced_delay = 0
+            public.advance()
+        else
+            public.execute_command("input /ja Immanence <me>", 1, 3)
+            expected_next = "Immanence"
+            forced_delay = JA_FORCED_DELAY
+        end
+    end
+
+    public.get_spellinfo = function(spellname)
+        local spell = spell_cache[spellname:lower()]
+
+        if spell == nil then
+            spell = res.spells:with('name', spellname)
+
+            if not spell then
+                spell = res.spells:with('name', spellname:ucfirst())
+            end
+
+            spell_cache[spellname:lower()] = spell or ''
+        end
+
+        return spell
+    end
+
+    public.cast_spell = function()
+        local action = public.get_action()
+        local spell = public.get_spellinfo(action.spell)
+        local cast_time = spell.cast_time * fastcast
+        local since_last_spell = nil
+        local max_delay = 1
+
+        if last_spell_cast_time ~= nil then
+            since_last_spell = os.clock() - last_spell_cast_time
+        end
+
+        -- Delay spell until SC window is open
+        if since_last_spell ~= nil and
+           (since_last_spell + cast_time) < MIN_SC_WINDOW then
+            local sc_delay = MIN_SC_WINDOW - since_last_spell - cast_time
+            coroutine.schedule(public.resubmit, sc_delay + 0.01)
+            return
+        end
+
+
+        cmd = 'input /ma "' .. action.spell .. '" <t>'
+        if since_last_spell ~= nil then
+            max_delay = MAX_SC_WINDOW - since_last_spell - cast_time - 0.5
+        end
+
+        public.execute_command(
+            cmd, max_delay, MAX_SC_WINDOW - (since_last_spell or 0)
+        )
+        spell_count = spell_count + 1
+        expected_next = action.spell
+        forced_delay = SPELL_FORCED_DELAY
+    end
+
+    public.on_spell_finish = function(cc)
+        local spell = cc.gearswap_spell or { cast_time=0 }
+        -- It's a bit fuzzy when the spell ends, so we add a factor of the
+        -- spells cast time to the finishing time.
+        last_spell_cast_time = os.clock() + (spell.cast_time * 0.3)
+    end
+
+    public.start_skillchain = function(sc)
+        if skillchain then
+            return public.abort("Already have active skillchain, aborting it")
+        end
+
         -- Enable dark arts if it is not up
         if not (buffactive["Dark Arts"] or buffactive["Addendum: Black"]) then
             local recasts = windower.ffxi.get_ability_recasts()
@@ -479,38 +597,11 @@ local AutoImmanence = function()
             end
 
             expected_next = "Dark Arts"
-            return public.inject_command(
-                'input /ja "Dark Arts" <me>', 1, 2, 1
-            )
+            send_command('input /ja "Dark Arts" <me>')
+            add_to_chat(128, "Dark Arts not up, enabling it")
+            return
         end
 
-        if buffactive["Immanence"] then
-            advance_delay = 0
-            public.advance()
-        else
-            public.execute_command("input /ja Immanence <me>", 1, 2)
-            expected_next = "Immanence"
-            advance_delay = public.get_action().advance_delay
-        end
-    end
-
-    public.cast_spell = function()
-        local action = public.get_action()
-        cmd = 'input /ma "' .. action.spell .. '" <t>'
-        -- 6 seconds timeout is a default and will be adjusted with actual
-        -- casting time in precast method.
-        public.execute_command(cmd, 1, 6)
-        spell_count = spell_count + 1
-        local msg = skillchain.name .. " skillchain spell #" .. spell_count
-        send_command("input /party " .. msg)
-        expected_next = action.spell
-        advance_delay = action.advance_delay
-    end
-
-    public.start_skillchain = function(sc)
-        if skillchain then
-            return public.abort("Already have active skillchain, aborting it")
-        end
         skillchain = sc
         index = 1
         local action = public.get_action()
@@ -547,6 +638,12 @@ local AutoImmanence = function()
     if not alias_initialized then
         send_command("alias sc gs c sc")
         alias_initialized = true
+    end
+
+    public.in_mb_window = function(spell)
+        local since_skillchain = os.clock() - last_skillchain_finished
+        local cast_time = spell.cast_time * fastcast
+        return (since_skillchain + cast_time) <= MAX_SC_WINDOW
     end
 
     return public
