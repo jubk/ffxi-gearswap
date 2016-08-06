@@ -168,10 +168,12 @@ function get_sets()
         sets.base,
         {
             head="Merlinic Hood",
-            body="Vanya Robe",
+            -- macc 28, matk 28
+            body="Jhakri Robe",
             hands="Psycloth Manillas",
             legs="Merlinic Shalwar",
-            feet="Manabyss Pigaches",
+            -- macc 36, matk 36
+            feet="Jhakri Pigaches +1",
             neck="Sanctity Necklace",
             waist="Refoccilation Stone",
             left_ear="Hecate's Earring",

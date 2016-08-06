@@ -113,8 +113,17 @@ function get_sets()
     sets.nuking = set_combine(
         sets.standard,
         {
-            -- matk +28, macc +38 (aug), mdam+6
-            head = "Merlinic Hood",
+            -- matk +47, macc +52 (aug)
+            head={
+                name="Merlinic Hood",
+                augments={
+                    'Mag. Acc.+22 "Mag.Atk.Bns."+22',
+                    'Damage taken-2%',
+                    'CHR+1',
+                    'Mag. Acc.+15',
+                    '"Mag.Atk.Bns."+15',
+                }
+            },
 
             -- matk + 39, macc +14, mdam +10
             body = "Witching Robe",
@@ -128,8 +137,16 @@ function get_sets()
             -- matk + 10
             right_ear="Friomisi Earring",
 
-            -- int +28, matk +40, haste +3%
-            legs="Merlinic Shalwar",
+            -- int +43, macc 52, matk +53, haste +5%
+            legs={
+                name="Merlinic Shalwar",
+                augments={
+                    'Mag. Acc.+23 "Mag.Atk.Bns."+23',
+                    '"Conserve MP"+3',
+                    'Mag. Acc.+14',
+                    '"Mag.Atk.Bns."+15',
+                }
+            },
 
             -- macc +2, matk +4
             left_ring="Strendu Ring",
@@ -137,12 +154,14 @@ function get_sets()
             -- macc +3, matk +3
             right_ring="Arvina Ringlet +1",
 
-            -- TODO: Amalric nails/Vexed Nails/9mill
-            -- matk +7, macc +7, (aug)matk +23
-            feet="Helios Boots",
+            -- macc 36, matk 36
+            feet="Jhakri Pigaches +1",
 
             -- matk 10, macc 10
             neck="Sanctity Necklace",
+
+            -- macc 20, matk 10, mdam 20, int+20
+            back="Lugh's Cape",
         }
     );
 
@@ -163,11 +182,34 @@ function get_sets()
     sets.magicburst = set_combine(
         sets.nuking,
         {
+            -- SCH staff is mb 10
+
+            -- matk 13, macc 13, mb 13
+            head={
+                name="Merlinic Hood",
+                augments={
+                    'Pet: DEX+8',
+                    'Pet: Mag. Acc.+24',
+                    'Magic burst mdg.+13%',
+                    'Mag. Acc.+13 "Mag.Atk.Bns."+13',
+                }
+            },
+
             -- matk 8, mb bonus 10
             neck="Mizu. Kubikazari",
 
-            -- mb bonus augment (4%)
+            -- mb bonus augment (10%), matk 23, macc 9
             hands="Merlinic Dastanas",
+
+            legs={
+                name="Merlinic Shalwar",
+                augments={
+                    'Mag. Acc.+27',
+                    'Magic burst mdg.+8%',
+                    'VIT+7',
+                    '"Mag.Atk.Bns."+2',
+                }
+            },
 
             -- skillchain bonus
             right_ring="Mujin Band",
@@ -334,7 +376,7 @@ function get_sets()
     Grimoire = nil;
 
     auto_sc = AutoImmanence({
-        gear_fastcast=32,
+        gear_fastcast=37,
         uses_academics_loafers=true,
         uses_pedagogy_mortarboard=true,
     })
@@ -460,7 +502,8 @@ function precast(spell)
 
             if buffactive["Immanence"] then
                 baseGear = sets.skillchain
-            else
+            elseif auto_sc.in_mb_window(spell) then
+                baseGear = sets.magicburst
             end
             -- +20% extra damage from Ebullience
             if buffactive["Ebullience"] then
@@ -485,7 +528,7 @@ function precast(spell)
                 return;
             end
             if buffactive["Ebullience"] then
-                precast_extra.head = "Arbatel Bonnet";
+                extraGear.head = "Arbatel Bonnet";
             end
 
             -- This should give more acc, even on light arts, as it gives
@@ -596,5 +639,3 @@ function status_change(new,old)
         equip(sets.resting);
     end
 end
-
-

@@ -394,24 +394,32 @@ end
 function self_command(command)
     if "updateammo" == command then
         for i, ammo in ipairs(CheapAmmoList) do
-            if player.inventory[ammo] or player.wardrobe[ammo] then
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
                 CheapAmmo = ammo;
             end
         end
         for i, ammo in ipairs(HighDamageAmmoList) do
-            if player.inventory[ammo] or player.wardrobe[ammo] then
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
                 HighDamAmmo = ammo;
             end
         end
         SlugWinderAmmo = HighDamAmmo;
         for i, ammo in ipairs(SlugWinderAmmoList) do
-            if player.inventory[ammo] or player.wardrobe[ammo] then
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
                 SlugWinderAmmo = ammo;
             end
         end
         QuickDrawAmmo = HighDamAmmo;
         for i, ammo in ipairs(QuickDrawAmmoList) do
-            if player.inventory[ammo] or player.wardrobe[ammo] then
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
                 QuickDrawAmmo = ammo;
             end
         end

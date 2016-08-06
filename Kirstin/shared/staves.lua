@@ -20,14 +20,14 @@ kirstin_staves = {
         Water = { main = "Keraunos", sub = "Niobid Strap" },
     },
     fastcast = {
-        Ice = { main = "Marin Staff +1", sub = "Niobid Strap" },
-        Dark = { main = "Marin Staff +1", sub = "Niobid Strap" },
-        Lightning = { main = "Marin Staff +1", sub = "Niobid Strap" },
-        Light = { main = "Marin Staff +1", sub = "Niobid Strap" },
-        Wind = { main = "Marin Staff +1", sub = "Niobid Strap" },
-        Fire = { main = "Marin Staff +1", sub = "Niobid Strap" },
-        Earth = { main = "Marin Staff +1", sub = "Niobid Strap" },
-        Water = { main = "Marin Staff +1", sub = "Niobid Strap" },
+        Ice = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Dark = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Lightning = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Light = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Wind = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Fire = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Earth = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Water = { main = "Marin Staff +1", sub = "Clerisy Strap" },
     },
     healing = { main = "Ababinili +1", sub = "Achaq Grip" }
 }

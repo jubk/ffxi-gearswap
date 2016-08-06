@@ -219,6 +219,7 @@ local AutoImmanence = function(options)
     local injected_command = nil
     local last_spell_cast_time = nil
     local last_action_finished = os.clock()
+    local last_skillchain_finished = os.clock() - 10
     local fastcast = calculate_fast_cast(options or {})
 
     local public = {
@@ -373,6 +374,7 @@ local AutoImmanence = function(options)
 
     public.finish = function()
         public.reset()
+        last_skillchain_finished = os.clock()
     end
 
     public.abort = function(message)
@@ -429,7 +431,10 @@ local AutoImmanence = function(options)
     end
 
     public.check_command_timeout = function()
-        if cc and (os.clock() - cc.started) > cc.timeout then
+        if not cc or cc.finished then
+            return false
+        end
+        if (os.clock() - cc.started) > cc.timeout then
             public.abort(
                 "Timeout exeeded (" .. cc.timeout .. "): " .. cc.input
             )
@@ -489,9 +494,7 @@ local AutoImmanence = function(options)
 
     public.finish_command = function()
         if cc then
-            if cc.timer then
-                coroutine.close(cc.timer)
-            end
+            cc.finished = true
             last_action_finished = os.clock()
             local injected = cc.injected
             local action = public.get_action()
@@ -635,6 +638,12 @@ local AutoImmanence = function(options)
     if not alias_initialized then
         send_command("alias sc gs c sc")
         alias_initialized = true
+    end
+
+    public.in_mb_window = function(spell)
+        local since_skillchain = os.clock() - last_skillchain_finished
+        local cast_time = spell.cast_time * fastcast
+        return (since_skillchain + cast_time) <= MAX_SC_WINDOW
     end
 
     return public
