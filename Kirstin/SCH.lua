@@ -81,8 +81,8 @@ function get_sets()
             right_ear="Friomisi Earring",
             -- macc 4
             left_ring="Balrahn's Ring",
-            -- enmity -3
-            right_ring="Tamas Ring",
+            -- matk 4
+            right_ring="Acumen Ring",
             -- matk 10, mdam 10, elem skill +8
             back="Bookworm's Cape",
         }
@@ -91,6 +91,9 @@ function get_sets()
     sets.skillchain = set_combine(
         sets.nuking,
         {
+            -- Immanence: +10% damage
+            hands="Arbatel Bracers",
+
             -- skillchain bonus
             right_ring="Mujin Band",
         }
@@ -264,10 +267,11 @@ function precast(spell)
                 extraGear
             );
 
-            -- Use Savant's Bonnet +2 during rapture
+            -- Use Arbatel Bonnet during rapture
             if buffactive["Rapture"] then
-                precast_extra.head = "Savant's Bonnet +2";
+                precast_extra.head = "Arbatel Bonnet";
             end
+
         elseif "Enhancing Magic" == spell.skill then
             if "Stoneskin" == spell.name then
                 MidcastGear = set_combine(sets.stoneskin, {});
@@ -286,11 +290,11 @@ function precast(spell)
 
             -- +20% extra damage from Ebullience
             if buffactive["Ebullience"] then
-                extraGear.head = "Savant's Bonnet +2";
+                extraGear.head = "Arbatel Bonnet";
             end
             -- Straight 10% damage buff if we have klimaform active
             if buffactive["Klimaform"] then
-                extraGear.feet = "Savant's Loafers +2"
+                extraGear.feet = "Arbatel Loafers"
             end
 
             MidcastGear = set_combine(
@@ -308,7 +312,7 @@ function precast(spell)
                 return;
             end
             if buffactive["Ebullience"] then
-                extraGear.head = "Savant's Bonnet +2";
+                extraGear.head = "Arbatel Bonnet";
             end
             if "BlackMagic" == spell.type then
                 MidcastGear = set_combine(
@@ -346,6 +350,9 @@ function precast(spell)
             precast_extra.feet = "Argute Loafers";
         end
 
+        if (buffactive["Perpetuance"] or buffactive["Immanence"]) then
+            MidcastGear.hands = "Arbatel Bracers";
+        end
 
         equip(set_combine(
             sets.fastcast,

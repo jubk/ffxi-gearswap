@@ -13,13 +13,13 @@ end
 function get_sets()
     local base = set_combine({
             range="Dunna",
-            head="Hike Khat +1",
+            head="Azimuth Hood +1",
             body="Vrikodara Jupon",
             hands="Merlinic Dastanas",
             legs="Assiduity Pants",
-            feet="Serpentes Sabots",
+            feet="Geo. Sandals +1",
             neck="Sanctity Necklace",
-            waist="Siegel Sash",
+            waist="Refoccilation Stone",
             left_ear="Mendi. Earring",
             right_ear="Moonshade Earring",
             left_ring="Fortified Ring",
@@ -27,6 +27,7 @@ function get_sets()
             back="Lifestream Cape",
         }
     )
+    sets.base = base
 
     sets.idle = set_combine(base, {
         right_ear="Moonshade Earring",
@@ -167,33 +168,59 @@ function get_sets()
     sets.nuking = set_combine(
         sets.base,
         {
-            head="Merlinic Hood",
+            -- matk +50 (aug), macc +40 (aug)
+            head={
+                name="Merlinic Hood",
+                augments={
+                    'Mag. Acc.+25 "Mag.Atk.Bns."+25',
+                    'Magic Damage +2',
+                    'AGI+9',
+                    '"Mag.Atk.Bns."+15',
+                }
+            },
             -- macc 28, matk 28
             body="Jhakri Robe",
-            hands="Psycloth Manillas",
+            -- macc 37, matk 37
+            hands="Jhakri Cuffs +1",
+            -- macc 40 (aug), matk 13 (aug), mdam 13
             legs="Merlinic Shalwar",
             -- macc 36, matk 36
             feet="Jhakri Pigaches +1",
+            -- macc 10, matk 10
             neck="Sanctity Necklace",
+            -- macc 4, matk 10
             waist="Refoccilation Stone",
+            -- matk 6
             left_ear="Hecate's Earring",
-            right_ear="Loquac. Earring",
-            left_ring="Tamas Ring",
-            right_ring="Janniston Ring",
+            -- matk 10
+            right_ear="Friomisi Earring",
+            -- macc 4
+            left_ring="Balrahn's Ring",
+            -- MB bonus
+            right_ring="Mujin Band",
         }
     );
 
     sets.geomancy = set_combine(
         sets.base,
         {
-            -- Geomancy +5
-            head="Hike Khat +1",
+            -- Geomancy +15
+            head="Azimuth Hood +1",
+            -- Geomancy +12
+            body="Bagua Tunic +1",
             -- Geomancy +15
             hands="Geomancy Mitaines",
             -- Geomancy +10
             neck="Deceiver's Torque",
             -- Geomancy +5
-            back="Lifestream Cape",
+            back={
+                name="Lifestream Cape",
+                augments={
+                        'Geomancy Skill +10',
+                        'Indi. eff. dur. +11',
+                        'Pet: Damage taken -5%',
+                }
+            },
         }
     )
     

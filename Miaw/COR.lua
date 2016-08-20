@@ -112,8 +112,7 @@ function get_sets()
     }
 
     -- sets
-    sets.elemental = {}
-    sets.elemental['Standard'] = {
+    sets.base = {
         head = "Laksamana's Hat +1",
         neck = "Stoicheion medal",
         ear1 = "Volley Earring",
@@ -129,8 +128,8 @@ function get_sets()
         legs = "Lak. Trews +1",
         feet = "Vanir Boots",
     };
-    sets.elemental['QuickDraw'] = set_combine(
-        sets.elemental['Standard'],
+    sets.quickdraw = set_combine(
+        sets.base,
         {
             neck = "Stoicheion medal",
             left_ear="Friomisi Earring",
@@ -144,12 +143,15 @@ function get_sets()
             waist = "Aquiline Belt",
             -- +20% damage from matching element for 15 seconds
             feet = "Chasseur's Bottes",
+            -- matk +14, macc +10
             back="Gunslinger's Cape",
+            -- AGI+20. macc +20, mdam +20
+            -- back="Camulus's Mantle",
         }
     );
 
-    sets.elemental['WildFire'] = set_combine(
-        sets.elemental['QuickDraw'],
+    sets.wildfire = set_combine(
+        sets.quickdraw,
         {
             head = "Imp. Wing Hair. +1",
             -- hands = "Schutzen Mittens",
@@ -157,51 +159,57 @@ function get_sets()
             ring2 = "Arvina Ringlet +1",
             -- TODO: Adhemar gamashes/Vexed Gamashes/10mill
             feet = "Vanir Boots",
+            -- AGI+20. macc +20, mdam +20, wsdam +10
+            back="Camulus's Mantle",
         }
     );
 
-    sets.elemental['WildFireBrew'] = set_combine(
-        sets.elemental['QuickDraw'],
+    sets.wildfirebrew = set_combine(
+        sets.quickdraw,
         {
             ring1 = "Demon's Ring",
             ring2 = "Strendu Ring",
+            -- AGI+20. macc +20, mdam +20, wsdam +10
+            back="Camulus's Mantle",
         }
     );
 
-    sets.elemental['Idle'] = set_combine(
-        sets.elemental['Standard'], {
+    sets.idle = set_combine(
+        sets.base, {
             feet = "Hermes' Sandals",
         }
     );
 
-    sets.elemental['Resting'] = set_combine(
-        sets.elemental['Standard'], {}
-    );
+    sets.resting = set_combine(sets.base, {});
 
-    sets.elemental['ratk'] = set_combine(
-        sets.elemental['Standard'],
+    sets.ranged_accuracy = set_combine(
+        sets.base,
         {
-            ear1 = "Drone earring",
-            ear2 = "Drone earring",
-            back = "Amemet Mantle +1",
-            ring1 = "Solemn Ring",
-            ring2 = "Jalzahn's Ring",
-            feet = "Chasseur's Bottes",
+            -- racc +42
+            head="Meghanada Visor +1",
+            -- racc +44
+            body="Meg. Cuirie +1",
+            -- racc +41
+            hands="Meg. Gloves +1",
+            -- racc +43
+            legs="Meg. Chausses +1",
+            -- racc +40
+            feet="Meg. Jam. +1",
+            -- racc +10
+            neck="Sanctity Necklace",
+            -- racc +10
+            waist="Yemaya Belt",
+            -- racc +15
+            left_ring="Cacoethic Ring",
+            -- racc +20
+            back="Gunslinger's Cape",
         }
     );
 
-    sets.elemental['racc'] = set_combine(
-        sets.elemental['Standard'],
-        {
-            neck = "Spectacles",
-            ring1 = "Behemoth Ring",
-            ring2 = "Jalzahn's Ring",
-            feet = "Chasseur's Bottes",
-        }
-    );
+    sets.ranged_attack = set_combine(sets.ranged_accuracy,{});
 
-    sets.elemental['ws'] = set_combine(
-        sets.elemental['Standard'],
+    sets.ws = set_combine(
+        sets.base,
         {
             feet = "Chasseur's Bottes",
         }
@@ -252,7 +260,7 @@ function precast(spell)
     end
 
     if '/weaponskill' == spell.prefix then
-        local chosenSet = sets.elemental.ratk
+        local chosenSet = sets.ranged_attack
 
         -- Handle all weaponskill stuff
         if table.contains(marksmanship_ws, spell.name) then
@@ -266,7 +274,7 @@ function precast(spell)
             local chosenAmmo = CheapAmmo;
 
             if 'Slug Shot' == spell.name then
-                chosenSet = sets.elemental.racc
+                chosenSet = sets.ranged_accuracy
                 chosenAmmo = SlugWinderAmmo
             elseif 'Wildfire' == spell.name then
                 if "Fire" == world.weather_element or
@@ -276,21 +284,21 @@ function precast(spell)
 
                 if buffactive['transcendency'] then
                     chosenAmmo = "Orichalc. Bullet";
-                    chosenSet = sets.elemental.WildFireBrew
+                    chosenSet = sets.wildfirebrew
                     if "Fire" == world.day_element then
                         MidCastGear.ring1 = 'Zodiac Ring'
                     end
                 else
-                    chosenSet = sets.elemental.WildFire
+                    chosenSet = sets.wildfire
                 end
             elseif 'Leaden Salute' == spell.name then
-                chosenSet = sets.elemental.WildFire
+                chosenSet = sets.wildfire
             else
                 chosenAmmo = HighDamAmmo
             end
             chosenSet = set_combine(chosenSet, { ammo = chosenAmmo });
         else
-            chosenSet = sets.elemental.ws;
+            chosenSet = sets.ws;
         end
         equip(chosenSet);
     elseif '/range' == spell.prefix then
@@ -301,7 +309,7 @@ function precast(spell)
         -- Fall back to cheap ammo after shooting
         AfterCastGear.ammo = CheapAmmo
 
-        equip(set_combine(sets.elemental.ratk, { ammo = SlugWinderAmmo }));
+        equip(set_combine(sets.ranged_attack, { ammo = SlugWinderAmmo }));
     elseif '/magic' == spell.prefix  then
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
@@ -350,7 +358,7 @@ function precast(spell)
                 qdEquip.ring1 = 'Zodiac Ring';
             end
 
-            equip(set_combine(sets.elemental.QuickDraw, qdEquip))
+            equip(set_combine(sets.quickdraw, qdEquip))
         elseif 'Triple Shot' == spell.name then
             equip({ body = "Navarch's Frac +2" })
         elseif 'Random Deal' == spell.english then
@@ -368,17 +376,17 @@ end
 
 function aftercast(spell)
     if "Idle" == player.status then
-        equip(set_combine(sets.elemental.Idle, AfterCastGear));
+        equip(set_combine(sets.idle, AfterCastGear));
     else
-        equip(set_combine(sets.elemental.Standard, AfterCastGear));
+        equip(set_combine(sets.base, AfterCastGear));
     end
 end
 
 function status_change(new,old)
     if "Idle" == new then
-        equip(sets.elemental.Idle);
+        equip(sets.idle);
     elseif "Resting" == new then
-        equip(sets.elemental.resting);
+        equip(sets.resting);
     end
 end
 

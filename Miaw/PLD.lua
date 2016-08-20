@@ -144,7 +144,7 @@ function get_sets()
             legs="Carmine Cuisses"
         }
     );
-    sets.ws['magic'] = set_combine(
+    sets.ws.magic = set_combine(
         sets.ws.base, {
             -- mdam +10
             ammo="Ghastly Tathlum",
@@ -160,15 +160,6 @@ function get_sets()
             right_ear="Friomisi Earring",
             -- macc +3, matk +3
             left_ring="Arvina Ringlet +1",
-            -- matk +3
-            right_ring={
-                name="Demon's Ring",
-                augments={
-                    '"Mag.Atk.Bns."+3',
-                    '"Resist Curse"+3',
-                    '"Resist Blind"+2',
-                }
-            },
             -- macc +5, matk +10
             back="Izdubar Mantle",
         }
