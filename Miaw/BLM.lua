@@ -476,13 +476,11 @@ end
 
 function midcast(spell)
     cancel_buffs(spell);
-    auto_sc.midcast(spell)
     equip(MidcastGear);
     MidcastGear = {};
 end
 
 function aftercast(spell)
-    auto_sc.aftercast(spell)
     equip(set_combine(sets.idle, AfterCastGear));
     AfterCastGear = {};
 end
