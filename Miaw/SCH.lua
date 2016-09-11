@@ -188,9 +188,9 @@ function get_sets()
     sets.magicburst = set_combine(
         sets.nuking,
         {
-            -- SCH staff is mb 10
+            -- SCH staff is mbdam 10
 
-            -- matk 13, macc 13, mb 13
+            -- matk 13, macc 13, mb 13%
             head={
                 name="Merlinic Hood",
                 augments={
@@ -201,12 +201,13 @@ function get_sets()
                 }
             },
 
-            -- matk 8, mb bonus 10
+            -- matk 8, mb bonus 10%
             neck="Mizu. Kubikazari",
 
-            -- mb bonus augment (10%), matk 23, macc 9
+            -- mb 10%, matk 23, macc 9
             hands="Merlinic Dastanas",
 
+            -- mb 10%
             legs={
                 name="Merlinic Shalwar",
                 augments={
@@ -217,7 +218,7 @@ function get_sets()
                 }
             },
 
-            -- skillchain bonus
+            -- skillchain bonus, mb II 5%
             right_ring="Mujin Band",
         }
     );
