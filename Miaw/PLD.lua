@@ -67,8 +67,8 @@ function get_sets()
         {
             -- cast time -2, recast -1
             ammo = "Incantor Stone",
-            -- fast cast +6
-            head="Odyssean Helm",
+            -- fast cast +12
+            head="Carmine Mask",
             -- fast cast +4
             neck = "Voltsurge Torque",
             -- Fast cast +2

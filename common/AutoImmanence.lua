@@ -96,6 +96,14 @@ local USE_IMMANENCE = {
     method='use_immanence',
     needs_forced_delay=true,
 }
+local USE_EBULLIENCE = {
+    method='use_ebullience',
+    needs_forced_delay=true,
+}
+local USE_ALACRITY = {
+    method='use_alacrity',
+    needs_forced_delay=true,
+}
 local CAST_SPELL = function(spellname)
     return {
         method='cast_spell',
@@ -160,10 +168,12 @@ local SKILLCHAINS = {
 }
 SKILLCHAINS["stone"]=SKILLCHAINS["scission"]
 SKILLCHAINS["aero"]=SKILLCHAINS["detonation"]
+SKILLCHAINS["wind"]=SKILLCHAINS["detonation"]
 SKILLCHAINS["darkness"]=SKILLCHAINS["compression"]
 SKILLCHAINS["light"]=SKILLCHAINS["transfixion"]
 SKILLCHAINS["water"]=SKILLCHAINS["reverberation"]
 SKILLCHAINS["blizzard"]=SKILLCHAINS["induration"]
+SKILLCHAINS["ice"]=SKILLCHAINS["induration"]
 SKILLCHAINS["thunder"]=SKILLCHAINS["impaction"]
 SKILLCHAINS["fire"]=SKILLCHAINS["liquefaction"]
 
@@ -528,6 +538,40 @@ local AutoImmanence = function(options)
         end
     end
 
+    public.use_ebullience = function()
+        -- We can not completely rely on buffactive, so check if we recently
+        -- casted a spell as well.
+        if (buffactive["Ebullience"] and
+            not (
+                last_spell_cast_time ~= nil and
+                (os.clock() - last_spell_cast_time) <= 3
+            )) then
+            forced_delay = 0
+            public.advance()
+        else
+            public.execute_command("input /ja Ebullience <me>", 1, 3)
+            expected_next = "Ebullience"
+            forced_delay = JA_FORCED_DELAY
+        end
+    end
+
+    public.use_alacrity = function()
+        -- We can not completely rely on buffactive, so check if we recently
+        -- casted a spell as well.
+        if (buffactive["Alacrity"] and
+            not (
+                last_spell_cast_time ~= nil and
+                (os.clock() - last_spell_cast_time) <= 3
+            )) then
+            forced_delay = 0
+            public.advance()
+        else
+            public.execute_command("input /ja Alacrity <me>", 1, 3)
+            expected_next = "Alacrity"
+            forced_delay = JA_FORCED_DELAY
+        end
+    end
+
     public.get_spellinfo = function(spellname)
         local spell = spell_cache[spellname:lower()]
 
@@ -584,7 +628,7 @@ local AutoImmanence = function(options)
         last_spell_cast_time = os.clock() + (spell.cast_time * 0.3)
     end
 
-    public.start_skillchain = function(sc)
+    public.start_skillchain = function(sc, opts)
         if skillchain then
             return public.abort("Already have active skillchain, aborting it")
         end
@@ -602,7 +646,28 @@ local AutoImmanence = function(options)
             return
         end
 
-        skillchain = sc
+        skillchain = {}
+
+        -- Create a copy of the skillchain and add various options before
+        -- the finish.
+        for k, v in pairs(sc) do
+            skillchain[k] = v
+        end
+        skillchain.program = {}
+
+        for _, action in ipairs(sc.program) do
+            if action.method == 'finish' then
+                if opts['ebullience'] then
+                    table.insert(skillchain.program, USE_EBULLIENCE)
+                end
+                if opts['alacrity'] then
+                    table.insert(skillchain.program, USE_ALACRITY)
+                end
+                -- TODO: Cast nuke if opts['nuke'] is set
+            end
+            table.insert(skillchain.program, action)
+        end
+
         index = 1
         local action = public.get_action()
         local method = public[action.method]
@@ -611,27 +676,36 @@ local AutoImmanence = function(options)
         end
     end
 
-    public.start_skillchain_by_name = function(name)
+    public.start_skillchain_by_name = function(name, opts)
         local sc = SKILLCHAINS[name:lower()]
         if sc then
-            public.start_skillchain(sc)
+            public.start_skillchain(sc, opts)
         else
             add_to_chat(128, "No suck skillchian '" .. name .. '"')
         end
     end
 
     public.self_command = function(command)
-        if command == "sc" then
-            add_to_chat(
-                128,
-                "You must specify a name of the skillchain you want to use"
-            )
-            return true
-        elseif command:sub(1, 3) == "sc " then
-            auto_sc.start_skillchain_by_name(command:sub(4))
-            return true
-        else
-            return false
+        local action, args_str = command:match('(%a+)%s*(.*)')
+        if action == "sc" then
+            if args_str == "" then
+                add_to_chat(
+                    128,
+                    "You must specify a name of the skillchain you want to use"
+                )
+                return true
+            end
+            local element, rest = args_str:match('(%a+)%s*(.*)')
+            local opts = {}
+            if rest:find('[+]') then
+                opts['ebullience'] = true
+            end
+            if rest:find('[+][+]') then
+                opts['alacrity'] = true
+            end
+            opts['nuke'] = rest:match('(%d+)')
+            
+            auto_sc.start_skillchain_by_name(element, opts)
         end
     end
 

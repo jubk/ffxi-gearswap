@@ -22,8 +22,8 @@ function get_sets()
     sets.fastcast = {
         -- fast cast 2
         ammo="Sapience Orb",
-        -- fast cast 6
-        head={ name="Odyssean Helm", augments={'"Fast Cast"+6','AGI+10','Attack+3',}},
+        -- fast cast +12
+        head="Carmine Mask",
         -- fast cast 10
         feet={ name="Odyssean Greaves", augments={'Accuracy+10','"Fast Cast"+5','Attack+13',}},
         -- fast cast 4

@@ -9,14 +9,13 @@ function get_sets()
         body="Meg. Cuirie +1",
         hands="Meg. Gloves +1",
         legs="Meg. Chausses +1",
-        legs="Valor. Hose",
         feet="Meg. Jam. +1",
         neck="Sanctity Necklace",
         waist="Eschan Stone",
         left_ear="Digni. Earring",
         right_ear="Odnowa Earring",
-        left_ring="Cacoethic Ring",
-        right_ring="Fortified Ring",
+        left_ring={name="Varar Ring", bag="wardrobe2"},
+        right_ring={name="Varar Ring", bag="wardrobe3"},
         back="Pastoralist's Mantle",
     }
 
@@ -34,6 +33,7 @@ function get_sets()
         {
             head="Valorous Mask",
             legs="Desultor Tassets",
+            feet="Despair Greaves",
         }
     )
 

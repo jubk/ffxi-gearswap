@@ -215,6 +215,22 @@ function get_sets()
         }
     );
 
+    sets.fastcast = set_combine(
+        sets.base,
+        {
+            -- fast cast 2
+            ammo="Sapience Orb",
+            -- fast cast +12
+            head="Carmine Mask",
+            -- fast cast +4
+            neck = "Voltsurge Torque",
+            -- Fast cast +2
+            right_ear="Loquac. Earring",
+            -- fast cast 2
+            left_ring="Prolix Ring",
+        }
+    );
+
     set_has_hachirin_no_obi(true);
 end
 
@@ -311,6 +327,8 @@ function precast(spell)
 
         equip(set_combine(sets.ranged_attack, { ammo = SlugWinderAmmo }));
     elseif '/magic' == spell.prefix  then
+        equip(sets.fastcast)
+
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
     elseif '/jobability' == spell.prefix  then

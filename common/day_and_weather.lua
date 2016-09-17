@@ -52,6 +52,12 @@ opposing_elements = {
 
 -- Determines whether to use the combined obi
 function use_obi(spell)
+    -- Helixes always get weather/day bonuses, so they do not need the
+    -- obi.
+    if spell.english:find("helix") then
+        return nil
+    end
+
     local bonus = 0;
 
     if element_to_storm_buff[spell.element] then
@@ -89,6 +95,12 @@ function set_has_hachirin_no_obi(new_value)
 end
 
 function get_obi(spell)
+    -- Helixes always get weather/day bonuses, so they do not need the
+    -- obi.
+    if spell.english:find("helix") then
+        return nil
+    end
+
     local stormBuff = element_to_storm_buff[spell.element] or false;
 
     if (stormBuff and buffactive[stormBuff]) or

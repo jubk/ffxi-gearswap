@@ -207,7 +207,7 @@ function get_sets()
             -- mb 10%, matk 23, macc 9
             hands="Merlinic Dastanas",
 
-            -- mb 10%
+            -- macc 27, mb 8%
             legs={
                 name="Merlinic Shalwar",
                 augments={
@@ -518,7 +518,7 @@ function precast(spell)
             end
             -- Straight 10% damage buff if we have klimaform active
             if buffactive["Klimaform"] then
-                extraGear.feet = "Arbatel Loafers"
+                extraGear.feet = "Arbatel Loafers +1"
             end
             MidcastGear = set_combine(
                 baseGear,

@@ -8,14 +8,14 @@ function get_sets()
         head="Meghanada Visor +1",
         body="Meg. Cuirie +1",
         hands="Meg. Gloves +1",
-        legs="Meg. Chausses +1",
+        legs="Valor. Hose",
         feet="Meg. Jam. +1",
         neck="Sanctity Necklace",
         waist="Olseni Belt",
         left_ear="Digni. Earring",
         right_ear="Brutal Earring",
-        left_ring="Yacuruna Ring",
-        right_ring="Cacoethic Ring",
+        left_ring={name="Varar Ring", bag="wardrobe2"},
+        right_ring={name="Varar Ring", bag="wardrobe3"},
         back="Kayapa Cape",
     }
 
@@ -32,7 +32,9 @@ function get_sets()
     sets.ready = set_combine(
         sets.base,
         {
+            head="Valorous Mask",
             legs="Desultor Tassets",
+            feet="Despair Greaves",
         }
     )
 
