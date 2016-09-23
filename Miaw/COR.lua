@@ -218,8 +218,6 @@ function get_sets()
     sets.fastcast = set_combine(
         sets.base,
         {
-            -- fast cast 2
-            ammo="Sapience Orb",
             -- fast cast +12
             head="Carmine Mask",
             -- fast cast +4

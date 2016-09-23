@@ -177,21 +177,21 @@ function get_sets()
         }
     );
 
-    sets.nuking = {
-        ammo="Pemphredo Tathlum",
-        head={ name="Merlinic Hood", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','Damage taken-2%','CHR+1','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
-        body="Jhakri Robe +1",
-        hands="Jhakri Cuffs +1",
-        legs={ name="Merlinic Shalwar", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Conserve MP"+3','Mag. Acc.+14','"Mag.Atk.Bns."+15',}},
-        feet="Jhakri Pigaches +1",
-        neck="Sanctity Necklace",
-        waist="Refoccilation Stone",
-        left_ear="Friomisi Earring",
-        right_ear="Digni. Earring",
-        left_ring="Arvina Ringlet +1",
-        right_ring="Strendu Ring",
-        back="Izdubar Mantle",
-    }
+    --sets.nuking = {
+    --    ammo="Pemphredo Tathlum",
+    --    head={ name="Merlinic Hood", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','Damage taken-2%','CHR+1','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
+    --    body="Jhakri Robe +1",
+    --    hands="Jhakri Cuffs +1",
+    --    legs={ name="Merlinic Shalwar", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Conserve MP"+3','Mag. Acc.+14','"Mag.Atk.Bns."+15',}},
+    --    feet="Jhakri Pigaches +1",
+    --    neck="Sanctity Necklace",
+    --    waist="Refoccilation Stone",
+    --    left_ear="Friomisi Earring",
+    --    right_ear="Digni. Earring",
+    --    left_ring="Arvina Ringlet +1",
+    --    right_ring="Strendu Ring",
+    --    back="Izdubar Mantle",
+    --}
 
     sets.skillchain = set_combine(
         sets.nuking,
@@ -232,6 +232,15 @@ function get_sets()
                 }
             },
 
+            -- mb 6, macc 28, matk 15
+            feet={
+                name="Merlinic Crackows",
+                augments={
+                    'Mag. Acc.+28',
+                    'Magic burst mdg.+6%',
+                    'CHR+2',
+                }
+            },
             -- mb bonus
             right_ring="Mujin Band",
         }
@@ -449,6 +458,7 @@ function precast(spell)
             end
         elseif "Elemental Magic" == spell.skill then
             local baseGear = sets.nuking
+            baseGear = sets.magicburst
             local extraGear = get_day_and_weather_gear(spell) or {}
 
             MidcastGear = set_combine(
