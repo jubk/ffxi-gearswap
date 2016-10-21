@@ -282,13 +282,12 @@ function precast(spell)
                 chosenSet = sets.ranged_accuracy
                 chosenAmmo = SlugWinderAmmo
             elseif 'Wildfire' == spell.name then
-                if "Fire" == world.weather_element or
-                    "Fire" == world.day_element then
-                    MidCastGear.waist = 'Karin Obi'
-                end
+                -- if "Fire" == world.weather_element or
+                --     "Fire" == world.day_element then
+                --     MidCastGear.waist = 'Karin Obi'
+                -- end
 
                 if buffactive['transcendency'] then
-                    chosenAmmo = "Orichalc. Bullet";
                     chosenSet = sets.wildfirebrew
                     if "Fire" == world.day_element then
                         MidCastGear.ring1 = 'Zodiac Ring'

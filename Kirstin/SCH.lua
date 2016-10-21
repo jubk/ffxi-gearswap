@@ -19,7 +19,10 @@ function get_sets()
                 '"Drain" and "Aspir" potency +2',
             }
         },
-        body="Vrikodara Jupon",
+
+        -- macc 40, matk 40, refresh +3
+        body="Jhakri Robe +1",
+
         hands="Psycloth Manillas",
         legs="Assiduity Pants",
         feet="Manabyss Pigaches",
@@ -63,8 +66,8 @@ function get_sets()
                     '"Mag.Atk.Bns."+15',
                 }
             },
-            -- macc 28, matk 28
-            body="Jhakri Robe",
+            -- macc 40, matk 40, refresh +3
+            body="Jhakri Robe +1",
             -- macc 48 (aug), matk 50 (aug)
             hands="Chironic Gloves",
             -- macc 40 (aug), matk 13 (aug), mdam 13

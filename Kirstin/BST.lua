@@ -8,7 +8,15 @@ function get_sets()
         head="Meghanada Visor +1",
         body="Meg. Cuirie +1",
         hands="Meg. Gloves +1",
-        legs="Meg. Chausses +1",
+        legs={
+            name="Valor. Hose",
+            augments={
+                'Pet: Accuracy+25 Pet: Rng. Acc.+25',
+                'Pet: "Dbl. Atk."+2',
+                'Pet: STR+9',
+                'Pet: Attack+14 Pet: Rng.Atk.+14',
+            }
+        },
         feet="Meg. Jam. +1",
         neck="Sanctity Necklace",
         waist="Eschan Stone",
@@ -32,6 +40,7 @@ function get_sets()
         sets.base,
         {
             head="Valorous Mask",
+            hands="Emicho Gauntlets",
             legs="Desultor Tassets",
             feet="Despair Greaves",
         }

@@ -113,72 +113,51 @@ function get_sets()
 
     -- sets
     sets.base = {
-        head = "Laksamana's Hat +1",
-        neck = "Stoicheion medal",
-        ear1 = "Volley Earring",
-        ear2 = "Hecate's Earring",
-        -- Matk +25, acc +15 (or more), +15 atk
-        body="Rawhide Vest",
-        hands="Pursuer's Cuffs",
-        -- hands = "Lak. Gants +1",
-        ring1 = "Solemn Ring",
-        ring2 = "Sattva Ring",
+        head="Meghanada Visor +1",
+        body="Meg. Cuirie +1",
+        hands="Meg. Gloves +1",
+        legs="Meg. Chausses +1",
+        feet="Meg. Jam. +1",
+        neck="Sanctity Necklace",
+        waist="Kentarch Belt +1",
+        left_ear="Digni. Earring",
+        right_ear="Steelflash Earring",
+        left_ring="Cacoethic Ring",
+        right_ring="Arvina Ringlet +1",
         back="Gunslinger's Cape",
-        waist = "Aquiline Belt",
-        legs = "Lak. Trews +1",
-        feet = "Vanir Boots",
     };
     sets.quickdraw = set_combine(
         sets.base,
         {
-            neck = "Stoicheion medal",
-            left_ear="Friomisi Earring",
-            right_ear="Hecate's Earring",
-            -- TODO: Carmine Fin. Ga./Shinryu Abjuration: Hands/
-            --       Bewitched finger gauntlets/7mill/Tenodera T1 EschaNM
+            -- Quick draw +10
+            head="Lak. Hat +1",
+            -- matk +25
+            body="Rawhide Vest",
+            -- matk +20
             hands="Pursuer's Cuffs",
-            -- hands = "Schutzen Mittens",
-            ring1 = "Demon's Ring",
-            ring2 = "Arvina Ringlet +1",
-            waist = "Aquiline Belt",
-            -- +20% damage from matching element for 15 seconds
-            feet = "Chasseur's Bottes",
-            -- matk +14, macc +10
+            -- matk +15
+            legs="Lak. Trews +1",
+            -- Quickdraw +22
+            feet="Chasseur's Bottes",
+            -- matk 10, macc 10
+            neck="Sanctity Necklace",
+            -- matk 3, macc 3
+            waist="Aquiline Belt",
+            -- matk 10
+            left_ear="Friomisi Earring",
+            -- matk 6
+            right_ear="Hecate's Earring",
+            -- macc 7
+            left_ring="Etana Ring",
+            -- macc 3, matk 3
+            right_ring="Arvina Ringlet +1",
+            -- matk 14, macc 10
             back="Gunslinger's Cape",
-            -- AGI+20. macc +20, mdam +20
-            -- back="Camulus's Mantle",
         }
     );
 
-    sets.wildfire = set_combine(
-        sets.quickdraw,
-        {
-            head = "Imp. Wing Hair. +1",
-            -- hands = "Schutzen Mittens",
-            ring1 = "Solemn Ring",
-            ring2 = "Arvina Ringlet +1",
-            -- TODO: Adhemar gamashes/Vexed Gamashes/10mill
-            feet = "Vanir Boots",
-            -- AGI+20. macc +20, mdam +20, wsdam +10
-            back="Camulus's Mantle",
-        }
-    );
-
-    sets.wildfirebrew = set_combine(
-        sets.quickdraw,
-        {
-            ring1 = "Demon's Ring",
-            ring2 = "Strendu Ring",
-            -- AGI+20. macc +20, mdam +20, wsdam +10
-            back="Camulus's Mantle",
-        }
-    );
-
-    sets.idle = set_combine(
-        sets.base, {
-            feet = "Hermes' Sandals",
-        }
-    );
+    -- +12% runspeed
+    sets.idle = set_combine(sets.base, { legs="Carmine Cuisses" });
 
     sets.resting = set_combine(sets.base, {});
 
@@ -208,12 +187,30 @@ function get_sets()
 
     sets.ranged_attack = set_combine(sets.ranged_accuracy,{});
 
-    sets.ws = set_combine(
-        sets.base,
+    sets.ranged_ws = set_combine(sets.ranged_accuracy, {});
+
+    sets.magic_ws = set_combine(
+        sets.quickdraw, {
+            -- macc +14
+            feet="Lak. Bottes +1",
+        }
+    )
+
+    sets.wildfire = set_combine(
+        sets.quickdraw,
         {
-            feet = "Chasseur's Bottes",
+            -- macc +38, AGI+21
+            head="Carmine Mask",
+            -- AGI +42
+            feet = "Vanir Boots",
+            -- AGI+20. macc +20, mdam +20, wsdam +10
+            back="Camulus's Mantle",
         }
     );
+
+    sets.leaden_salute = set_combine(sets.wildfire, {});
+
+    sets.wildfirebrew = set_combine(sets.wildfire, {});
 
     sets.fastcast = set_combine(
         sets.base,
@@ -274,7 +271,7 @@ function precast(spell)
     end
 
     if '/weaponskill' == spell.prefix then
-        local chosenSet = sets.ranged_attack
+        local chosenSet = sets.ranged_ws
 
         -- Handle all weaponskill stuff
         if table.contains(marksmanship_ws, spell.name) then
@@ -293,26 +290,32 @@ function precast(spell)
             elseif 'Wildfire' == spell.name then
                 if "Fire" == world.weather_element or
                     "Fire" == world.day_element then
-                    MidCastGear.waist = 'Karin Obi'
+                    MidCastGear.waist = 'Hachirin-no-Obi'
+                end
+                if "Fire" == world.day_element then
+                    MidCastGear.left_ring = 'Zodiac Ring'
                 end
 
                 if buffactive['transcendency'] then
-                    chosenAmmo = "Orichalc. Bullet";
                     chosenSet = sets.wildfirebrew
-                    if "Fire" == world.day_element then
-                        MidCastGear.ring1 = 'Zodiac Ring'
-                    end
                 else
                     chosenSet = sets.wildfire
                 end
             elseif 'Leaden Salute' == spell.name then
-                chosenSet = sets.wildfire
+                if "Darkness" == world.weather_element or
+                    "Darkness" == world.day_element then
+                    MidCastGear.waist = 'Hachirin-no-Obi'
+                end
+                if "Darkness" == world.day_element then
+                    MidCastGear.left_ring = 'Zodiac Ring'
+                end
+                chosenSet = sets.leaden_salute
             else
                 chosenAmmo = HighDamAmmo
             end
             chosenSet = set_combine(chosenSet, { ammo = chosenAmmo });
         else
-            chosenSet = sets.ws;
+            chosenSet = sets.magic_ws;
         end
         equip(chosenSet);
     elseif '/range' == spell.prefix then

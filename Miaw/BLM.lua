@@ -35,14 +35,8 @@ function get_sets()
                 '"Mag.Atk.Bns."+15',
             }
         },
-        -- macc 14, matk 39, mdam 10
-        body={
-            name="Witching Robe",
-            augments={
-                'MP+45','Mag. Acc.+14',
-                '"Mag.Atk.Bns."+14',
-            }
-        },
+        -- macc 40, matk 40
+        body="Jhakri Robe +1",
         -- macc 9, matk 23, mb 10
         hands={
             name="Merlinic Dastanas",
@@ -130,14 +124,10 @@ function get_sets()
                     '"Mag.Atk.Bns."+15',
                 }
             },
-            -- macc 14, matk 39, mdam 10
-            body={
-                name="Witching Robe",
-                augments={
-                    'MP+45','Mag. Acc.+14',
-                    '"Mag.Atk.Bns."+14',
-                }
-            },
+
+            -- macc 40, matk 40, refresh +3
+            body="Jhakri Robe +1",
+
             -- macc 9, matk 23, mb 10
             hands={
                 name="Merlinic Dastanas",

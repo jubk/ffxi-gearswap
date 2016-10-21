@@ -14,7 +14,10 @@ function get_sets()
     local base = set_combine({
             range="Dunna",
             head="Azimuth Hood +1",
-            body="Vrikodara Jupon",
+
+            -- macc 40, matk 40, refresh +3
+            body="Jhakri Robe +1",
+
             hands="Merlinic Dastanas",
             legs="Assiduity Pants",
             feet="Geo. Sandals +1",
@@ -178,8 +181,8 @@ function get_sets()
                     '"Mag.Atk.Bns."+15',
                 }
             },
-            -- macc 28, matk 28
-            body="Jhakri Robe",
+            -- macc 40, matk 40, refresh +3
+            body="Jhakri Robe +1",
             -- macc 37, matk 37
             hands="Jhakri Cuffs +1",
             -- macc 40 (aug), matk 13 (aug), mdam 13

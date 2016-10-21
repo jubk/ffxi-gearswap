@@ -38,6 +38,8 @@ function get_sets()
         }
     )
 
+    -- TODO: Loyalist sabatons for reward set
+
     sets.fastcast = set_combine(sets.base, {})
     sets.magic_accuracy = set_combine(sets.base, {})
 

@@ -23,9 +23,8 @@ function get_sets()
         -- Sublimation +2, haste +6%, matk +10, macc +10, int 27, mnd 27
         head="Acad. Mortar. +1",
 
-        -- Refresh +2, haste +3%, int 34, mnd 29
-        -- Dark arts +20
-        body="Acad. Gown +1",
+        -- macc 40, matk 40, refresh +3
+        body="Jhakri Robe +1",
 
         -- Haste +3%, Fast Cast +5%, int 19, mnd 33
         hands="Acad. Bracers +1",
@@ -128,8 +127,8 @@ function get_sets()
             -- matk 4, macc 8, int 4
             ammo="Pemphredo Tathlum",
 
-            -- matk + 39, macc +14, mdam +10
-            body = "Witching Robe",
+            -- macc 40, matk 40, refresh +3
+            body="Jhakri Robe +1",
 
             -- macc +44, matk+52
             hands = "Chironic Gloves",
@@ -252,11 +251,8 @@ function get_sets()
     sets.darkmagic = set_combine(sets.nuking, {});
 
     sets.enfeeble_dark = set_combine(
-        sets.standard,
+        sets.nuking,
         {
-            -- matk +7, macc +25 (aug)
-            head = "Helios Band",
-
             -- macc +15
             -- Note: Using Acad body +1 for +20 skill during dark arts
             body = "Arbatel Gown",
@@ -279,13 +275,10 @@ function get_sets()
     );
 
     sets.enfeeble_light = set_combine(
-        sets.standard,
+        sets.nuking,
         {
             -- matk +7, macc +25 (aug)
             head = "Helios Band",
-
-            -- macc +15
-            body = "Arbatel Gown",
 
             -- macc +44, matk+52
             hands = "Chironic Gloves",
@@ -299,9 +292,6 @@ function get_sets()
 
             -- macc +7
             right_ring = "Etana Ring",
-
-            -- matk +7, macc +7
-            feet="Helios Boots"
         }
     );
 
