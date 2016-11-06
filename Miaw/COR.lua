@@ -233,7 +233,7 @@ function get_roll_equipment(spellname)
     local rollEquip = {
         hands = "Navarch's Gants +2",
         head = "Comm. Tricorne",
-        ring2 = "Barataria Ring"
+        right_ring = "Barataria Ring"
     }
 
     if "Courser's Roll" == spellname then

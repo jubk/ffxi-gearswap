@@ -6,61 +6,27 @@ include("cyclable_sets");
 function get_sets()
     -- sets
     sets.tanking = {
-        -- mdef +4
-        ammo = "Vanir Battery",
-        -- mdef +2, haste +7, enmity +5, pdt -5%, cover eff dur +9
-        head = "Rev. Coronet +1",
-
-        -- TODO: Souveran cuirass/Bushin abjuration: body/Pakecet T3 NM/
-        --       Bewitched cuirass/100k
-        -- dt -10, mdef +4, enmity +8, haste +3, cover: dam-to-mp 35, +fealty
-        body = "Cab. Surcoat +1",
-        -- mdef +4, regen +1, refresh +1
-        neck = "Coatl Gorget +1",
-        -- mdt -2, atk +6
-        ear1 = "Merman's Earring",
-        -- mdt -2, atk +6
-        ear2 = "Merman's Earring",
-        -- acc +42, atk +31, m.def.bonus 1, mdt -2, pdt -3, haste 4
-        hands="Odyssean Gauntlets",
-        -- cure recieved +5, dt -7, knockback dist -2
-        ring1 = "Vocane Ring",
-        -- dt -10
-        ring2 = "Defending Ring",
-        -- acc +15, dt -3, enmity +3, phalanx +4
-        back = "Weard Mantle",
-        -- dt -3
-        waist = "Nierenschutz",
-        -- mdef +3, haste +5, acc+37, dam.taken -3%
-        legs="Souveran Diechlings",
-
-        -- mdef +2, haste +3, enmity +6, sentinel +15, mdt -5
-        feet = "Cab. Leggings +1"
+        ammo="Incantor Stone",
+        head="Sulevia's Mask +1",
+        body="Cab. Surcoat +1",
+        hands="Sulev. Gauntlets +1",
+        legs="Sulevi. Cuisses +1",
+        feet="Sulev. Leggings +1",
+        neck="Sanctity Necklace",
+        waist="Eschan Stone",
+        left_ear="Nourish. Earring",
+        right_ear="Cryptic Earring",
+        left_ring="Fortified Ring",
+        right_ring="Patricius Ring",
+        back="Tantalic Cape",
     }
 
     sets.enmity = set_combine(
         sets.tanking,
         {
-            -- enmity +7
-            head = "Cab. Coronet +1",
-            -- enmity +2
-            ammo = "Sapience Orb",
-            -- enmity +5
-            neck = "Invidia Torque",
-            -- enmity +10
-            body = "Creed Cuirass +2",
-            -- mdef +1, haste +4, enmity +7, shield bash +25
-            hands = "Cab. Gauntlets +1",
-            -- enmity +6
-            legs = "Cab. Breeches",
-            -- enmity +3
-            left_ring = "Vengeful Ring",
-            -- enmity +3
-            right_ring = "Sattva Ring",
-            -- enmity +5, mdef +4
-            waist = "Creed Baudrier",
-            -- enmity +6, evasion +15, resist gravity +15
-            back = "Fravashi Mantle",
+            left_ear="Friomisi Earring",
+            right_ear="Cryptic Earring",
+            left_ring="Vengeful Ring",
         }
     );
 
@@ -69,105 +35,40 @@ function get_sets()
         {
             -- cast time -2, recast -1
             ammo = "Incantor Stone",
-            -- fast cast +12
-            head="Carmine Mask",
-            -- fast cast +4
-            neck = "Voltsurge Torque",
-            -- Fast cast +2
+            hands = "Leyline Gloves",
+            feet = "Odyssean Greaves",
+            right_ring="Prolix Ring",
             right_ear="Loquac. Earring",
-            -- Fast cast +10
-            feet="Odyssean Greaves"
         }
     );
 
     sets.fastcast_cure = set_combine(
         sets.fastcast,
         {
-            -- cure spellcasting time -10%
-            body="Jumalik Mail",
         }
     );
     sets.cure = set_combine(
         sets.enmity,
         {
-            -- cure potency +15, mnd+16
-            body="Jumalik Mail",
-            -- Cure potency 5-6, MND +3
-            ear1 = "Nourish. Earring",
-            -- Cure effect recieved +5
-            left_ring="Vocane Ring",
-            -- Cure effect recieved +7
-            legs="Souveran Diechlings",
-            -- Cure potency +7
-            feet="Odyssean Greaves",
-            -- Cure potency +7
-            back="Solemnity Cape",
         }
     );
 
     sets.ws = {};
     sets.ws.base = set_combine(
         sets.tanking, {
-            -- acc +34
-            head="Founder's Corona",
-
-            -- acc +7
-            left_ring="Patricius Ring",
-            -- acc +7
-            right_ring="Yacuruna Ring",
-
-            -- acc +35, matk +35, macc +35
-            body = "Found. Breastplate",
-
-            -- acc +5
-            neck = "Voltsurge Torque",
-
-            -- acc +8
-            left_ear="Steelflash Earring",
-
-            -- acc +20
-            waist="Olseni Belt",
-
-            -- acc +7
-            ring1 = "Yacaruna Ring",
-
-            -- acc +7
-            ring1 = "Patricius Ring",
-
-            -- Acc +25
-            feet="Founder's Greaves"
         }
     );
     sets.ws['Atonement'] = sets.enmity;
     sets.ws['Requiescat'] = set_combine(
         sets.ws.base, {
-            -- MND 29
-            hands = "Cab. Gauntlets +1",
-            legs="Carmine Cuisses"
         }
     );
     sets.ws.magic = set_combine(
         sets.ws.base, {
-            -- mdam +10
-            ammo="Ghastly Tathlum",
-            -- matk/macc +35
-            body="Found. Breastplate",
-            -- matk/macc +34
-            feet="Founder's Greaves",
-            -- macc +10, matk +10
-            neck="Sanctity Necklace",
-            -- matk +6
-            left_ear="Hecate's Earring",
-            -- matk +10
-            right_ear="Friomisi Earring",
-            -- macc +3, matk +3
-            left_ring="Arvina Ringlet +1",
-            -- macc +5, matk +10
-            back="Izdubar Mantle",
         }
     );
     sets.ws['Burning Blade'] = set_combine(
-        sets.ws.magic, { legs="Carmine Cuisses" }
+        sets.ws.magic, {}
     );
     sets.ws['Red Lotus Blade'] = sets.ws['Burning Blade'];
     sets.ws['Shining Blade'] = sets.ws.magic
@@ -190,18 +91,11 @@ function get_sets()
     sets.resting = set_combine(
         sets.tanking,
         {
-            -- Refresh +2
-            body = "Twilight Mail",
-            -- rmp +4
-            waist = "Austerity Belt",
-            -- rmp +3
-            feet = "Lord's sabatons",
         }
     );
 
     sets.idle = set_combine(
         sets.tanking, {
-            legs="Carmine Cuisses"
         }
     );
 

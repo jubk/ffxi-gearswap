@@ -78,8 +78,8 @@ function get_sets()
             neck="Sanctity Necklace",
             -- macc 4, matk 10
             waist="Refoccilation Stone",
-            -- matk 6
-            left_ear="Hecate's Earring",
+            -- matk 8, macc 8
+            left_ear="Barkaro. Earring",
             -- matk 10
             right_ear="Friomisi Earring",
             -- macc 4
@@ -284,6 +284,9 @@ function precast(spell)
         elseif "Elemental Magic" == spell.skill then
             local baseGear = sets.nuking
             local extraGear = get_day_and_weather_gear(spell) or {}
+
+            -- Elem. magic casting time -3
+            precast_extra.left_ear = "Barkaro. Earring"
 
             if buffactive["Immanence"] then
                 baseGear = sets.skillchain

@@ -6,6 +6,8 @@ include("shared/staves");
 -- include("dumper");
 
 local AutoImmanence = require("AutoImmanence");
+local aug_gear = require("shared/aug_gear");
+local modesets = require("modesets");
 
 function get_sets()
     setup_spellcost_map(player);
@@ -72,7 +74,7 @@ function get_sets()
             head="Acad. Mortar. +1",
 
             -- defense / shield blocks
-            sub = "Sors Shield",
+            sub = "Genmei Shield",
 
             -- Sublimation +2
             body = "Pedagogy Gown",
@@ -113,16 +115,7 @@ function get_sets()
         sets.standard,
         {
             -- matk +47, macc +52 (aug)
-            head={
-                name="Merlinic Hood",
-                augments={
-                    'Mag. Acc.+22 "Mag.Atk.Bns."+22',
-                    'Damage taken-2%',
-                    'CHR+1',
-                    'Mag. Acc.+15',
-                    '"Mag.Atk.Bns."+15',
-                }
-            },
+            head=aug_gear.nuke.head,
 
             -- matk 4, macc 8, int 4
             ammo="Pemphredo Tathlum",
@@ -133,22 +126,14 @@ function get_sets()
             -- macc +44, matk+52
             hands = "Chironic Gloves",
 
-            -- matk +6, mcrit +3
-            left_ear="Hecate's Earring",
+            -- matk +8, macc 8
+            left_ear="Barkaro. Earring",
 
             -- matk + 10
             right_ear="Friomisi Earring",
 
             -- int +43, macc 52, matk +53, haste +5%
-            legs={
-                name="Merlinic Shalwar",
-                augments={
-                    'Mag. Acc.+23 "Mag.Atk.Bns."+23',
-                    '"Conserve MP"+3',
-                    'Mag. Acc.+14',
-                    '"Mag.Atk.Bns."+15',
-                }
-            },
+            legs=aug_gear.nuke.legs,
 
             -- macc +2, matk +4
             left_ring="Strendu Ring",
@@ -190,32 +175,16 @@ function get_sets()
             -- SCH staff is mbdam 10
 
             -- matk 13, macc 13, mb 13%
-            head={
-                name="Merlinic Hood",
-                augments={
-                    'Pet: DEX+8',
-                    'Pet: Mag. Acc.+24',
-                    'Magic burst mdg.+13%',
-                    'Mag. Acc.+13 "Mag.Atk.Bns."+13',
-                }
-            },
+            head=aug_gear.burst.head,
 
             -- matk 8, mb bonus 10%
             neck="Mizu. Kubikazari",
 
-            -- mb 10%, matk 23, macc 9
-            hands="Merlinic Dastanas",
+            -- MB II+5, macc 15, matk 38, elem. magic skill +13
+            hands=aug_gear.burst.hands,
 
             -- macc 27, mb 8%
-            legs={
-                name="Merlinic Shalwar",
-                augments={
-                    'Mag. Acc.+27',
-                    'Magic burst mdg.+8%',
-                    'VIT+7',
-                    '"Mag.Atk.Bns."+2',
-                }
-            },
+            legs=aug_gear.burst.legs,
 
             -- skillchain bonus, mb II 5%
             right_ring="Mujin Band",
@@ -250,50 +219,41 @@ function get_sets()
 
     sets.darkmagic = set_combine(sets.nuking, {});
 
-    sets.enfeeble_dark = set_combine(
-        sets.nuking,
-        {
-            -- macc +15
-            -- Note: Using Acad body +1 for +20 skill during dark arts
-            body = "Arbatel Gown",
-
-            -- macc +44, matk+52
-            hands = "Chironic Gloves",
-
-            -- int +7, macc +5
-            waist = "Porous Robe",
-
-            -- macc +3
+    sets.enfeebling_magic = set_combine(
+        sets.nuking, {
+            -- macc 8
+            ammo="Pemphredo Tathlum",
+            -- macc 52
+            head=aug_gear.acc.head,
+            -- macc 40
+            body="Jhakri Robe +1",
+            -- macc 44
+            hands="Chironic Gloves",
+            -- macc 57
+            legs=aug_gear.acc.legs,
+            -- macc 36
+            feet="Jhakri Pigaches +1",
+            -- macc 10
+            neck="Sanctity Necklace",
+            -- macc 7
+            waist="Eschan Stone",
+            -- macc 8
+            left_ear="Barkaro. Earring",
+            -- macc 10
+            right_ear="Digni. Earring",
+            -- macc 3
             left_ring="Arvina Ringlet +1",
-
-            -- macc +7
-            right_ring = "Etana Ring",
-
-            -- macc +7
-            feet="Helios Boots"
+            -- macc 7
+            right_ring="Etana Ring",
+            -- macc 20
+            back="Lugh's Cape",
+            
         }
-    );
+    )
 
-    sets.enfeeble_light = set_combine(
-        sets.nuking,
-        {
-            -- matk +7, macc +25 (aug)
-            head = "Helios Band",
+    sets.enfeeble_dark = set_combine(sets.enfeebling_magic, {});
 
-            -- macc +44, matk+52
-            hands = "Chironic Gloves",
-
-            -- TODO: Tengu-no-Obi
-            -- mnd +7, macc +5
-            waist = "Porous Robe",
-
-            -- macc +3
-            left_ring="Arvina Ringlet +1",
-
-            -- macc +7
-            right_ring = "Etana Ring",
-        }
-    );
+    sets.enfeeble_light = set_combine(sets.enfeebling_magic, {});
 
     sets.healing = set_combine(
         sets.standard,
@@ -372,6 +332,9 @@ function get_sets()
     AfterCastGear = {};
     Grimoire = nil;
 
+    nuke_mode = modesets.make_set('Nukemode', {'nuking', 'magicburst'});
+    send_command('bind ^f9 gs c mode Nukemode cycle')
+
     auto_sc = AutoImmanence({
         gear_fastcast=37,
         uses_academics_loafers=true,
@@ -385,8 +348,8 @@ end
 function self_command(command)
     if auto_sc.self_command(command) then
         return
-    elseif command == "echo" then
-        send_command('input /party ' .. "\253\2\2\30K\253")
+    elseif modesets.self_command(command) then
+        return
     elseif command == "test" then
         print(DataDumper(windower.ffxi.get_ability_recasts()))
     end
@@ -494,8 +457,11 @@ function precast(spell)
                 MidcastGear = set_combine(sets.enhancing, {});
             end
         elseif "Elemental Magic" == spell.skill then
-            local baseGear = sets.nuking
+            local baseGear = sets[nuke_mode.value]
             local extraGear = get_day_and_weather_gear(spell) or {}
+
+            -- Elem. magic casting time -3
+            precast_extra.left_ear = "Barkaro. Earring"
 
             if buffactive["Immanence"] then
                 baseGear = sets.skillchain

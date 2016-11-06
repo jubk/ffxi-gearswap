@@ -4,6 +4,9 @@ include("day_and_weather");
 include("spelltools");
 -- include("dumper");
 
+local aug_gear = require("shared/aug_gear");
+local modesets = require("modesets");
+
 function get_sets()
     setup_spellcost_map(player);
 
@@ -18,45 +21,20 @@ function get_sets()
             }
         },
 
-        -- macc 3, matk 5
-        sub="Willpower Grip",
+        -- macc 5, matk 5
+        sub="Niobid Strap",
 
         -- macc 6, matk 4, int 4
         ammo="Pemphredo Tathlum",
 
         -- macc 52, matk 47
-        head={
-            name="Merlinic Hood",
-            augments={
-                'Mag. Acc.+22 "Mag.Atk.Bns."+22',
-                'Damage taken-2%',
-                'CHR+1',
-                'Mag. Acc.+15',
-                '"Mag.Atk.Bns."+15',
-            }
-        },
+        head=aug_gear.nuke.head,
         -- macc 40, matk 40
         body="Jhakri Robe +1",
         -- macc 9, matk 23, mb 10
-        hands={
-            name="Merlinic Dastanas",
-            augments={
-                '"Mag.Atk.Bns."+23',
-                'Magic burst mdg.+10%',
-                'INT+4',
-                'Mag. Acc.+9',
-            }
-        },
+        hands=aug_gear.burst.hands,
         -- macc 57, matk 53
-        legs={
-            name="Merlinic Shalwar",
-            augments={
-                'Mag. Acc.+23 "Mag.Atk.Bns."+23',
-                '"Conserve MP"+3',
-                'Mag. Acc.+14',
-                '"Mag.Atk.Bns."+15',
-            }
-        },
+        legs=aug_gear.nuke.legs,
         -- macc 36, matk 36
         feet="Jhakri Pigaches +1",
         -- macc 2, matk 8
@@ -114,40 +92,15 @@ function get_sets()
             ammo="Pemphredo Tathlum",
 
             -- macc 52, matk 47
-            head={
-                name="Merlinic Hood",
-                augments={
-                    'Mag. Acc.+22 "Mag.Atk.Bns."+22',
-                    'Damage taken-2%',
-                    'CHR+1',
-                    'Mag. Acc.+15',
-                    '"Mag.Atk.Bns."+15',
-                }
-            },
+            head=aug_gear.nuke.head,
 
             -- macc 40, matk 40, refresh +3
             body="Jhakri Robe +1",
 
             -- macc 9, matk 23, mb 10
-            hands={
-                name="Merlinic Dastanas",
-                augments={
-                    '"Mag.Atk.Bns."+23',
-                    'Magic burst mdg.+10%',
-                    'INT+4',
-                    'Mag. Acc.+9',
-                }
-            },
+            hands=aug_gear.burst.hands,
             -- macc 57, matk 53
-            legs={
-                name="Merlinic Shalwar",
-                augments={
-                    'Mag. Acc.+23 "Mag.Atk.Bns."+23',
-                    '"Conserve MP"+3',
-                    'Mag. Acc.+14',
-                    '"Mag.Atk.Bns."+15',
-                }
-            },
+            legs=aug_gear.nuke.legs,
             -- macc 36, matk 36
             feet="Jhakri Pigaches +1",
             -- macc 2, matk 8
@@ -156,8 +109,8 @@ function get_sets()
             waist="Refoccilation Stone",
             -- matk 10
             left_ear="Friomisi Earring",
-            -- matk 6
-            right_ear="Hecate's Earring",
+            -- matk 8, macc 8
+            right_ear="Barkaro. Earring",
             -- macc +3, matk 3
             left_ring="Arvina Ringlet +1",
             -- macc 2, matk 4
@@ -166,22 +119,6 @@ function get_sets()
             back="Izdubar Mantle",
         }
     );
-
-    --sets.nuking = {
-    --    ammo="Pemphredo Tathlum",
-    --    head={ name="Merlinic Hood", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','Damage taken-2%','CHR+1','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
-    --    body="Jhakri Robe +1",
-    --    hands="Jhakri Cuffs +1",
-    --    legs={ name="Merlinic Shalwar", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Conserve MP"+3','Mag. Acc.+14','"Mag.Atk.Bns."+15',}},
-    --    feet="Jhakri Pigaches +1",
-    --    neck="Sanctity Necklace",
-    --    waist="Refoccilation Stone",
-    --    left_ear="Friomisi Earring",
-    --    right_ear="Digni. Earring",
-    --    left_ring="Arvina Ringlet +1",
-    --    right_ring="Strendu Ring",
-    --    back="Izdubar Mantle",
-    --}
 
     sets.skillchain = set_combine(
         sets.nuking,
@@ -195,43 +132,21 @@ function get_sets()
         sets.nuking,
         {
             -- matk 13, macc 13, mb 13
-            head={
-                name="Merlinic Hood",
-                augments={
-                    'Pet: DEX+8',
-                    'Pet: Mag. Acc.+24',
-                    'Magic burst mdg.+13%',
-                    'Mag. Acc.+13 "Mag.Atk.Bns."+13',
-                }
-            },
+            head=aug_gear.burst.head,
 
             -- matk 8, mb bonus 10
             neck="Mizu. Kubikazari",
 
-            -- mb bonus augment (10%), matk 23, macc 9
-            hands="Merlinic Dastanas",
+            -- MB II+5, macc 15, matk 38, elem. magic skill +13
+            hands=aug_gear.burst.hands,
 
             -- mb 8
-            legs={
-                name="Merlinic Shalwar",
-                augments={
-                    'Mag. Acc.+27',
-                    'Magic burst mdg.+8%',
-                    'VIT+7',
-                    '"Mag.Atk.Bns."+2',
-                }
-            },
+            legs=aug_gear.burst.legs,
 
-            -- mb 6, macc 28, matk 15
-            feet={
-                name="Merlinic Crackows",
-                augments={
-                    'Mag. Acc.+28',
-                    'Magic burst mdg.+6%',
-                    'CHR+2',
-                }
-            },
-            -- mb bonus
+            -- mb 10, macc 21, matk 5
+            feet=aug_gear.burst.feet,
+
+            -- mb bonus 5, exceeds cap
             right_ring="Mujin Band",
         }
     );
@@ -370,6 +285,9 @@ function get_sets()
         }
     );
 
+    nuke_mode = modesets.make_set('Nukemode', {'magicburst', 'nuking'});
+    send_command('bind ^f9 gs c mode Nukemode cycle')
+
     MidcastGear = {};
     AfterCastGear = {};
     Grimoire = nil;
@@ -379,6 +297,9 @@ end
 
 
 function self_command(command)
+    if modesets.self_command(command) then
+        return
+    end
 end
 
 function filtered_action(spell)
@@ -447,8 +368,7 @@ function precast(spell)
                 MidcastGear = set_combine(sets.enhancing, {});
             end
         elseif "Elemental Magic" == spell.skill then
-            local baseGear = sets.nuking
-            baseGear = sets.magicburst
+            local baseGear = sets[nuke_mode.value]
             local extraGear = get_day_and_weather_gear(spell) or {}
 
             MidcastGear = set_combine(

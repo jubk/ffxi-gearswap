@@ -67,6 +67,10 @@ function get_sets()
         -- Healing magic time -5%
         back="Disperser's Cape",
     });
+    sets.elemental_fastcast = set_combine(sets.fastcast, {
+        -- Elem. casting time -3
+        left_ear="Barkaro. Earring",
+    });
     sets.enhancing_fastcast = set_combine(sets.fastcast, {
         -- enhancing magic time -8%
         waist="Siegel Sash",
@@ -193,8 +197,8 @@ function get_sets()
             neck="Sanctity Necklace",
             -- macc 4, matk 10
             waist="Refoccilation Stone",
-            -- matk 6
-            left_ear="Hecate's Earring",
+            -- matk 8, macc 8
+            left_ear="Barkaro. Earring",
             -- matk 10
             right_ear="Friomisi Earring",
             -- macc 4
@@ -243,6 +247,9 @@ function precast(spell)
             -- equip(kirstin_staves.fastcast[spell.element]);
         elseif "Enhancing Magic" == spell.skill then
             equip(sets.enhancing_fastcast);
+            -- equip(kirstin_staves.fastcast[spell.element]);
+        elseif "Elemental Magic" == spell.skill then
+            equip(sets.elemental_fastcast);
             -- equip(kirstin_staves.fastcast[spell.element]);
         else
             equip(sets.fastcast);
