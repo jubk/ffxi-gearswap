@@ -6,8 +6,8 @@ include("cyclable_sets");
 function get_sets()
     -- sets
     sets.tanking = {
-        -- mdef +4
-        ammo = "Vanir Battery",
+        -- Damaga taken -2, +10 resist to all debuffs
+        ammo="Staunch Tathlum",
         -- mdef +2, haste +7, enmity +5, pdt -5%, cover eff dur +9
         head = "Rev. Coronet +1",
 
@@ -293,18 +293,17 @@ function precast(spell)
         if "Holy Circle" == spell.english then
             toEquip['feet'] = "Gallant Leggings"
         elseif "Sentinel" == spell.english then
+            SituationalGear['feet'] = "Cab. Leggings +1"
             toEquip['feet'] = "Cab. Leggings +1"
-            MidCastGear['feet'] = nil
-            AfterCastGear['feet'] = nil
-        elseif "Cover" == spell.english or
-            "Fealty" == spell.english then
+            AfterCastGear['feet'] = "Cab. Leggings +1"
+        elseif "Cover" == spell.english then
             SituationalGear['body'] = "Cab. Surcoat +1"
             toEquip['body'] = "Cab. Surcoat +1"
-            MidCastGear['body'] = "Cab. Surcoat +1"
             AfterCastGear['body'] = "Cab. Surcoat +1"
+        elseif "Fealty" == spell.english then
+            toEquip['body'] = "Cab. Surcoat +1"
         elseif "Shield Bash" == spell.english then
             toEquip['hands'] = "Cab. Gauntlets +1"
-            MidCastGear['hands'] = "Cab. Gauntlets +1"
         elseif "Rampart" == spell.english then
             toEquip['head'] = "Cab. Coronet +1"
         elseif "Invincible" == spell.english then
@@ -326,6 +325,16 @@ function aftercast(spell)
         SituationalGear.right_ring = "Purity Ring"
     else
         SituationalGear.right_ring = nil
+    end
+
+    if SituationalGear.body == "Cab. Surcoat +1" and
+        not buffactive["Cover"] then
+        SituationalGear.body = nil
+    end
+
+    if SituationalGear['feet'] == "Cab. Leggings +1" and
+        not buffactive["Sentinel"] then
+        SituationalGear['feet'] = nil
     end
 
     if player.status == "Idle" then

@@ -6,24 +6,30 @@ include("cyclable_sets");
 function get_sets()
     -- sets
     sets.tanking = {
-        ammo="Incantor Stone",
+        -- Damaga taken -2, +10 resist to all debuffs
+        ammo="Staunch Tathlum",
         head="Sulevia's Mask +1",
         body="Cab. Surcoat +1",
         hands="Sulev. Gauntlets +1",
         legs="Sulevi. Cuisses +1",
         feet="Sulev. Leggings +1",
-        neck="Sanctity Necklace",
-        waist="Eschan Stone",
-        left_ear="Nourish. Earring",
-        right_ear="Cryptic Earring",
+        -- Refresh +1
+        neck="Coatl Gorget +1",
+        waist="Nierenschutz",
+        -- mdt -2
+        left_ear="Merman's Earring",
+        right_ear="Odnowa Earring +1",
         left_ring="Fortified Ring",
         right_ring="Patricius Ring",
-        back="Tantalic Cape",
+        back="Weard Mantle",
     }
 
     sets.enmity = set_combine(
         sets.tanking,
         {
+            -- Enmity +5
+            waist="Creed Baudrier",
+            -- Enmity +2
             left_ear="Friomisi Earring",
             right_ear="Cryptic Earring",
             left_ring="Vengeful Ring",
@@ -45,17 +51,35 @@ function get_sets()
     sets.fastcast_cure = set_combine(
         sets.fastcast,
         {
+            -- cure cast time -4
+            neck="Diemer Gorget",
+            -- cure cast time -3
+            left_ear="Nourish. Earring",
+            -- cure cast time -5
+            right_ear="Mendi. Earring",
         }
     );
     sets.cure = set_combine(
         sets.enmity,
         {
+            -- cure pot +4
+            neck="Phalaina Locket",
+            -- cure pot +2
+            left_ear="Nourish. Earring",
+            -- cure pot +5
+            right_ear="Mendi. Earring",
         }
     );
 
     sets.ws = {};
     sets.ws.base = set_combine(
         sets.tanking, {
+            -- atk 10, matk 10, acc 10, macc 10
+            neck="Sanctity Necklace",
+            -- atk 15, matk 7, acc 15, macc 7
+            waist="Eschan Stone",
+            -- acc 10, macc 10
+            left_ear="Digni. Earring",
         }
     );
     sets.ws['Atonement'] = sets.enmity;
@@ -65,6 +89,16 @@ function get_sets()
     );
     sets.ws.magic = set_combine(
         sets.ws.base, {
+            -- macc 32, matk 30
+            hands = "Leyline Gloves",
+            -- macc 30+, matk 29+
+            body="Found. Breastplate",
+            -- matk 15
+            legs="Augury Cuisses",
+            -- matk 29
+            feet="Founder's Greaves",
+            -- Matk 10, Enmity +2
+            left_ear="Friomisi Earring",
         }
     );
     sets.ws['Burning Blade'] = set_combine(
@@ -122,12 +156,6 @@ function get_sets()
 end
 
 function status_change(new,old)
-    if (player.max_mp - player.mp) > 100 then
-        SituationalGear['body'] = "Twilight Mail"
-    else
-        SituationalGear['body'] = nil
-    end
-
     if "Idle" == new then
         equip(set_combine(SituationalGear, sets.idle))
     elseif "Resting" == new then
@@ -187,18 +215,17 @@ function precast(spell)
         if "Holy Circle" == spell.english then
             toEquip['feet'] = "Gallant Leggings"
         elseif "Sentinel" == spell.english then
+            SituationalGear['feet'] = "Cab. Leggings +1"
             toEquip['feet'] = "Cab. Leggings +1"
-            MidCastGear['feet'] = nil
-            AfterCastGear['feet'] = nil
-        elseif "Cover" == spell.english or
-            "Fealty" == spell.english then
+            AfterCastGear['feet'] = "Cab. Leggings +1"
+        elseif "Cover" == spell.english then
             SituationalGear['body'] = "Cab. Surcoat +1"
             toEquip['body'] = "Cab. Surcoat +1"
-            MidCastGear['body'] = "Cab. Surcoat +1"
             AfterCastGear['body'] = "Cab. Surcoat +1"
+        elseif "Fealty" == spell.english then
+            toEquip['body'] = "Cab. Surcoat +1"
         elseif "Shield Bash" == spell.english then
             toEquip['hands'] = "Cab. Gauntlets +1"
-            MidCastGear['hands'] = "Cab. Gauntlets +1"
         elseif "Rampart" == spell.english then
             toEquip['head'] = "Cab. Coronet +1"
         elseif "Invincible" == spell.english then
@@ -220,6 +247,16 @@ function aftercast(spell)
         SituationalGear.right_ring = "Purity Ring"
     else
         SituationalGear.right_ring = nil
+    end
+
+    if SituationalGear.body == "Cab. Surcoat +1" and
+        not buffactive["Cover"] then
+        SituationalGear.body = nil
+    end
+
+    if SituationalGear['feet'] == "Cab. Leggings +1" and
+        not buffactive["Sentinel"] then
+        SituationalGear['feet'] = nil
     end
 
     if player.status == "Idle" then
