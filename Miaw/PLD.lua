@@ -302,7 +302,8 @@ function precast(spell)
             AfterCastGear['body'] = "Cab. Surcoat +1"
         elseif "Fealty" == spell.english then
             toEquip['body'] = "Cab. Surcoat +1"
-        elseif "Shield Bash" == spell.english then
+        elseif "Shield Bash" == spell.english or
+            "Chivalry" == spell.english then
             toEquip['hands'] = "Cab. Gauntlets +1"
         elseif "Rampart" == spell.english then
             toEquip['head'] = "Cab. Coronet +1"

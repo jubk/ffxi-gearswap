@@ -27,6 +27,8 @@ function get_sets()
     sets.enmity = set_combine(
         sets.tanking,
         {
+            -- Enmity +7
+            head="Cab. Coronet +1",
             -- Enmity +5
             waist="Creed Baudrier",
             -- Enmity +2
@@ -76,6 +78,8 @@ function get_sets()
         sets.tanking, {
             -- atk 10, matk 10, acc 10, macc 10
             neck="Sanctity Necklace",
+            -- acc 40, atk 44, SC bonus
+            body="Sulevia's Plate. +1",
             -- atk 15, matk 7, acc 15, macc 7
             waist="Eschan Stone",
             -- acc 10, macc 10
@@ -224,7 +228,8 @@ function precast(spell)
             AfterCastGear['body'] = "Cab. Surcoat +1"
         elseif "Fealty" == spell.english then
             toEquip['body'] = "Cab. Surcoat +1"
-        elseif "Shield Bash" == spell.english then
+        elseif "Shield Bash" == spell.english or
+            "Chivalry" == spell.english then
             toEquip['hands'] = "Cab. Gauntlets +1"
         elseif "Rampart" == spell.english then
             toEquip['head'] = "Cab. Coronet +1"
