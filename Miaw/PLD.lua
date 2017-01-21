@@ -8,34 +8,30 @@ function get_sets()
     sets.tanking = {
         -- Damaga taken -2, +10 resist to all debuffs
         ammo="Staunch Tathlum",
-        -- mdef +2, haste +7, enmity +5, pdt -5%, cover eff dur +9
-        head = "Rev. Coronet +1",
-
-        -- TODO: Souveran cuirass/Bushin abjuration: body/Pakecet T3 NM/
-        --       Bewitched cuirass/100k
-        -- dt -10, mdef +4, enmity +8, haste +3, cover: dam-to-mp 35, +fealty
-        body = "Cab. Surcoat +1",
+        -- dt -5%, acc 38, store tp 8
+        head="Sulevia's Mask +1",
+        -- dt -10, mdef +6, meva +80, absorb.m 5, acc 40
+        body="Tartarus Platemail",
         -- mdef +4, regen +1, refresh +1
         neck = "Coatl Gorget +1",
-        -- mdt -2, atk +6
-        ear1 = "Merman's Earring",
-        -- mdt -2, atk +6
-        ear2 = "Merman's Earring",
-        -- acc +42, atk +31, m.def.bonus 1, mdt -2, pdt -3, haste 4
-        hands="Odyssean Gauntlets",
+        -- acc +9, bird killer 4, bdt -1
+        left_ear="Zwazo Earring",
+        -- acc +10, subtle blow 5, store tp 3
+        right_ear="Digni. Earring",
+        -- acc +37, atk +41, dt -4
+        hands="Sulev. Gauntlets +1",
         -- cure recieved +5, dt -7, knockback dist -2
         ring1 = "Vocane Ring",
         -- dt -10
         ring2 = "Defending Ring",
         -- acc +15, dt -3, enmity +3, phalanx +4
         back = "Weard Mantle",
-        -- dt -3
-        waist = "Nierenschutz",
-        -- mdef +3, haste +5, acc+37, dam.taken -3%
-        legs="Souveran Diechlings",
-
-        -- mdef +2, haste +3, enmity +6, sentinel +15, mdt -5
-        feet = "Cab. Leggings +1"
+        -- acc 14, doubleatk 3, store tp 1~5
+        waist="Kentarch Belt +1",
+        -- dt -6, acc 39, atk 43
+        legs="Sulevi. Cuisses +1",
+        -- dt -3, acc 36, atk 40
+        feet="Sulev. Leggings +1",
     }
 
     sets.enmity = set_combine(

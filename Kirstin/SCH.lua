@@ -111,9 +111,9 @@ function get_sets()
             head={
                 name="Merlinic Hood",
                 augments={
-                    'Mag. Acc.+18 "Mag.Atk.Bns."+18',
-                    'Magic burst mdg.+9%',
-                    '"Mag.Atk.Bns."+5',
+                    '"Mag.Atk.Bns."+19',
+                    'Magic burst mdg.+11%',
+                    'Mag. Acc.+14',
                 }
             },
             hands={

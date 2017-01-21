@@ -20,7 +20,7 @@ function get_sets()
         left_ear="Merman's Earring",
         right_ear="Odnowa Earring +1",
         left_ring="Fortified Ring",
-        right_ring="Patricius Ring",
+        right_ring="Defending ring",
         back="Weard Mantle",
     }
 

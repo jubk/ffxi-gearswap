@@ -51,8 +51,16 @@ function get_sets()
         left_ring="Arvina Ringlet +1",
         -- macc 2, matk 4
         right_ring="Strendu Ring",
-        -- macc 5, matk 10
-        back="Izdubar Mantle",
+        -- macc 30, mdam 20, matk 10, int 20, mb +5
+        back={
+            name="Taranus's Cape",
+            augments={
+                'INT+20',
+                'Mag. Acc+20 /Mag. Dmg.+20',
+                'Mag. Acc.+10',
+                '"Mag.Atk.Bns."+10',
+            }
+        },
     };
 
     sets.standard_idle = set_combine(sets.standard, {});
@@ -115,8 +123,16 @@ function get_sets()
             left_ring="Arvina Ringlet +1",
             -- macc 2, matk 4
             right_ring="Strendu Ring",
-            -- macc 5, matk 10
-            back="Izdubar Mantle",
+            -- macc 30, mdam 20, matk 10, int 20, mb +5
+            back={
+                name="Taranus's Cape",
+                augments={
+                    'INT+20',
+                    'Mag. Acc+20 /Mag. Dmg.+20',
+                    'Mag. Acc.+10',
+                    '"Mag.Atk.Bns."+10',
+                }
+            },
         }
     );
 
