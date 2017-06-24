@@ -207,9 +207,9 @@ local calculate_fast_cast = function(options)
 
     local grimoire = 0.1
     if options['uses_academics_loafers'] then
-        grimoire = grimoire + 0.05
-    elseif options['uses_scholars_loafers'] then
         grimoire = grimoire + 0.08
+    elseif options['uses_scholars_loafers'] then
+        grimoire = grimoire + 0.05
     end
     if options['uses_pedagogy_mortarboard'] then
         grimoire = grimoire + 0.1

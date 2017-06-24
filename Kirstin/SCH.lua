@@ -70,8 +70,15 @@ function get_sets()
             body="Jhakri Robe +1",
             -- macc 48 (aug), matk 50 (aug)
             hands="Chironic Gloves",
-            -- macc 40 (aug), matk 13 (aug), mdam 13
-            legs="Merlinic Shalwar",
+            -- macc 36 (aug), matk 42 (aug), mdam 13
+            legs={
+                name="Merlinic Shalwar",
+                augments={
+                    '"Mag.Atk.Bns."+11',
+                    'INT+8',
+                    'Mag. Acc.+16 "Mag.Atk.Bns."+16',
+                },
+            },
             -- macc 36, matk 36
             feet="Jhakri Pigaches +1",
             -- macc 10, matk 10

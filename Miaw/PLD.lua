@@ -30,8 +30,8 @@ function get_sets()
         waist="Kentarch Belt +1",
         -- dt -6, acc 39, atk 43
         legs="Sulevi. Cuisses +1",
-        -- dt -3, acc 36, atk 40
-        feet="Sulev. Leggings +1",
+        -- dt -4, acc 42, atk 46
+        feet="Sulev. Leggings +2",
     }
 
     sets.enmity = set_combine(
@@ -294,6 +294,7 @@ function precast(spell)
             AfterCastGear['feet'] = "Cab. Leggings +1"
         elseif "Cover" == spell.english then
             SituationalGear['body'] = "Cab. Surcoat +1"
+            toEquip['head'] = "Rev. Coronet +1"
             toEquip['body'] = "Cab. Surcoat +1"
             AfterCastGear['body'] = "Cab. Surcoat +1"
         elseif "Fealty" == spell.english then

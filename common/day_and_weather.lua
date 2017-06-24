@@ -50,8 +50,57 @@ opposing_elements = {
     Water = "Lightning"
 }
 
+stormbuff_level = 1;
+
+function set_stormbuff_level(new_level)
+    stormbuff_level = new_level
+end
+
+function stormbuff_is_active(elem)
+    local stormbuff = element_to_storm_buff[elem] or false;
+
+    return (stormbuff and buffactive[stormbuff])
+end
+
+function zone_weather_is_active(elem)
+    return (elem == world.weather_element)
+end
+
+function weather_is_active(elem)
+    return stormbuff_is_active(elem) or zone_weather_is_active(elem)
+end
+
+function day_is_active(elem)
+    return (elem == world.day_element)
+end
+
+function get_weather_intensity(spell)
+    local weatherbonus = 0;
+    local opposing = opposing_elements[spell.element]
+
+    if stormbuff_is_active(spell.element) then
+        weatherbonus = weatherbonus + stormbuff_level;
+    elseif stormbuff_is_active(opposing) then
+        weatherbonus = weatherbonus - stormbuff_level;
+    end
+    if zone_weather_is_active(spell.element) then
+        weatherbonus = weatherbonus + weather_to_intensity[world.weather];
+    elseif zone_weather_is_active(opposing) then
+        weatherbonus = weatherbonus - weather_to_intensity[world.weather];
+    end
+
+    -- Cap intensity at 2
+    if weatherbonus > 2 then
+        return 2
+    elseif weatherbonus < -2 then
+        return -2
+    else
+        return weatherbonus
+    end
+end
+
 -- Determines whether to use the combined obi
-function use_obi(spell)
+function use_hachirin_no_obi(spell)
     -- Helixes always get weather/day bonuses, so they do not need the
     -- obi.
     if spell.english:find("helix") then
@@ -60,26 +109,13 @@ function use_obi(spell)
 
     local bonus = 0;
 
-    if element_to_storm_buff[spell.element] then
+    if day_is_active(spell.element) then
         bonus = bonus + 1;
-    end
-    if spell.element == world.day_element then
-        bonus = bonus + 1;
-    end
-    if spell.element == world.weather_element then
-        bonus = bonus + weather_to_intensity[world.weather];
+    elseif day_is_active(opposing_elements[spell.element]) then
+        bonus = bonus - 1;
     end
 
-    local opposing = opposing_elements[spell.element]
-    if element_to_storm_buff[opposing] then
-        bonus = bonus - 1;
-    end
-    if opposing == world.day_element then
-        bonus = bonus - 1;
-    end
-    if opposing == world.weather_element then
-        bonus = bonus - weather_to_intensity[world.weather];
-    end
+    bonus = bonus + get_weather_intensity(spell)
 
     if bonus > 0 then
         return true
@@ -101,22 +137,20 @@ function get_obi(spell)
         return nil
     end
 
-    local stormBuff = element_to_storm_buff[spell.element] or false;
-
-    if (stormBuff and buffactive[stormBuff]) or
-       spell.element == world.day_element or
-       spell.element == world.weather_element then
+    if weather_is_active(spell.element) or day_is_active(spell.element) then
         return elemental_obi_table[spell.element];
     end
     return nil;
 end
 
 function get_twilight_cape(spell)
-    local stormBuff = element_to_storm_buff[spell.element] or false;
+    -- Helixes always get weather/day bonuses, so they do not need the
+    -- obi.
+    if spell.english:find("helix") then
+        return nil
+    end
 
-    if (stormBuff and buffactive[stormBuff]) or
-       spell.element == world.day_element or
-       spell.element == world.weather_element then
+    if weather_is_active(spell.element) or day_is_active(spell.element) then
         return "Twilight Cape";
     end
     return nil;
@@ -124,20 +158,17 @@ end
 
 function get_day_and_weather_gear(spell)
     if _has_combined_obi then
-        if use_obi(spell) then
+        if use_hachirin_no_obi(spell) then
             return {
                 waist = "Hachirin-no-Obi",
                 back = "Twilight Cape"
             }
         end
     else
-        local stormBuff = element_to_storm_buff[spell.element] or false;
-
-        if (stormBuff and buffactive[stormBuff]) or
-           spell.element == world.day_element or
-           spell.element == world.weather_element then
+        local obi = get_obi(spell)
+        if obi then
             return {
-                waist = elemental_obi_table[spell.element],
+                waist = obi,
                 back = "Twilight Cape"
             };
         end

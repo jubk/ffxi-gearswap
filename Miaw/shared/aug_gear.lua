@@ -22,15 +22,15 @@ local aug_gear = {
     },
     burst = {
         head = {
-            name = "Merlinic Hood",
+            name="Merlinic Hood",
             augments = {
                 'Pet: DEX+8',
                 'Pet: Mag. Acc.+24',
-                'Magic burst mdg.+13%',
+                'Magic burst dmg.+13%',
                 'Mag. Acc.+13 "Mag.Atk.Bns."+13',
             },
         },
-        -- MB+10, macc 15, matk 38, elem. magic skill +13
+        -- MB II+5, macc 15, matk 38, elem. magic skill +13
         hands = {
             name="Amalric Gages",
             augments={
@@ -39,22 +39,24 @@ local aug_gear = {
                 '"Mag.Atk.Bns."+15',
             }
         },
+        -- MB+9, macc 54, matk 47, mdam +13
         legs = {
             name="Merlinic Shalwar",
             augments={
-                'Mag. Acc.+27',
-                'Magic burst mdg.+8%',
-                'VIT+7',
-                '"Mag.Atk.Bns."+2',
-            }
+                'Mag. Acc.+24 "Mag.Atk.Bns."+24',
+                'Magic burst dmg.+9%',
+                'CHR+5',
+                'Mag. Acc.+10',
+                '"Mag.Atk.Bns."+8',
+            },
         },
         feet = {
             name="Merlinic Crackows",
             augments={
                 'Mag. Acc.+21',
-                'Magic burst mdg.+10%',
+                'Magic burst dmg.+10%',
                 '"Mag.Atk.Bns."+5',
-            }
+            },
         },
     },
     acc = {},

@@ -22,8 +22,8 @@ function get_sets()
         -- mdam +10, INT 2-6
         ammo="Ghastly Tathlum",
 
-        -- Sublimation +2, haste +6%, matk +10, macc +10, int 27, mnd 27
-        head="Acad. Mortar. +1",
+        -- Sublimation +3, haste +6%, matk +15, macc +42, int 32, mnd 32
+        head="Acad. Mortar. +2",
 
         -- macc 40, matk 40, refresh +3
         body="Jhakri Robe +1",
@@ -35,8 +35,8 @@ function get_sets()
         -- Light Arts +20
         legs="Acad. Pants +1",
 
-        -- Casting time -8%, haste +3%, Enmity -6, int 22, mnd 19
-        feet="Acad. Loafers +1",
+        -- Casting time -10%, haste +3%, Enmity -7, int 27, mnd 24
+        feet="Acad. Loafers +2",
 
         -- macc +2, matk +8, elem.cast.time -3%
         neck="Stoicheion Medal",
@@ -70,8 +70,8 @@ function get_sets()
             -- Sublimation +1
             main = "Siriti",
 
-            -- Sublimation +2
-            head="Acad. Mortar. +1",
+            -- Sublimation +3
+            head="Acad. Mortar. +2",
 
             -- defense / shield blocks
             sub = "Genmei Shield",
@@ -183,18 +183,46 @@ function get_sets()
             -- MB II+5, macc 15, matk 38, elem. magic skill +13
             hands=aug_gear.burst.hands,
 
-            -- macc 27, mb 8%
+            -- MB+9, macc 54, matk 47, mdam +13
             legs=aug_gear.burst.legs,
+
+            -- mb bonus 10%, overwritten by arbatel loafers if klimaform is up
+            feet=aug_gear.burst.feet,
 
             -- skillchain bonus, mb II 5%
             right_ring="Mujin Band",
+
+
         }
     );
 
+    -- This set is meant to be combined with either nuking or magicburst
+    sets.helix_overrides = {
+        -- mdam +10
+        ammo="Ghastly Tathlum",
+        -- mdam +58
+        body="Mallquis Saio",
+        -- mdam +5
+        left_ring="Mephitas's Ring +1",
+    }
+
     sets.fastcast = {
+        -- Possible upgrades:
+        --  * Augmented merlinic hood, 15 fast cast (+7)
+        --  * Augmented merlinic feet, 12 fc (+7)
+        --  * Kaykaus Tights, 6 fast cast (+1)
+        --  * Rahab Ring, fc 2 (+2), AA TT
+        --  * Shango robe, fc 8 (+3), duke vepar NM
+        --  * Grioavolr staff, up to +11 fastcast (+8), Bashmu reisen NM
+        --  * Hvergelmir i119 III staff, +50, (+47)
+        --  * Zendik robe, fc 13 (+8), Warder of Courage
+
+        -- Weapon and sub: 5%
+
+        -- Fast cast +10
+        -- Note: Replaced with Peda. M.Board under grimoire
+        head="Nahtirah Hat",
         -- Fast cast +8
-        head = "Merlinic Hood",
-        -- Fast cast +5
         body = "Helios Jacket",
         -- Fast cast +4
         neck = "Voltsurge Torque",
@@ -204,17 +232,27 @@ function get_sets()
         hands="Gende. Gages +1",
         -- Fast cast +2
         ammo = "Incantor Stone",
-        -- Fast cast +3
-        back = "Swith Cape",
+        -- Fast cast +4
+        back = "Swith Cape +1",
         -- Fast cast +5
         legs="Artsieq Hose",
         -- Fast cast +5
-        -- Note: Uses Acad. Loafers +1 with grimoire for cast time -8%
+        -- Note: Replaced with Acad. Loafers +2 under grimoire
         feet = "Peda. Loafers",
         -- Fast cast +2
         right_ear="Loquac. Earring",
         -- Fast cast +2
         left_ring="Prolix Ring",
+
+        -- Elem. magic cast time -3%, auto-included when casting elemental
+        -- magic
+        -- left_ear="Barkaro. Earring",
+
+
+        -- Total: 56%
+
+        -- cap with non-fast-cast sub: 80
+        -- cap with RDM sub: 65
     }
 
     sets.darkmagic = set_combine(sets.nuking, {});
@@ -296,8 +334,8 @@ function get_sets()
             -- Enh.magic +12, regen dur +12, haste +3
             body = "Telchine Chas.",
 
-            -- MND +33, converserve mp 4%
-            hands="Acad. Bracers +1",
+            -- Enhancing magic +15
+            hands = "Chironic Gloves",
 
             -- MND +5, INT +5
             waist = "Penitent's Rope",
@@ -305,8 +343,11 @@ function get_sets()
             -- MND +8
             back="Pahtli Cape",
 
-            -- Enh.magic +10
-            feet = "Regal Pumps",
+            -- Enh.magic +20
+            feet="Kaykaus Boots",
+
+            -- Enh.magic +7
+            left_ear="Andoaa Earring",
 
             -- MND +5
             left_ring="Solemn Ring",
@@ -316,6 +357,11 @@ function get_sets()
     sets.regen = set_combine(
         sets.enhancing,
         {
+            -- Regen +10
+            main="Bolelabunga",
+            -- Defence
+            sub="Genmei Shield",
+            -- Regen +9
             back="Bookworm's Cape",
         }
     );
@@ -336,12 +382,15 @@ function get_sets()
     send_command('bind ^f9 gs c mode Nukemode cycle')
 
     auto_sc = AutoImmanence({
-        gear_fastcast=37,
+        gear_fastcast=54,
         uses_academics_loafers=true,
         uses_pedagogy_mortarboard=true,
     })
 
+    -- Tell day and weather we have the combined obi
     set_has_hachirin_no_obi(true);
+    -- And tell it we will be using tier II storm buffs
+    set_stormbuff_level(2)
 end
 
 
@@ -472,10 +521,17 @@ function precast(spell)
             if buffactive["Ebullience"] then
                 extraGear.head = "Arbatel Bonnet";
             end
-            -- Straight 10% damage buff if we have klimaform active
-            if buffactive["Klimaform"] then
+            -- Straight 10% damage buff if we have klimaform active during
+            -- correct weather.
+            if (buffactive["Klimaform"] and
+                weather_is_active(spell.element)) then
                 extraGear.feet = "Arbatel Loafers +1"
             end
+
+            if spell.english:find("helix") then
+                extraGear = set_combine(extraGear, sets.helix_overrides)
+            end
+
             MidcastGear = set_combine(
                 baseGear,
                 extraGear,
@@ -540,8 +596,8 @@ function precast(spell)
         if grimoire_is_active(spell) then
             -- Certain job abilites does not stack with grimoire fastcast gear
             if not jobabilities_cancels_grimoire_fastcast() then
-                -- Grimoire cast time -8
-                precast_extra.feet = "Acad. Loafers +1";
+                -- Grimoire cast time -10
+                precast_extra.feet = "Acad. Loafers +2";
                 -- Grimoire cast time -10
                 precast_extra.head = "Peda. M.Board"
             end
