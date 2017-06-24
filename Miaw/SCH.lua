@@ -25,8 +25,8 @@ function get_sets()
         -- Sublimation +3, haste +6%, matk +15, macc +42, int 32, mnd 32
         head="Acad. Mortar. +2",
 
-        -- macc 40, matk 40, refresh +3
-        body="Jhakri Robe +1",
+        -- macc 40, 22 dark arts skills, refresh +3
+        body="Acad. Gown +2",
 
         -- Haste +3%, Fast Cast +5%, int 19, mnd 33
         hands="Acad. Bracers +1",
@@ -120,8 +120,8 @@ function get_sets()
             -- matk 4, macc 8, int 4
             ammo="Pemphredo Tathlum",
 
-            -- macc 40, matk 40, refresh +3
-            body="Jhakri Robe +1",
+            -- macc 40, 22 dark arts skill, set acc bonus, refresh +3
+            body="Acad. Gown +2",
 
             -- macc +44, matk+52
             hands = "Chironic Gloves",
@@ -258,19 +258,20 @@ function get_sets()
     sets.darkmagic = set_combine(sets.nuking, {});
 
     sets.enfeebling_magic = set_combine(
+        -- Set bonus from Academic gear: 30 macc from 3 pieces
         sets.nuking, {
             -- macc 8
             ammo="Pemphredo Tathlum",
-            -- macc 52
-            head=aug_gear.acc.head,
-            -- macc 40
-            body="Jhakri Robe +1",
+            -- macc 42, set bonus
+            head="Acad. Mortar. +2",
+            -- macc 40, set bonus
+            body="Acad. Gown +2",
             -- macc 44
             hands="Chironic Gloves",
             -- macc 57
             legs=aug_gear.acc.legs,
-            -- macc 36
-            feet="Jhakri Pigaches +1",
+            -- macc 36, set bonus
+            feet = "Acad. Loafers +2";
             -- macc 10
             neck="Sanctity Necklace",
             -- macc 7
@@ -557,9 +558,9 @@ function precast(spell)
             end
 
             if "BlackMagic" == spell.type then
-                -- +20 enf. skill from Dark Arts
+                -- +22 enf. skill from Dark Arts
                 if grimoire_is_active(spell) then
-                   extraGear.body = "Acad. Gown +1";
+                   extraGear.body = "Acad. Gown +2";
                 end
 
                 MidcastGear = set_combine(
