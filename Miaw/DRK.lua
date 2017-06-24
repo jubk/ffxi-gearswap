@@ -12,7 +12,7 @@ function get_sets()
         feet="Sulev. Leggings +2",
         neck="Sanctity Necklace",
         waist="Sailfi Belt",
-        left_ear="Digni. Earring",
+        left_ear="Bladeborn Earring",
         right_ear="Steelflash Earring",
         left_ring="Cacoethic Ring",
         right_ring="Strigoi Ring",

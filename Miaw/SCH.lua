@@ -180,19 +180,19 @@ function get_sets()
             -- matk 8, mb bonus 10%
             neck="Mizu. Kubikazari",
 
+            -- macc 40, 22 dark arts skill, mb+5
+            body="Acad. Gown +2",
+
             -- MB II+5, macc 15, matk 38, elem. magic skill +13
             hands=aug_gear.burst.hands,
 
             -- MB+9, macc 54, matk 47, mdam +13
             legs=aug_gear.burst.legs,
 
-            -- mb bonus 10%, overwritten by arbatel loafers if klimaform is up
-            feet=aug_gear.burst.feet,
-
             -- skillchain bonus, mb II 5%
             right_ring="Mujin Band",
 
-
+            -- 47% MB I, 10 MB II
         }
     );
 
@@ -256,6 +256,10 @@ function get_sets()
     }
 
     sets.darkmagic = set_combine(sets.nuking, {});
+
+    sets.drain_and_aspir = set_combine(sets.darkmagic, {
+        waist = "Fucho-no-Obi"
+    })
 
     sets.enfeebling_magic = set_combine(
         -- Set bonus from Academic gear: 30 macc from 3 pieces
@@ -576,10 +580,15 @@ function precast(spell)
                 );
             end
         elseif "Dark Magic" == spell.skill then
+            local equipSet = sets.darkmagic
             local extraGear = {}
-            local obi = get_obi(spell);
-            if obi ~= nil then
-                extraGear['waist'] = obi
+            if spell.english == 'Drain' or spell.english == 'Aspir' then
+                equipSet = sets.drain_and_aspir
+            else
+                local obi = get_obi(spell);
+                if obi ~= nil then
+                    extraGear['waist'] = obi
+                end
             end
             MidcastGear = set_combine(
                 sets.darkmagic,

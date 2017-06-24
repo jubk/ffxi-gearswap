@@ -37,8 +37,8 @@ function get_sets()
     sets.enmity = set_combine(
         sets.tanking,
         {
-            -- enmity +7
-            head = "Cab. Coronet +1",
+            -- enmity +9-14
+            head = "Loess Barbuta",
             -- enmity +2
             ammo = "Sapience Orb",
             -- enmity +5
@@ -49,10 +49,12 @@ function get_sets()
             hands = "Cab. Gauntlets +1",
             -- enmity +6
             legs = "Cab. Breeches",
+            -- enmity +4
+            left_ear = "Cryptic Earring",
             -- enmity +3
             left_ring = "Vengeful Ring",
-            -- enmity +3
-            right_ring = "Sattva Ring",
+            -- enmity +5
+            right_ring="Begrudging Ring",
             -- enmity +5, mdef +4
             waist = "Creed Baudrier",
             -- enmity +6, evasion +15, resist gravity +15
@@ -146,6 +148,8 @@ function get_sets()
         sets.ws.base, {
             -- mdam +10
             ammo="Ghastly Tathlum",
+            -- macc 20/matk 15/mdam 20
+            head="Jumalik Helm",
             -- matk/macc +35
             body="Found. Breastplate",
             -- matk/macc +34

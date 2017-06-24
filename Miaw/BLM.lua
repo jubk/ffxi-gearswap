@@ -326,7 +326,8 @@ function get_sets()
         right_ear="Thureous Earring",
         -- Mp +100
         left_ring="Mephitas's Ring +1",
-        right_ring="Strendu Ring",
+        -- Mp +60, macc 7
+        right_ring="Etana Ring",
         -- Mp +90
         back={ name="Bane Cape", augments={'Elem. magic skill +10','Dark magic skill +6','"Mag.Atk.Bns."+1',}},
     }
