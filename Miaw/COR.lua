@@ -141,8 +141,8 @@ function get_sets()
             feet="Chasseur's Bottes",
             -- matk 10, macc 10
             neck="Sanctity Necklace",
-            -- matk 3, macc 3
-            waist="Aquiline Belt",
+            -- matk 7, macc 7
+            waist="Eschan Stone",
             -- matk 10
             left_ear="Friomisi Earring",
             -- matk 6
@@ -190,23 +190,36 @@ function get_sets()
     sets.ranged_ws = set_combine(sets.ranged_accuracy, {});
 
     sets.magic_ws = set_combine(
-        sets.quickdraw, {
-            -- macc +14
-            feet="Lak. Bottes +1",
+        sets.base,
+        {
+            -- macc 9, matk 19, wsdam 2, AGI 25
+            head="Herculean Helm",
+            -- matk 25, AGI 30
+            body="Rawhide Vest",
+            -- macc 12, matk 24, wsdam 1, AGI 8
+            hands="Herculean Gloves",
+            -- macc 5, matk 21, wsdam 1, AGI 32
+            legs="Herculean Trousers",
+            -- macc 17, matk 15, wsdam 4, AGI 43
+            feet="Herculean Boots",
+            -- macc 10, matk 10
+            neck="Sanctity Necklace",
+            -- macc 7, matk 7
+            waist="Eschan Stone",
+            -- matk 10
+            left_ear="Friomisi Earring",
+            -- matk 8
+            right_ear="Hecate's Earring",
+            -- macc 7
+            left_ring="Etana Ring",
+            -- macc 3, matk 3, AGI 5
+            right_ring="Arvina Ringlet +1",
+            -- macc 20, mdam 20, wsdam 10, AGI 20
+            back="Camulus's Mantle",
         }
     )
 
-    sets.wildfire = set_combine(
-        sets.quickdraw,
-        {
-            -- macc +38, AGI+21
-            head="Carmine Mask",
-            -- AGI +42
-            feet = "Vanir Boots",
-            -- AGI+20. macc +20, mdam +20, wsdam +10
-            back="Camulus's Mantle",
-        }
-    );
+    sets.wildfire = set_combine(sets.magic_ws, {});
 
     sets.leaden_salute = set_combine(sets.wildfire, {});
 

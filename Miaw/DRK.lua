@@ -5,7 +5,7 @@ function get_sets()
     -- set_has_hachirin_no_obi(true);
     sets.base = {
         ammo="Seething Bomblet",
-        head="Sulevia's Mask +1",
+        head="Sulevia's Mask +2",
         body="Sulevia's Plate. +1",
         hands="Sulev. Gauntlets +1",
         legs="Sulevi. Cuisses +1",

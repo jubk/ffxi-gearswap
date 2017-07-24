@@ -24,11 +24,10 @@ local aug_gear = {
         head = {
             name="Merlinic Hood",
             augments = {
-                'Pet: DEX+8',
-                'Pet: Mag. Acc.+24',
-                'Magic burst dmg.+13%',
-                'Mag. Acc.+13 "Mag.Atk.Bns."+13',
-            },
+                'Mag. Acc.+23 "Mag.Atk.Bns."+23',
+                'Magic burst dmg.+10%',
+                'INT+5',
+            }
         },
         -- MB II+5, macc 15, matk 38, elem. magic skill +13
         hands = {

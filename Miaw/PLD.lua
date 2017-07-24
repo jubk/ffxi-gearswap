@@ -8,8 +8,8 @@ function get_sets()
     sets.tanking = {
         -- Damaga taken -2, +10 resist to all debuffs
         ammo="Staunch Tathlum",
-        -- dt -5%, acc 38, store tp 8
-        head="Sulevia's Mask +1",
+        -- dt -6%, acc 44, store tp 10
+        head="Sulevia's Mask +2",
         -- dt -10, mdef +6, meva +80, absorb.m 5, acc 40
         body="Tartarus Platemail",
         -- mdef +4, regen +1, refresh +1
@@ -49,6 +49,8 @@ function get_sets()
             hands = "Cab. Gauntlets +1",
             -- enmity +6
             legs = "Cab. Breeches",
+            -- enmity +6
+            feet="Cab. Leggings +1",
             -- enmity +4
             left_ear = "Cryptic Earring",
             -- enmity +3

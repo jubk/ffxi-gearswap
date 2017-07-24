@@ -9,6 +9,30 @@ local AutoImmanence = require("AutoImmanence");
 local aug_gear = require("shared/aug_gear");
 local modesets = require("modesets");
 
+--              AF/Relic/Empyrean gear status
+--
+--  AF       | Base | B +1 | Rf | Rf +1 | Rf +2 | Rf +3 |
+--   head    |      |      |    |       |   X   |       |
+--   body    |      |      |    |       |   X   |       |
+--   hands   |      |      |    |       |   X   |       |
+--   legs    |      |      |    |       |   X   |       |
+--   feet    |      |      |    |       |   X   |       |
+--
+--  Relic    | Base | Base +1 | Base +2 | RF | Rf +1 |
+--   head    |      |         |         |  X |       |
+--   body    |      |         |         |  X |       |
+--   hands   |   X  |         |         |    |       |
+--   legs    |      |         |         |    |       |
+--   feet    |      |         |         |  X |       |
+--
+--  Empyrean | Base | Base +1 | Base +2 | RF | Rf +1 |
+--   head    |      |         |         |  X |       |
+--   body    |      |         |         |  X |       |
+--   hands   |      |         |         |  X |       |
+--   legs    |      |         |         |  X |       |
+--   feet    |      |         |         |    |   X   |
+--
+
 function get_sets()
     setup_spellcost_map(player);
 
@@ -28,12 +52,12 @@ function get_sets()
         -- macc 40, 22 dark arts skills, refresh +3
         body="Acad. Gown +2",
 
-        -- Haste +3%, Fast Cast +5%, int 19, mnd 33
-        hands="Acad. Bracers +1",
+        -- Haste +3%, Fast Cast +7%, int 24, mnd 38
+        hands="Acad. Bracers +2",
 
-        -- haste +5%, int 34, mnd 29
-        -- Light Arts +20
-        legs="Acad. Pants +1",
+        -- haste +5%, int 39, mnd 34
+        -- Light Arts +22
+        legs="Acad. Pants +2",
 
         -- Casting time -10%, haste +3%, Enmity -7, int 27, mnd 24
         feet="Acad. Loafers +2",
@@ -120,7 +144,7 @@ function get_sets()
             -- matk 4, macc 8, int 4
             ammo="Pemphredo Tathlum",
 
-            -- macc 40, 22 dark arts skill, set acc bonus, refresh +3
+            -- macc 40, 22 dark arts skill, set acc bonus, refresh +2
             body="Acad. Gown +2",
 
             -- macc +44, matk+52
@@ -212,10 +236,9 @@ function get_sets()
         --  * Augmented merlinic feet, 12 fc (+7)
         --  * Kaykaus Tights, 6 fast cast (+1)
         --  * Rahab Ring, fc 2 (+2), AA TT
-        --  * Shango robe, fc 8 (+3), duke vepar NM
         --  * Grioavolr staff, up to +11 fastcast (+8), Bashmu reisen NM
         --  * Hvergelmir i119 III staff, +50, (+47)
-        --  * Zendik robe, fc 13 (+8), Warder of Courage
+        --  * Zendik robe, fc 13 (+5), Warder of Courage
 
         -- Weapon and sub: 5%
 
@@ -228,8 +251,8 @@ function get_sets()
         neck = "Voltsurge Torque",
         -- Fast cast +2
         waist="Channeler's Stone",
-        -- Fast cast +7
-        hands="Gende. Gages +1",
+        -- Fast Cast +7%
+        hands="Acad. Bracers +2",
         -- Fast cast +2
         ammo = "Incantor Stone",
         -- Fast cast +4
@@ -262,7 +285,7 @@ function get_sets()
     })
 
     sets.enfeebling_magic = set_combine(
-        -- Set bonus from Academic gear: 30 macc from 3 pieces
+        -- Set bonus from Academic gear: 45 macc from 3 pieces
         sets.nuking, {
             -- macc 8
             ammo="Pemphredo Tathlum",
@@ -270,8 +293,8 @@ function get_sets()
             head="Acad. Mortar. +2",
             -- macc 40, set bonus
             body="Acad. Gown +2",
-            -- macc 44
-            hands="Chironic Gloves",
+            -- macc 38, set bonus
+            hands="Acad. Bracers +2",
             -- macc 57
             legs=aug_gear.acc.legs,
             -- macc 36, set bonus
@@ -307,7 +330,7 @@ function get_sets()
             -- MND +18, healing.skill +12
             body = "Pedagogy Gown",
 
-            -- cure.pot +10%, MND +33
+            -- cure.pot +14%, MND +33
             hands="Telchine Gloves",
 
             -- Cure.pot +10
@@ -316,34 +339,44 @@ function get_sets()
             -- Healing magic skill +14, mnd+12
             feet = "Peda. Loafers",
 
-            -- MND +8
-            back = "Pahtli Cape",
+            -- Cure potency +7%
+            back="Solemnity Cape",
 
-            -- mnd +7
-            waist = "Porous Robe",
+            -- healing magic skill +5
+            waist="Bishop's Sash",
+
+            -- Cure potency +5%
+            right_ear="Mendi. Earring",
 
             -- MND +5
             left_ring="Solemn Ring",
 
-            -- MND +3
-            right_ring={ name="Diamond Ring", augments={'MND+3',}},
+            -- Healing magic +10
+            right_ring="Sirona's Ring",
         }
     );
 
     sets.enhancing = set_combine(
         sets.standard,
         {
+            -- Possible upgrades
+            -- Grioavolr staff, +9 duration, Bashmu reisenjima NM
+            
+
             -- Enh.magic +12, regen +10
             head="Arbatel Bonnet",
 
-            -- Enh.magic +12, regen dur +12, haste +3
+            -- Enh.magic +12, regen dur +12, haste +3, enh. dura. +5
             body = "Telchine Chas.",
 
-            -- Enhancing magic +15
-            hands = "Chironic Gloves",
+            -- Enhancing duration +10
+            hands="Telchine Gloves",
 
             -- MND +5, INT +5
             waist = "Penitent's Rope",
+
+            -- Enhancing duration +10
+            legs="Telchine Braconi",
 
             -- MND +8
             back="Pahtli Cape",
@@ -573,6 +606,10 @@ function precast(spell)
                     miaw_staves.accuracy[spell.element]
                 );
             else
+                -- +22 enf. skill from Light Arts
+                if grimoire_is_active(spell) then
+                   extraGear.body = "Acad. Pants +2";
+                end
                 MidcastGear = set_combine(
                     sets.enfeeble_light,
                     extraGear,
