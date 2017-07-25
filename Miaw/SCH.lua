@@ -232,7 +232,7 @@ function get_sets()
 
     sets.fastcast = {
         -- Possible upgrades:
-        --  * Augmented merlinic hood, 15 fast cast (+7)
+        --  * Augmented merlinic hood, 15 fast cast (+1)
         --  * Augmented merlinic feet, 12 fc (+7)
         --  * Kaykaus Tights, 6 fast cast (+1)
         --  * Rahab Ring, fc 2 (+2), AA TT
@@ -242,8 +242,16 @@ function get_sets()
 
         -- Weapon and sub: 5%
 
-        -- Fast cast +10
+        -- Fast cast +14
         -- Note: Replaced with Peda. M.Board under grimoire
+        head={
+            name="Merlinic Hood",
+            augments={
+                'Mag. Acc.+19 "Mag.Atk.Bns."+19',
+                '"Fast Cast"+6',
+                'CHR+5',
+            }
+        },
         head="Nahtirah Hat",
         -- Fast cast +8
         body = "Helios Jacket",
@@ -272,7 +280,7 @@ function get_sets()
         -- left_ear="Barkaro. Earring",
 
 
-        -- Total: 56%
+        -- Total: 60%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
