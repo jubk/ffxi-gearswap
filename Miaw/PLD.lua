@@ -28,8 +28,8 @@ function get_sets()
         back = "Weard Mantle",
         -- acc 14, doubleatk 3, store tp 1~5
         waist="Kentarch Belt +1",
-        -- dt -6, acc 39, atk 43
-        legs="Sulevi. Cuisses +1",
+        -- dt -7, acc 45, atk 49
+        legs="Sulevi. Cuisses +2",
         -- dt -4, acc 42, atk 46
         feet="Sulev. Leggings +2",
     }

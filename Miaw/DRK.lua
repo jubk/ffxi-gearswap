@@ -8,7 +8,7 @@ function get_sets()
         head="Sulevia's Mask +2",
         body="Sulevia's Plate. +1",
         hands="Sulev. Gauntlets +1",
-        legs="Sulevi. Cuisses +1",
+        legs="Sulevi. Cuisses +2",
         feet="Sulev. Leggings +2",
         neck="Sanctity Necklace",
         waist="Sailfi Belt",
