@@ -233,10 +233,10 @@ function get_sets()
     sets.fastcast = {
         -- Possible upgrades:
         --  * Augmented merlinic hood, 15 fast cast (+1)
-        --  * Augmented merlinic feet, 12 fc (+7)
+        --  * Augmented merlinic feet, 12 fc (+2)
         --  * Kaykaus Tights, 6 fast cast (+1)
         --  * Rahab Ring, fc 2 (+2), AA TT
-        --  * Grioavolr staff, up to +11 fastcast (+8), Bashmu reisen NM
+        --  * Grioavolr staff, up to +11 fastcast (+2), Bashmu reisen NM
         --  * Hvergelmir i119 III staff, +50, (+47)
         --  * Zendik robe, fc 13 (+5), Warder of Courage
 
@@ -267,9 +267,15 @@ function get_sets()
         back = "Swith Cape +1",
         -- Fast cast +5
         legs="Artsieq Hose",
-        -- Fast cast +5
+        -- Fast cast +10
         -- Note: Replaced with Acad. Loafers +2 under grimoire
-        feet = "Peda. Loafers",
+        feet={
+            name="Merlinic Crackows",
+            augments={
+                '"Fast Cast"+5',
+                '"Mag.Atk.Bns."+4',
+            }
+        },
         -- Fast cast +2
         right_ear="Loquac. Earring",
         -- Fast cast +2
@@ -280,7 +286,7 @@ function get_sets()
         -- left_ear="Barkaro. Earring",
 
 
-        -- Total: 60%
+        -- Total: 65%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
@@ -344,8 +350,8 @@ function get_sets()
             -- Cure.pot +10
             legs="Gyve Trousers",
 
-            -- Healing magic skill +14, mnd+12
-            feet = "Peda. Loafers",
+            -- Cure potency +10%, healing magic +20
+            feet = "Vanya Clogs",
 
             -- Cure potency +7%
             back="Solemnity Cape",
@@ -368,8 +374,17 @@ function get_sets()
         sets.standard,
         {
             -- Possible upgrades
-            -- Grioavolr staff, +9 duration, Bashmu reisenjima NM
-            
+            -- Grioavolr augs, +9 duration (+3)
+
+            main={
+                name="Grioavolr",
+                augments={
+                    'Enh. Mag. eff. dur. +6',
+                    'INT+14','Mag. Acc.+18',
+                    '"Mag.Atk.Bns."+15',
+                    'Magic Damage +1',
+                }
+            },
 
             -- Enh.magic +12, regen +10
             head="Arbatel Bonnet",

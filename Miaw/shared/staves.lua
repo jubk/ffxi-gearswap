@@ -1,3 +1,13 @@
+local fc_staff = {
+    name="Grioavolr",
+    augments={
+        '"Fast Cast"+5',
+        'MP+32',
+        'Mag. Acc.+9',
+        'Magic Damage +3',
+    }
+}
+
 miaw_staves = {
     nuking = {
         Ice = { main = "Akademos", sub = "Niobid Strap" },
@@ -22,14 +32,14 @@ miaw_staves = {
         Water = { main = "Akademos", sub = "Clerisy Strap" },
     },
     fastcast = {
-        Ice = { main = "Vourukasha I", sub = "Clerisy Strap" },
-        Dark = { main = "Marin Staff +1", sub = "Clerisy Strap" },
-        Lightning = { main = "Apamajas I", sub = "Clerisy Strap" },
-        Light = { main = "Marin Staff +1", sub = "Clerisy Strap" },
-        Wind = { main = "Marin Staff +1", sub = "Clerisy Strap" },
-        Fire = { main = "Marin Staff +1", sub = "Clerisy Strap" },
-        Earth = { main = "Marin Staff +1", sub = "Clerisy Strap" },
-        Water = { main = "Marin Staff +1", sub = "Clerisy Strap" },
+        Ice = { main = fc_staff, sub = "Clerisy Strap" },
+        Dark = { main = fc_staff, sub = "Clerisy Strap" },
+        Lightning = { main = fc_staff, sub = "Clerisy Strap" },
+        Light = { main = fc_staff, sub = "Clerisy Strap" },
+        Wind = { main = fc_staff, sub = "Clerisy Strap" },
+        Fire = { main = fc_staff, sub = "Clerisy Strap" },
+        Earth = { main = fc_staff, sub = "Clerisy Strap" },
+        Water = { main = fc_staff, sub = "Clerisy Strap" },
     },
     healing = { main = "Chatoyant Staff", sub = "Raptor Strap +1" }
 }
