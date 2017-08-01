@@ -143,7 +143,7 @@ function get_sets()
         sets.ws.base, {
             -- MND 29
             hands = "Cab. Gauntlets +1",
-            legs="Carmine Cuisses"
+            legs="Carmine Cuisses +1"
         }
     );
     sets.ws.magic = set_combine(
@@ -169,7 +169,7 @@ function get_sets()
         }
     );
     sets.ws['Burning Blade'] = set_combine(
-        sets.ws.magic, { legs="Carmine Cuisses" }
+        sets.ws.magic, { legs="Carmine Cuisses +1" }
     );
     sets.ws['Red Lotus Blade'] = sets.ws['Burning Blade'];
     sets.ws['Shining Blade'] = sets.ws.magic
@@ -203,7 +203,7 @@ function get_sets()
 
     sets.idle = set_combine(
         sets.tanking, {
-            legs="Carmine Cuisses"
+            legs="Carmine Cuisses +1"
         }
     );
 
