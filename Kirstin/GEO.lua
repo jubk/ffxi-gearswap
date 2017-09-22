@@ -2,6 +2,8 @@ include("remove_silence");
 include("cancel_buffs");
 include("shared/staves");
 
+local modesets = require("modesets");
+
 function time_specific_gear()
     if world.time >= 8*60 and world.time < 18*60 then
         return { feet="Serpentes Sabots" };
@@ -11,16 +13,28 @@ function time_specific_gear()
 end
 
 function get_sets()
+    idle_mode = modesets.make_set(
+        'Idlemode',
+        {'refresh', 'defensive', 'luopan'}
+    );
+    engaged_mode = modesets.make_set(
+        'Engagedmode',
+        {'luopan', 'defensive', 'refresh'}
+    );
+    send_command('bind ^f9 gs c mode Idlemode cycle');
+    send_command('bind ^f10 gs c mode Engagedmode cycle');
+
+
     local base = set_combine({
             range="Dunna",
             head="Azimuth Hood +1",
 
-            -- macc 40, matk 40, refresh +3
-            body="Jhakri Robe +1",
+            -- macc 46, matk 46, refresh +4
+            body="Jhakri Robe +2",
 
             hands="Merlinic Dastanas",
             legs="Assiduity Pants",
-            feet="Geo. Sandals +1",
+            feet="Geo. Sandals +2",
             neck="Sanctity Necklace",
             waist="Refoccilation Stone",
             left_ear="Mendi. Earring",
@@ -32,23 +46,30 @@ function get_sets()
     )
     sets.base = base
 
-    sets.idle = set_combine(base, {
-        right_ear="Moonshade Earring",
-    });
-    sets.engaged = set_combine(base, {});
-
     sets.fastcast = set_combine(base, {
-        -- Fast cast +2
-        head="Selenian Cap",
-        -- Fast cast +5%
-        body="Vrikodara Jupon",
-        -- Fast cast +4%
-        legs="Gyve Trousers",
-        -- Fast cast +4-6%
+        -- Fast cast +8
+        head="Merlinic Hood",
+        -- Fast cast +8
+        body="Shango Robe",
+        -- Fast cast +13
+        legs="Geomancy Pants +2",
+        -- Fast cast +4-6
         feet="Regal Pumps",
-        -- Enhances fast cast
+        -- Fast cast +2
+        waist="Channeler's Stone",
+        -- Fast cast +2
         left_ear="Loquac. Earring",
-        -- TODO: back="Swith Cape"
+        -- Fast cast +2
+        left_ring="Prolix Ring",
+        -- Fast cast +7
+        back={
+            name="Lifestream Cape",
+            augments={
+                'Geomancy Skill +10',
+                'Indi. eff. dur. +11',
+                'Pet: Damage taken -5%',
+            }
+        },
     });
     sets.cure_fastcast = set_combine(
         sets.fastcast,
@@ -56,7 +77,7 @@ function get_sets()
             -- Cure magic time -7%
             body="Vanya Robe",
             -- Cure magic time -3%
-            right_ear="Mendi. Earring",
+            left_ear="Mendi. Earring",
             -- Cure magic time -8%
             back="Pahtli Cape",
             -- Cure casting time -15%
@@ -68,7 +89,9 @@ function get_sets()
         back="Disperser's Cape",
     });
     sets.elemental_fastcast = set_combine(sets.fastcast, {
-        -- Elem. casting time -3
+        -- Elem. magic casting time -11%
+        hands="Bagua Mitaines",
+        -- Elem magic casting time -3%
         left_ear="Barkaro. Earring",
     });
     sets.enhancing_fastcast = set_combine(sets.fastcast, {
@@ -88,7 +111,7 @@ function get_sets()
             -- cure pot 5
             feet="Vanya Clogs",
             -- cure pot 5-6
-            right_ear="Mendi. Earring",
+            left_ear="Mendi. Earring",
             -- healing magic skill 10
             left_ring="Sirona's Ring",
             -- cure pot II 5
@@ -186,9 +209,9 @@ function get_sets()
                 }
             },
             -- macc 40, matk 40, refresh +3
-            body="Jhakri Robe +1",
-            -- macc 37, matk 37
-            hands="Jhakri Cuffs +1",
+            body="Jhakri Robe +2",
+            -- macc 43, matk 40
+            hands="Jhakri Cuffs +2",
             -- macc 40 (aug), matk 13 (aug), mdam 13
             legs="Merlinic Shalwar",
             -- macc 36, matk 36
@@ -213,23 +236,123 @@ function get_sets()
         {
             -- Geomancy +15
             head="Azimuth Hood +1",
-            -- Geomancy +12
-            body="Bagua Tunic +1",
-            -- Geomancy +15
-            hands="Geomancy Mitaines",
+            -- Set bonus
+            body="Azimuth Coat",
+            -- Set bonus
+            hands="Azimuth Gloves",
+            -- Indi duration +12
+            legs="Bagua Pants +1",
+            -- Indi duration +20, set bonus
+            feet="Azimuth Gaiters +1",
             -- Geomancy +10
             neck="Deceiver's Torque",
-            -- Geomancy +5
+            -- Geomancy +15
             back={
                 name="Lifestream Cape",
                 augments={
-                        'Geomancy Skill +10',
-                        'Indi. eff. dur. +11',
-                        'Pet: Damage taken -5%',
+                    'Geomancy Skill +10',
+                    'Indi. eff. dur. +11',
+                    'Pet: Damage taken -5%',
                 }
             },
         }
-    )
+    );
+
+    sets.engaged = {}
+    sets.engaged['defensive'] = set_combine(
+        sets.base,
+        {
+            -- def 107, mdef 5
+            head="Geo. Galero +2",
+            -- pdt -3
+            body="Vrikodara Jupon",
+            -- pdt -2
+            hands="Geo. Mitaines +2",
+            -- mdt -2
+            legs="Gyve Trousers",
+            -- pdt -4
+            feet="Azimuth Gaiters +1",
+            -- dt -6
+            neck="Loricate Torque +1",
+            -- mdt -2
+            left_ear="Merman's Earring",
+            -- mdt -2
+            right_ear="Odnowa Earring +1",
+            -- pdt -5
+            left_ring="Patricius Ring",
+            -- dt -10
+            right_ring="Defending Ring",
+            -- dt -4
+            back="Solemnity Cape",
+        }
+    );
+    sets.engaged['luopan'] = set_combine(
+        sets.engaged['defensive'],
+        {
+            -- Luopan regen +3
+            head="Azimuth Hood +1",
+            -- Luopan dt -12%
+            hands="Geo. Mitaines +2",
+            -- Luopan regen +3
+            feet="Bagua Sandals +1",
+            -- Luopan dt -5%
+            back={
+                name="Lifestream Cape",
+                augments={
+                    'Geomancy Skill +10',
+                    'Indi. eff. dur. +11',
+                    'Pet: Damage taken -5%',
+                }
+            },
+        }
+    );
+    sets.engaged['refresh'] = set_combine(
+        sets.engaged['luopan'],
+        {
+            -- refresh +1
+            head="Befouled Crown",
+            -- refresh +4
+            body="Jhakri Robe +2",
+            -- refresh +1
+            hands="Bagua Mitaines",
+            -- refresh +1
+            legs="Assiduity Pants",
+        }
+    );
+
+    sets.idle = {}
+    sets.idle['base'] = {
+        -- Runspeed +12
+        feet="Geo. Sandals +2",
+    }
+    sets.idle['refresh'] = set_combine(
+        sets.engaged['refresh'],
+        sets.idle['base'],
+        {
+            -- refresh +1
+            right_ear="Moonshade Earring",
+        }
+    );
+    sets.idle['defensive'] = set_combine(
+        sets.engaged['defensive'],
+        sets.idle['base'],
+        {}
+    );
+    sets.idle['luopan'] = set_combine(
+        sets.engaged['luopan'],
+        sets.idle['base'],
+        {}
+    );
+
+    sets.JA = {};
+    sets.JA["Bolster"] = { body="Bagua Tunic" }
+    sets.JA["Mending Halation"] = { legs="Bagua Pants +1" }
+    sets.JA["Radial Arcana"] = { feet="Bagua Sandals +1" }
+    sets.JA["Full Circle"] = {
+        head="Azimuth Hood +1",
+        body="Geomancy Tunic +2"
+    }
+
     
 end
 
@@ -244,18 +367,18 @@ function precast(spell)
             equip(sets.cure_fastcast);
         elseif "Healing Magic" == spell.skill then
             equip(sets.healing_fastcast);
-            -- equip(kirstin_staves.fastcast[spell.element]);
         elseif "Enhancing Magic" == spell.skill then
             equip(sets.enhancing_fastcast);
-            -- equip(kirstin_staves.fastcast[spell.element]);
         elseif "Elemental Magic" == spell.skill then
             equip(sets.elemental_fastcast);
-            -- equip(kirstin_staves.fastcast[spell.element]);
         else
             equip(sets.fastcast);
-            -- equip(kirstin_staves.fastcast[spell.element]);
         end
     elseif '/jobability' == spell.prefix then
+        local gear = sets.JA[spell.english]
+        if(gear ~= nil) then
+            equip(gear)
+        end
     end
 end
 
@@ -298,19 +421,24 @@ end
 
 function aftercast(spell)
     if "Engaged" == player.status then
-        equip(sets.engaged)
+        equip(sets.engaged[engaged_mode.value]);
     else
-        equip(sets.idle)
-        equip(time_specific_gear());
+        equip(sets.idle[idle_mode.value]);
     end
 end
 
 function status_change(new,old)
     if "Idle" == new then
-        equip(set_combine(sets.idle, time_specific_gear()))
+        equip(sets.idle[idle_mode.value]);
     elseif "Resting" == new then
-        equip(set_combine(sets.resting, time_specific_gear()))
+        equip(sets.resting)
     elseif "Engaged" == new then
-        equip(sets.engaged)
+        equip(sets.engaged[engaged_mode.value]);
+    end
+end
+
+function self_command(command)
+    if modesets.self_command(command) then
+        return
     end
 end

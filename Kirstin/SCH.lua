@@ -20,8 +20,8 @@ function get_sets()
             }
         },
 
-        -- macc 40, matk 40, refresh +3
-        body="Jhakri Robe +1",
+        -- macc 46, matk 46, refresh +4
+        body="Jhakri Robe +2",
 
         hands="Psycloth Manillas",
         legs="Assiduity Pants",
@@ -66,8 +66,8 @@ function get_sets()
                     '"Mag.Atk.Bns."+15',
                 }
             },
-            -- macc 40, matk 40, refresh +3
-            body="Jhakri Robe +1",
+            -- macc 46, matk 46, refresh +4
+            body="Jhakri Robe +2",
             -- macc 48 (aug), matk 50 (aug)
             hands="Chironic Gloves",
             -- macc 36 (aug), matk 42 (aug), mdam 13

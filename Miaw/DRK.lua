@@ -59,6 +59,14 @@ function get_sets()
         back="Izdubar Mantle",
     }
 
+    sets.ws = {}
+    sets.ws.base = set_combine(sets.base, {
+        right_ring="Ruby Ring",
+        waist="Fotia Belt",
+        neck="Fotia Gorget",
+    })
+
+
     MidCastGear = nil
     AfterCastGear = {}
 
@@ -79,6 +87,12 @@ function precast(spell)
 
         equip(sets.fastcast)
         MidCastGear = sets.magic_accuracy
+    elseif '/weaponskill' == spell.prefix then
+        if sets.ws[spell.english] then
+            equip(sets.ws[spell.english])
+        else
+            equip(sets.ws.base)
+        end
     else
         equip(sets.base)
     end

@@ -220,6 +220,10 @@ function get_sets()
         }
     );
 
+    sets.nuking_darkmagic_extra = {
+        head="Pixie Hairpin +1",
+    }
+
     -- This set is meant to be combined with either nuking or magicburst
     sets.helix_overrides = {
         -- mdam +10
@@ -295,6 +299,7 @@ function get_sets()
     sets.darkmagic = set_combine(sets.nuking, {});
 
     sets.drain_and_aspir = set_combine(sets.darkmagic, {
+        head="Pixie Hairpin +1",
         waist = "Fucho-no-Obi"
     })
 
@@ -591,6 +596,10 @@ function precast(spell)
 
             if spell.english:find("helix") then
                 extraGear = set_combine(extraGear, sets.helix_overrides)
+            end
+
+            if(spell.element == "Dark") then
+                extraGear = set_combine(extraGear, sets.nuking_darkmagic_extra)
             end
 
             MidcastGear = set_combine(

@@ -143,7 +143,11 @@ function get_sets()
         sets.ws.base, {
             -- MND 29
             hands = "Cab. Gauntlets +1",
-            legs="Carmine Cuisses +1"
+            legs="Carmine Cuisses +1",
+            -- WS boost
+            neck="Fotia Gorget",
+            -- WS boost
+            waist="Fotia Belt",
         }
     );
     sets.ws.magic = set_combine(
@@ -156,8 +160,6 @@ function get_sets()
             body="Found. Breastplate",
             -- matk/macc +34
             feet="Founder's Greaves",
-            -- macc +10, matk +10
-            neck="Sanctity Necklace",
             -- matk +6
             left_ear="Hecate's Earring",
             -- matk +10

@@ -157,7 +157,7 @@ function get_sets()
     );
 
     -- +12% runspeed
-    sets.idle = set_combine(sets.base, { legs="Carmine Cuisses" });
+    sets.idle = set_combine(sets.base, { legs="Carmine Cuisses +1" });
 
     sets.resting = set_combine(sets.base, {});
 
@@ -185,7 +185,12 @@ function get_sets()
         }
     );
 
-    sets.ranged_attack = set_combine(sets.ranged_accuracy,{});
+    sets.ranged_attack = set_combine(sets.ranged_accuracy,{
+        -- WS boost
+        neck="Fotia Gorget",
+        -- WS boost
+        waist="Fotia Belt",
+    });
 
     sets.ranged_ws = set_combine(sets.ranged_accuracy, {});
 
@@ -202,10 +207,10 @@ function get_sets()
             legs="Herculean Trousers",
             -- macc 17, matk 15, wsdam 4, AGI 43
             feet="Herculean Boots",
-            -- macc 10, matk 10
-            neck="Sanctity Necklace",
-            -- macc 7, matk 7
-            waist="Eschan Stone",
+            -- WS boost
+            neck="Fotia Gorget",
+            -- WS boost
+            waist="Fotia Belt",
             -- matk 10
             left_ear="Friomisi Earring",
             -- matk 8
@@ -221,7 +226,9 @@ function get_sets()
 
     sets.wildfire = set_combine(sets.magic_ws, {});
 
-    sets.leaden_salute = set_combine(sets.wildfire, {});
+    sets.leaden_salute = set_combine(sets.wildfire, {
+        head="Pixie Hairpin +1",
+    });
 
     sets.wildfirebrew = set_combine(sets.wildfire, {});
 
