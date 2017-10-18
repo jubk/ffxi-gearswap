@@ -159,11 +159,11 @@ function get_sets()
             -- int +43, macc 52, matk +53, haste +5%
             legs=aug_gear.nuke.legs,
 
-            -- macc +2, matk +4
-            left_ring="Strendu Ring",
+            -- macc 6, matk 3, mb bonus 2
+            left_ring="Jhakri Ring",
 
-            -- macc +3, matk +3
-            right_ring="Arvina Ringlet +1",
+            -- macc +2, matk +4
+            right_ring="Strendu Ring",
 
             -- macc 36, matk 36
             feet="Jhakri Pigaches +1",

@@ -19,7 +19,7 @@ function get_sets()
         -- acc +10, subtle blow 5, store tp 3
         right_ear="Digni. Earring",
         -- acc +37, atk +41, dt -4
-        hands="Sulev. Gauntlets +1",
+        hands="Sulev. Gauntlets +2",
         -- cure recieved +5, dt -7, knockback dist -2
         ring1 = "Vocane Ring",
         -- dt -10
@@ -52,7 +52,7 @@ function get_sets()
             -- enmity +6
             feet="Cab. Leggings +1",
             -- enmity +4
-            left_ear = "Cryptic Earring",
+            left_ear = "Trux Earring",
             -- enmity +3
             left_ring = "Vengeful Ring",
             -- enmity +5

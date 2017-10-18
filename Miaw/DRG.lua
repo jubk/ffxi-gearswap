@@ -6,8 +6,8 @@ function get_sets()
     sets.base = {
         ammo="Staunch Tathlum",
         head="Sulevia's Mask +2",
-        body="Sulevia's Plate. +1",
-        hands="Sulev. Gauntlets +1",
+        body="Sulevia's Plate. +2",
+        hands="Sulev. Gauntlets +2",
         legs="Sulev. Cuisses +2",
         feet="Sulev. Leggings +2",
         neck="Sanctity Necklace",

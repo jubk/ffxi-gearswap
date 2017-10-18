@@ -119,8 +119,8 @@ function get_sets()
             left_ear="Friomisi Earring",
             -- matk 8, macc 8
             right_ear="Barkaro. Earring",
-            -- macc +3, matk 3
-            left_ring="Arvina Ringlet +1",
+            -- macc 6, matk 3, mb bonus 2
+            left_ring="Jhakri Ring",
             -- macc 2, matk 4
             right_ring="Strendu Ring",
             -- macc 30, mdam 20, matk 10, int 20, mb +5

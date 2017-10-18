@@ -119,7 +119,7 @@ function get_sets()
         legs="Meg. Chausses +1",
         feet="Meg. Jam. +1",
         neck="Sanctity Necklace",
-        waist="Kentarch Belt +1",
+        waist="Eschan Stone",
         left_ear="Digni. Earring",
         right_ear="Steelflash Earring",
         left_ring="Cacoethic Ring",
@@ -156,7 +156,7 @@ function get_sets()
         }
     );
 
-    -- +12% runspeed
+    -- +18% runspeed
     sets.idle = set_combine(sets.base, { legs="Carmine Cuisses +1" });
 
     sets.resting = set_combine(sets.base, {});
@@ -176,8 +176,8 @@ function get_sets()
             feet="Meg. Jam. +1",
             -- racc +10
             neck="Sanctity Necklace",
-            -- racc +10
-            waist="Yemaya Belt",
+            -- racc +15
+            waist="Eschan Stone",
             -- racc +15
             left_ring="Cacoethic Ring",
             -- racc +20

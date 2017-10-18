@@ -214,8 +214,8 @@ function get_sets()
             hands="Jhakri Cuffs +2",
             -- macc 40 (aug), matk 13 (aug), mdam 13
             legs="Merlinic Shalwar",
-            -- macc 36, matk 36
-            feet="Jhakri Pigaches +1",
+            -- macc 42, matk 39
+            feet="Jhakri Pigaches +2",
             -- macc 10, matk 10
             neck="Sanctity Necklace",
             -- macc 4, matk 10
@@ -224,8 +224,8 @@ function get_sets()
             left_ear="Barkaro. Earring",
             -- matk 10
             right_ear="Friomisi Earring",
-            -- macc 4
-            left_ring="Balrahn's Ring",
+            -- macc 6, matk 3, mb bonus 2
+            left_ring="Jhakri Ring",
             -- MB bonus
             right_ring="Mujin Band",
         }
