@@ -4,19 +4,19 @@ include("cancel_buffs");
 function get_sets()
     -- set_has_hachirin_no_obi(true);
     sets.base = {
-        ammo="Staunch Tathlum",
+        ammo="Seething Bomblet",
         head="Sulevia's Mask +2",
         body="Sulevia's Plate. +2",
         hands="Sulev. Gauntlets +2",
         legs="Sulev. Cuisses +2",
         feet="Sulev. Leggings +2",
         neck="Sanctity Necklace",
-        waist="Kentarch Belt +1",
-        left_ear="Zwazo Earring",
-        right_ear="Digni. Earring",
-        left_ring="Strigoi Ring",
-        right_ring="Cacoethic Ring",
-        back="Updraft Mantle",
+        waist="Eschan Stone",
+        left_ear="Digni. Earring",
+        right_ear="Steelflash Earring",
+        left_ring="Cacoethic Ring",
+        right_ring="Patricius Ring",
+        back="Mauler's Mantle",
     }
 
     sets.idle = set_combine(sets.base, {})
@@ -32,12 +32,12 @@ function get_sets()
         waist="Fotia Belt",
         neck="Fotia Gorget",
     })
+    sets.ws.Upheaval = set_combine(sets.ws.base, {
+        right_ring="Sattva Ring",
+    })
 
     sets.ja = {}
     sets.ja.base = set_combine(sets.base, {})
-    sets.ja.Angon = set_combine(sets.ja.base, {
-        ammo="Angon",
-    })
 
     MidCastGear = nil
     AfterCastGear = {}

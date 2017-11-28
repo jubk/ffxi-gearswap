@@ -108,39 +108,30 @@ function get_sets()
     sets.ws = {};
     sets.ws.base = set_combine(
         sets.tanking, {
-            -- acc +34
-            head="Founder's Corona",
-
-            -- acc +7
-            left_ring="Patricius Ring",
-            -- acc +7
-            right_ring="Yacuruna Ring",
-
-            -- acc +35, matk +35, macc +35
-            body = "Found. Breastplate",
-
-            -- acc +5
-            neck = "Voltsurge Torque",
+            -- acc +10, macc +10
+            neck="Sanctity Necklace",
 
             -- acc +8
             left_ear="Steelflash Earring",
 
+            -- acc +10
+            right_ear="Digni. Earring",
+
             -- acc +20
             waist="Olseni Belt",
 
-            -- acc +7
-            ring1 = "Yacaruna Ring",
+            -- acc +10
+            left_ring="Cacoethic Ring",
 
             -- acc +7
-            ring1 = "Patricius Ring",
-
-            -- Acc +25
-            feet="Founder's Greaves"
+            right_ring = "Patricius Ring",
         }
     );
     sets.ws['Atonement'] = sets.enmity;
     sets.ws['Requiescat'] = set_combine(
         sets.ws.base, {
+            -- acc +35, matk +35, macc +35
+            body = "Found. Breastplate",
             -- MND 29
             hands = "Cab. Gauntlets +1",
             legs="Carmine Cuisses +1",
@@ -152,6 +143,8 @@ function get_sets()
     );
     sets.ws.magic = set_combine(
         sets.ws.base, {
+            -- acc +35, matk +35, macc +35
+            body = "Found. Breastplate",
             -- mdam +10
             ammo="Ghastly Tathlum",
             -- macc 20/matk 15/mdam 20

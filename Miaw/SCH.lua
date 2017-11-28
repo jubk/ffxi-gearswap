@@ -269,8 +269,8 @@ function get_sets()
         ammo = "Incantor Stone",
         -- Fast cast +4
         back = "Swith Cape +1",
-        -- Fast cast +5
-        legs="Artsieq Hose",
+        -- Fast cast +4
+        legs="Gyve Trousers",
         -- Fast cast +10
         -- Note: Replaced with Acad. Loafers +2 under grimoire
         feet={
