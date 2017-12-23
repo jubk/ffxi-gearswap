@@ -21,15 +21,15 @@ miaw_staves = {
     },
     accuracy = {
         -- Akademos: macc 25, macc skill 228
-        -- Clerisy Strap: macc 10
-        Ice = { main = "Akademos", sub = "Clerisy Strap" },
-        Dark = { main = "Akademos", sub = "Clerisy Strap" },
-        Lightning = { main = "Akademos", sub = "Clerisy Strap" },
-        Light = { main = "Akademos", sub = "Clerisy Strap" },
-        Wind = { main = "Akademos", sub = "Clerisy Strap" },
-        Fire = { main = "Akademos", sub = "Clerisy Strap" },
-        Earth = { main = "Akademos", sub = "Clerisy Strap" },
-        Water = { main = "Akademos", sub = "Clerisy Strap" },
+        -- Enki Strap: macc 10, int+10, mnd+10
+        Ice = { main = "Akademos", sub = "Enki Strap" },
+        Dark = { main = "Akademos", sub = "Enki Strap" },
+        Lightning = { main = "Akademos", sub = "Enki Strap" },
+        Light = { main = "Akademos", sub = "Enki Strap" },
+        Wind = { main = "Akademos", sub = "Enki Strap" },
+        Fire = { main = "Akademos", sub = "Enki Strap" },
+        Earth = { main = "Akademos", sub = "Enki Strap" },
+        Water = { main = "Akademos", sub = "Enki Strap" },
     },
     fastcast = {
         Ice = { main = fc_staff, sub = "Clerisy Strap" },

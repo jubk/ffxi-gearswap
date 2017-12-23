@@ -15,7 +15,7 @@ function get_sets()
         left_ear="Digni. Earring",
         right_ear="Steelflash Earring",
         left_ring="Cacoethic Ring",
-        right_ring="Patricius Ring",
+        right_ring="Moonbeam Ring",
         back="Mauler's Mantle",
     }
 

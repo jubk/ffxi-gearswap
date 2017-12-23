@@ -85,6 +85,10 @@ function get_sets()
         {
             -- cure spellcasting time -10%
             body="Jumalik Mail",
+            -- cure spellcasting time -4%
+            neck="Diemer gorget",
+            -- Cure spellcasting time -5%
+            right_ear="Mendi. Earring",
         }
     );
     sets.cure = set_combine(

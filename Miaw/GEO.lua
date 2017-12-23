@@ -11,25 +11,14 @@ function get_sets()
     setup_spellcost_map(player);
 
     sets.standard = {
-        main={
-            name="Grioavolr",
-            augments={
-                'Enh. Mag. eff. dur. +6',
-                'INT+14',
-                'Mag. Acc.+18',
-                '"Mag.Atk.Bns."+15',
-                'Magic Damage +1',
-            }
-        },
+        main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}},
+        sub="Genmei Shield",
+        range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
+        back="Swith Cape +1",
 
-        -- macc 5, matk 5
-        sub="Niobid Strap",
+        -- Geomancy +5
+        head="Hike Khat",
 
-        -- macc 6, matk 4, int 4
-        ammo="Pemphredo Tathlum",
-
-        -- macc 52, matk 47
-        head=aug_gear.nuke.head,
         -- macc 40, matk 40
         body="Jhakri Robe +1",
         -- macc 9, matk 23, mb 10
@@ -52,8 +41,6 @@ function get_sets()
         left_ring="Arvina Ringlet +1",
         -- macc 2, matk 4
         right_ring="Strendu Ring",
-        --
-        back="Izdubar Mantle",
     };
 
     sets.standard_idle = set_combine(sets.standard, {});
@@ -89,9 +76,6 @@ function get_sets()
     sets.nuking = set_combine(
         sets.standard,
         {
-            -- macc 6, matk 4, int 4
-            ammo="Pemphredo Tathlum",
-
             -- macc 52, matk 47
             head=aug_gear.nuke.head,
 
@@ -116,16 +100,6 @@ function get_sets()
             left_ring="Jhakri Ring",
             -- macc 2, matk 4
             right_ring="Strendu Ring",
-            -- macc 30, mdam 20, matk 10, int 20, mb +5
-            back={
-                name="Taranus's Cape",
-                augments={
-                    'INT+20',
-                    'Mag. Acc+20 /Mag. Dmg.+20',
-                    'Mag. Acc.+10',
-                    '"Mag.Atk.Bns."+10',
-                }
-            },
         }
     );
 
@@ -171,10 +145,8 @@ function get_sets()
         waist="Channeler's Stone",
         -- Fast cast +7
         hands="Gende. Gages +1",
-        -- Fast cast +3
+        -- Fast cast +4
         back = "Swith Cape +1",
-        -- Fast cast +5
-        legs="Aya. Cosciales +1",
         -- Fast cast +5
         feet="Merlinic Crackows",
         -- Fast cast +2
@@ -196,7 +168,6 @@ function get_sets()
 
             -- macc +7
             right_ring = "Etana Ring",
-
         }
     );
 
@@ -222,6 +193,8 @@ function get_sets()
             -- macc +7
             right_ring = "Etana Ring",
 
+            -- matk +7, macc +7
+            feet="Helios Boots"
         }
     );
 
@@ -261,11 +234,8 @@ function get_sets()
             -- Enh.magic +12, regen dur +12, haste +3
             body = "Telchine Chas.",
 
-            -- MND +8
+             -- MND +8
             back="Pahtli Cape",
-
-            -- Enh.magic +7
-            left_ear="Andoaa Earring",
 
             -- MND +5
             left_ring="Solemn Ring",
@@ -282,13 +252,34 @@ function get_sets()
         }
     );
 
-    sets.alchemy = set_combine(
-        sets.standard,
-        {
-            main="Caduceus",
-            body="Alchemist's Apron",
-        }
-    )
+    sets.mp_plus = {
+        -- Mp +20
+        sub="Niobid Strap",
+        -- Mp +30
+        ammo="Ghastly Tathlum",
+        -- Mp +56
+        head={ name="Merlinic Hood", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','Damage taken-2%','CHR+1','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
+        -- Mp +89
+        body={ name="Helios Jacket", augments={'Mag. Evasion+21','"Fast Cast"+5',}},
+        -- Mp +26
+        hands={ name="Amalric Gages", augments={'INT+10','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
+        -- Mp +44
+        legs={ name="Merlinic Shalwar", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Conserve MP"+3','Mag. Acc.+14','"Mag.Atk.Bns."+15',}},
+        -- Mp +20
+        feet={ name="Merlinic Crackows", augments={'Mag. Acc.+21','Magic burst dmg.+10%','"Mag.Atk.Bns."+5',}},
+        -- Mp +35
+        neck="Sanctity Necklace",
+        -- Mp +20
+        waist="Eschan Stone",
+        -- Mp +25
+        left_ear="Barkaro. Earring",
+        -- Mp +100
+        left_ring="Mephitas's Ring +1",
+        -- Mp +60, macc 7
+        right_ring="Etana Ring",
+        -- Mp +90
+        back={ name="Bane Cape", augments={'Elem. magic skill +10','Dark magic skill +6','"Mag.Atk.Bns."+1',}},
+    }
 
     nuke_mode = modesets.make_set('Nukemode', {'magicburst', 'nuking'});
     send_command('bind ^f9 gs c mode Nukemode cycle')

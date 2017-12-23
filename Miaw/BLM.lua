@@ -190,7 +190,10 @@ function get_sets()
         left_ring="Prolix Ring",
     }
 
-    sets.darkmagic = set_combine(sets.nuking, {});
+    sets.darkmagic = set_combine(sets.nuking, {
+        -- Macc 17, dark magic skill 10, drain/aspir +5
+        neck="Erra Pendant",
+    });
 
     sets.enfeeble_dark = set_combine(
         sets.standard,

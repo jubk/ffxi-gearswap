@@ -163,7 +163,7 @@ function get_sets()
             left_ring="Jhakri Ring",
 
             -- macc +2, matk +4
-            right_ring="Strendu Ring",
+            right_ring="Shiva ring +1",
 
             -- macc 36, matk 36
             feet="Jhakri Pigaches +1",
@@ -213,10 +213,13 @@ function get_sets()
             -- MB+9, macc 54, matk 47, mdam +13
             legs=aug_gear.burst.legs,
 
+            -- macc 6, matk 3, mb bonus 2%
+            left_ring="Jhakri Ring",
+
             -- skillchain bonus, mb II 5%
             right_ring="Mujin Band",
 
-            -- 47% MB I, 10 MB II
+            -- 49% MB I, 10 MB II
         }
     );
 
@@ -236,15 +239,16 @@ function get_sets()
 
     sets.fastcast = {
         -- Possible upgrades:
+        --  * Hvergelmir i119 III staff, +50, (+47)
         --  * Augmented merlinic hood, 15 fast cast (+1)
         --  * Augmented merlinic feet, 12 fc (+2)
-        --  * Kaykaus Tights, 6 fast cast (+1)
-        --  * Rahab Ring, fc 2 (+2), AA TT
         --  * Grioavolr staff, up to +11 fastcast (+2), Bashmu reisen NM
-        --  * Hvergelmir i119 III staff, +50, (+47)
-        --  * Zendik robe, fc 13 (+5), Warder of Courage
+        --  * Pinga tunic, fc 13 (+5), 9 mill
+        --  * Pinga Pants, fc 11 (+7), 8 mill
+        --  * Enchntr. Earring +1, fc 2 (+2), 5 mill
+        --  * Rahab Ring, fc 2 (+2), AA TT
 
-        -- Weapon and sub: 5%
+        -- Weapon and sub: 11%
 
         -- Fast cast +14
         -- Note: Replaced with Peda. M.Board under grimoire
@@ -290,7 +294,8 @@ function get_sets()
         -- left_ear="Barkaro. Earring",
 
 
-        -- Total: 65%
+        -- Total: 70%
+        -- Total under grimoire: (total - 24) = 46%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
@@ -300,6 +305,8 @@ function get_sets()
 
     sets.drain_and_aspir = set_combine(sets.darkmagic, {
         head="Pixie Hairpin +1",
+        -- Macc 17, dark magic skill 10, drain/aspir +5
+        neck="Erra Pendant",
         waist = "Fucho-no-Obi"
     })
 

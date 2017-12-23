@@ -117,7 +117,7 @@ function get_sets()
         body="Meg. Cuirie +1",
         hands="Meg. Gloves +1",
         legs="Meg. Chausses +1",
-        feet="Meg. Jam. +1",
+        feet="Meg. Jam. +2",
         neck="Sanctity Necklace",
         waist="Eschan Stone",
         left_ear="Digni. Earring",
@@ -126,6 +126,38 @@ function get_sets()
         right_ring="Arvina Ringlet +1",
         back="Gunslinger's Cape",
     };
+
+    sets.snapshot = set_combine(
+        sets.base,
+        {
+            -- COR gifts: 10 snapshot
+            -- Flurry is 15, flurry II is 30
+
+            -- Snapshot +5
+            head="Aurore Beret +1",
+            -- Snapshot +9
+            hands = {
+                name="Lanun Gants +1",
+                augments={'Enhances "Fold" effect',}
+            },
+            -- Snapshot 10
+            feet="Meg. Jam. +2",
+            -- Snapshot +12
+            body="Oshosi Vest",
+            -- Snapshot 8
+            legs="Lak. Trews +2",
+            -- Snapshot 6.5
+            back="Navarch's Mantle",
+            -- Snapshot 3
+            waist="Impulse Belt",
+
+            -- Total: 53.5
+            -- Cap with no buffs: 60
+            -- Cap with flurry: 45
+            -- Cap with flurry II: 30
+        }
+    );
+
     sets.quickdraw = set_combine(
         sets.base,
         {
@@ -135,8 +167,8 @@ function get_sets()
             body="Rawhide Vest",
             -- matk +20
             hands="Pursuer's Cuffs",
-            -- matk +15
-            legs="Lak. Trews +1",
+            -- matk +20
+            legs="Lak. Trews +2",
             -- Quickdraw +22
             feet="Chasseur's Bottes",
             -- matk 10, macc 10
@@ -172,27 +204,24 @@ function get_sets()
             hands="Meg. Gloves +1",
             -- racc +43
             legs="Meg. Chausses +1",
-            -- racc +40
-            feet="Meg. Jam. +1",
+            -- racc +46
+            feet="Meg. Jam. +2",
             -- racc +10
             neck="Sanctity Necklace",
             -- racc +15
             waist="Eschan Stone",
             -- racc +15
             left_ring="Cacoethic Ring",
+            -- racc +16
+            right_ring="Cacoethic Ring +1",
             -- racc +20
             back="Gunslinger's Cape",
+            -- TODO: Envervating Earring, vagary body boss
         }
     );
 
     sets.ranged_attack = set_combine(sets.ranged_accuracy,{
-        -- WS boost
-        neck="Fotia Gorget",
-        -- WS boost
-        waist="Fotia Belt",
     });
-
-    sets.ranged_ws = set_combine(sets.ranged_accuracy, {});
 
     sets.magic_ws = set_combine(
         sets.base,
@@ -224,13 +253,24 @@ function get_sets()
         }
     )
 
-    sets.wildfire = set_combine(sets.magic_ws, {});
-
-    sets.leaden_salute = set_combine(sets.wildfire, {
-        head="Pixie Hairpin +1",
+    sets.ranged_ws = set_combine(sets.ranged_accuracy, {
+        -- WS boost
+        neck="Fotia Gorget",
+        -- WS boost
+        waist="Fotia Belt",
     });
 
-    sets.wildfirebrew = set_combine(sets.wildfire, {});
+    sets.ws = {}
+    sets.ws.base = set_combine(sets.base, {
+        -- WS boost
+        neck="Fotia Gorget",
+        -- WS boost
+        waist="Fotia Belt",
+    })
+    sets.ws["Wildfire"] = set_combine(sets.magic_ws, {});
+    sets.ws["Leaden Salute"] = set_combine(sets.wildfire, {
+        head="Pixie Hairpin +1",
+    });
 
     sets.fastcast = set_combine(
         sets.base,
@@ -291,53 +331,52 @@ function precast(spell)
     end
 
     if '/weaponskill' == spell.prefix then
-        local chosenSet = sets.ranged_ws
-
         -- Handle all weaponskill stuff
         if table.contains(marksmanship_ws, spell.name) then
             if stop_wasting_bullets() then
                 return;
             end
 
-            -- We want to equip cheap ammo after shooting
-            AfterCastGear.ammo = CheapAmmo
-
-            local chosenAmmo = CheapAmmo;
-
-            if 'Slug Shot' == spell.name then
-                chosenSet = sets.ranged_accuracy
-                chosenAmmo = SlugWinderAmmo
-            elseif 'Wildfire' == spell.name then
-                if "Fire" == world.weather_element or
-                    "Fire" == world.day_element then
-                    MidCastGear.waist = 'Hachirin-no-Obi'
-                end
-                if "Fire" == world.day_element then
-                    MidCastGear.left_ring = 'Zodiac Ring'
-                end
-
-                if buffactive['transcendency'] then
-                    chosenSet = sets.wildfirebrew
-                else
-                    chosenSet = sets.wildfire
-                end
-            elseif 'Leaden Salute' == spell.name then
-                if "Darkness" == world.weather_element or
-                    "Darkness" == world.day_element then
-                    MidCastGear.waist = 'Hachirin-no-Obi'
-                end
-                if "Darkness" == world.day_element then
-                    MidCastGear.left_ring = 'Zodiac Ring'
-                end
-                chosenSet = sets.leaden_salute
+            local chosenSet;
+            if sets.ws[spell.english] then
+                chosenSet = set_combine(sets.ws[spell.english], {});
             else
-                chosenAmmo = HighDamAmmo
+                chosenSet = set_combine(sets.ranged_ws, {});
+            end
+
+            -- We want to equip cheap ammo after shooting
+            AfterCastGear.ammo = CheapAmmo;
+
+            -- Default to using high damage ammo
+            chosenSet.ammo = HighDamAmmo;
+
+            if 'Wildfire' == spell.name then
+                if "Fire" == world.day_element then
+                    chosenSet.waist = 'Hachirin-no-Obi'
+                    chosenSet.left_ring = 'Zodiac Ring'
+                elseif "Fire" == world.weather_element then
+                    chosenSet.left_ring = 'Zodiac Ring'
+                end
+                -- Ammo damage has no effect on wildfire
+                chosenSet.ammo = CheapAmmo;
+            elseif 'Leaden Salute' == spell.name then
+                if "Darkness" == world.day_element then
+                    chosenSet.waist = 'Hachirin-no-Obi'
+                    chosenSet.left_ring = 'Zodiac Ring'
+                elseif "Darkness" == world.weather_element  then
+                    chosenSet.left_ring = 'Zodiac Ring'
+                end
+                -- Ammo damage has no effect on leaden salute
+                chosenSet.ammo = CheapAmmo;
             end
             chosenSet = set_combine(chosenSet, { ammo = chosenAmmo });
         else
-            chosenSet = sets.magic_ws;
+            if sets.ws[spell.english] then
+                equip(sets.ws[spell.english])
+            else
+                equip(sets.ws.base)
+            end
         end
-        equip(chosenSet);
     elseif '/range' == spell.prefix then
         if stop_wasting_bullets() then
             return;
@@ -346,7 +385,10 @@ function precast(spell)
         -- Fall back to cheap ammo after shooting
         AfterCastGear.ammo = CheapAmmo
 
-        equip(set_combine(sets.ranged_attack, { ammo = SlugWinderAmmo }));
+        equip(set_combine(sets.snapshot, { ammo = SlugWinderAmmo }));
+        MidCastGear = set_combine(
+            sets.ranged_attack, { ammo = SlugWinderAmmo }
+        )
     elseif '/magic' == spell.prefix  then
         equip(sets.fastcast)
 

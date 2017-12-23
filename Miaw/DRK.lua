@@ -45,8 +45,8 @@ function get_sets()
         legs="Augury Cuisses",
         -- macc 10
         feet={ name="Odyssean Greaves", augments={'Accuracy+10','"Fast Cast"+5','Attack+13',}},
-        -- macc 10, matk 10
-        neck="Sanctity Necklace",
+        -- Macc 17, dark magic skill 10, drain/aspir +5, absorb +5
+        neck="Erra Pendant",
         -- macc 10
         left_ear="Digni. Earring",
         -- matk 10
