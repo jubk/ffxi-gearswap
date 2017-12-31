@@ -38,8 +38,8 @@ function get_sets()
         legs=aug_gear.nuke.legs,
         -- macc 36, matk 36
         feet="Jhakri Pigaches +1",
-        -- macc 2, matk 8
-        neck="Stoicheion Medal",
+        -- macc 5, matk 11
+        neck="Eddy Necklace",
         -- macc 4, matk 10
         waist="Refoccilation Stone",
         -- matk 10
@@ -104,8 +104,8 @@ function get_sets()
             legs=aug_gear.nuke.legs,
             -- macc 36, matk 36
             feet="Jhakri Pigaches +1",
-            -- macc 2, matk 8
-            neck="Stoicheion Medal",
+            -- macc 5, matk 11
+            neck="Eddy Necklace",
             -- macc 4, matk 10
             waist="Refoccilation Stone",
             -- matk 10
@@ -163,8 +163,8 @@ function get_sets()
     sets.fastcast = {
         -- Fast cast +8
         head = "Merlinic Hood",
-        -- Fast cast +5
-        body = "Helios Jacket",
+        -- Fast cast +8
+        body="Shango Robe",
         -- Fast cast +4
         neck = "Voltsurge Torque",
         -- Fast cast +2
@@ -188,8 +188,13 @@ function get_sets()
     sets.enfeeble_dark = set_combine(
         sets.standard,
         {
-            -- matk +7, macc +25 (aug)
-            head = "Helios Band",
+            -- macc +38
+            head = "Jhakri Coronal +1",
+
+            -- macc 7
+            left_ear="Hermetic Earring",
+            -- macc 10
+            right_ear="Digni. Earring",
 
             -- macc +3
             left_ring="Arvina Ringlet +1",
@@ -203,8 +208,8 @@ function get_sets()
     sets.enfeeble_light = set_combine(
         sets.standard,
         {
-            -- matk +7, macc +25 (aug)
-            head = "Helios Band",
+            -- macc +38
+            head = "Jhakri Coronal +1",
 
             -- macc +15
             body = "Arbatel Gown",
@@ -215,6 +220,11 @@ function get_sets()
             -- TODO: Tengu-no-Obi
             -- mnd +7, macc +5
             waist = "Porous Robe",
+
+            -- macc 7
+            left_ear="Hermetic Earring",
+            -- macc 10
+            right_ear="Digni. Earring",
 
             -- macc +3
             left_ring="Arvina Ringlet +1",

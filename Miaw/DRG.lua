@@ -14,8 +14,8 @@ function get_sets()
         waist="Kentarch Belt +1",
         left_ear="Zwazo Earring",
         right_ear="Digni. Earring",
-        left_ring="Strigoi Ring",
-        right_ring="Cacoethic Ring",
+        left_ring="Cacoethic Ring",
+        right_ring="Cacoethic Ring +1",
         back="Updraft Mantle",
     }
 

@@ -62,8 +62,8 @@ function get_sets()
         -- Casting time -10%, haste +3%, Enmity -7, int 27, mnd 24
         feet="Acad. Loafers +2",
 
-        -- macc +2, matk +8, elem.cast.time -3%
-        neck="Stoicheion Medal",
+        -- macc 5, matk 11
+        neck="Eddy Necklace",
 
         -- macc +4, matk +10
         waist="Refoccilation Stone",
@@ -260,9 +260,8 @@ function get_sets()
                 'CHR+5',
             }
         },
-        head="Nahtirah Hat",
         -- Fast cast +8
-        body = "Helios Jacket",
+        body="Shango Robe",
         -- Fast cast +4
         neck = "Voltsurge Torque",
         -- Fast cast +2

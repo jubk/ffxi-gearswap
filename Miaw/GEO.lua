@@ -27,8 +27,8 @@ function get_sets()
         legs=aug_gear.nuke.legs,
         -- macc 36, matk 36
         feet="Jhakri Pigaches +1",
-        -- macc 2, matk 8
-        neck="Stoicheion Medal",
+        -- macc 5, matk 11
+        neck="Eddy Necklace",
         -- macc 4, matk 10
         waist="Refoccilation Stone",
         -- matk 10
@@ -88,8 +88,8 @@ function get_sets()
             legs=aug_gear.nuke.legs,
             -- macc 36, matk 36
             feet="Jhakri Pigaches +1",
-            -- macc 2, matk 8
-            neck="Stoicheion Medal",
+            -- macc 5, matk 11
+            neck="Eddy Necklace",
             -- macc 4, matk 10
             waist="Refoccilation Stone",
             -- matk 10
@@ -137,8 +137,8 @@ function get_sets()
     sets.fastcast = {
         -- Fast cast +8
         head = "Merlinic Hood",
-        -- Fast cast +5
-        body = "Helios Jacket",
+        -- Fast cast +8
+        body="Shango Robe",
         -- Fast cast +4
         neck = "Voltsurge Torque",
         -- Fast cast +2
@@ -160,8 +160,13 @@ function get_sets()
     sets.enfeeble_dark = set_combine(
         sets.standard,
         {
-            -- matk +7, macc +25 (aug)
-            head = "Helios Band",
+            -- macc +38
+            head = "Jhakri Coronal +1",
+
+            -- macc 8
+            left_ear="Barkaro. Earring",
+            -- macc 10
+            right_ear="Digni. Earring",
 
             -- macc +3
             left_ring="Arvina Ringlet +1",
@@ -174,14 +179,19 @@ function get_sets()
     sets.enfeeble_light = set_combine(
         sets.standard,
         {
-            -- matk +7, macc +25 (aug)
-            head = "Helios Band",
+            -- macc +38
+            head = "Jhakri Coronal +1",
 
             -- macc +15
             body = "Arbatel Gown",
 
             -- macc +44, matk+52
             hands = "Chironic Gloves",
+
+            -- macc 8
+            left_ear="Barkaro. Earring",
+            -- macc 10
+            right_ear="Digni. Earring",
 
             -- TODO: Tengu-no-Obi
             -- mnd +7, macc +5
@@ -251,35 +261,6 @@ function get_sets()
             neck="Nodens Gorget",
         }
     );
-
-    sets.mp_plus = {
-        -- Mp +20
-        sub="Niobid Strap",
-        -- Mp +30
-        ammo="Ghastly Tathlum",
-        -- Mp +56
-        head={ name="Merlinic Hood", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','Damage taken-2%','CHR+1','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
-        -- Mp +89
-        body={ name="Helios Jacket", augments={'Mag. Evasion+21','"Fast Cast"+5',}},
-        -- Mp +26
-        hands={ name="Amalric Gages", augments={'INT+10','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
-        -- Mp +44
-        legs={ name="Merlinic Shalwar", augments={'Mag. Acc.+23 "Mag.Atk.Bns."+23','"Conserve MP"+3','Mag. Acc.+14','"Mag.Atk.Bns."+15',}},
-        -- Mp +20
-        feet={ name="Merlinic Crackows", augments={'Mag. Acc.+21','Magic burst dmg.+10%','"Mag.Atk.Bns."+5',}},
-        -- Mp +35
-        neck="Sanctity Necklace",
-        -- Mp +20
-        waist="Eschan Stone",
-        -- Mp +25
-        left_ear="Barkaro. Earring",
-        -- Mp +100
-        left_ring="Mephitas's Ring +1",
-        -- Mp +60, macc 7
-        right_ring="Etana Ring",
-        -- Mp +90
-        back={ name="Bane Cape", augments={'Elem. magic skill +10','Dark magic skill +6','"Mag.Atk.Bns."+1',}},
-    }
 
     nuke_mode = modesets.make_set('Nukemode', {'magicburst', 'nuking'});
     send_command('bind ^f9 gs c mode Nukemode cycle')

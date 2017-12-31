@@ -31,6 +31,7 @@ function get_sets()
         "Steel Bullet",
         "Orichalc. Bullet",
         "Eminent Bullet",
+        "Midrium Bullet",
     };
 
     -- SlugwinderAmmo defaults to HighDamAmmo, but uses these if available:
@@ -122,7 +123,7 @@ function get_sets()
         waist="Eschan Stone",
         left_ear="Digni. Earring",
         right_ear="Steelflash Earring",
-        left_ring="Cacoethic Ring",
+        left_ring="Cacoethic Ring +1",
         right_ring="Arvina Ringlet +1",
         back="Gunslinger's Cape",
     };
@@ -206,8 +207,8 @@ function get_sets()
             legs="Meg. Chausses +1",
             -- racc +46
             feet="Meg. Jam. +2",
-            -- racc +10
-            neck="Sanctity Necklace",
+            -- racc +10, ratk 10, stp 4, rapid shot 5
+            neck="Yemaya Belt",
             -- racc +15
             waist="Eschan Stone",
             -- racc +15
@@ -246,6 +247,7 @@ function get_sets()
             right_ear="Hecate's Earring",
             -- macc 7
             left_ring="Etana Ring",
+            -- TODO: Acumen ring, matk 4%
             -- macc 3, matk 3, AGI 5
             right_ring="Arvina Ringlet +1",
             -- macc 20, mdam 20, wsdam 10, AGI 20

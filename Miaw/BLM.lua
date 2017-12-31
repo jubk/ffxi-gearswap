@@ -37,8 +37,8 @@ function get_sets()
         legs=aug_gear.nuke.legs,
         -- macc 36, matk 36
         feet="Jhakri Pigaches +1",
-        -- macc 2, matk 8
-        neck="Stoicheion Medal",
+        -- macc 5, matk 11
+        neck="Eddy Necklace",
         -- macc 4, matk 10
         waist="Refoccilation Stone",
         -- matk 10
@@ -105,14 +105,14 @@ function get_sets()
             -- macc 40, matk 40, refresh +3
             body="Jhakri Robe +1",
 
-            -- macc 9, matk 23, mb 10
-            hands=aug_gear.burst.hands,
+            -- macc 37, matk 37
+            hands="Jhakri Cuffs +1",
             -- macc 57, matk 53
             legs=aug_gear.nuke.legs,
             -- macc 36, matk 36
             feet="Jhakri Pigaches +1",
-            -- macc 2, matk 8
-            neck="Stoicheion Medal",
+            -- macc 5, matk 11
+            neck="Eddy Necklace",
             -- macc 4, matk 10
             waist="Refoccilation Stone",
             -- matk 10
@@ -170,8 +170,8 @@ function get_sets()
     sets.fastcast = {
         -- Fast cast +8
         head = "Merlinic Hood",
-        -- Fast cast +5
-        body = "Helios Jacket",
+        -- Fast cast +8
+        body="Shango Robe",
         -- Fast cast +4
         neck = "Voltsurge Torque",
         -- Fast cast +2
@@ -198,11 +198,16 @@ function get_sets()
     sets.enfeeble_dark = set_combine(
         sets.standard,
         {
-            -- matk +7, macc +25 (aug)
-            head = "Helios Band",
+            -- macc +38
+            head = "Jhakri Coronal +1",
 
             -- int +7, macc +5
             waist = "Porous Robe",
+
+            -- macc 8
+            left_ear="Barkaro. Earring",
+            -- macc 10
+            right_ear="Digni. Earring",
 
             -- macc +3
             left_ring="Arvina Ringlet +1",
@@ -218,14 +223,19 @@ function get_sets()
     sets.enfeeble_light = set_combine(
         sets.standard,
         {
-            -- matk +7, macc +25 (aug)
-            head = "Helios Band",
+            -- macc +38
+            head = "Jhakri Coronal +1",
 
             -- macc +15
             body = "Arbatel Gown",
 
             -- macc +44, matk+52
             hands = "Chironic Gloves",
+
+            -- macc 8
+            left_ear="Barkaro. Earring",
+            -- macc 10
+            right_ear="Digni. Earring",
 
             -- TODO: Tengu-no-Obi
             -- mnd +7, macc +5
@@ -311,8 +321,8 @@ function get_sets()
         ammo="Ghastly Tathlum",
         -- Mp +56
         head={ name="Merlinic Hood", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','Damage taken-2%','CHR+1','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
-        -- Mp +89
-        body={ name="Helios Jacket", augments={'Mag. Evasion+21','"Fast Cast"+5',}},
+        -- Mp +59
+        body="Shango Robe",
         -- Mp +26
         hands={ name="Amalric Gages", augments={'INT+10','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
         -- Mp +44
@@ -327,10 +337,10 @@ function get_sets()
         left_ear="Barkaro. Earring",
         -- Mp +30
         right_ear="Thureous Earring",
-        -- Mp +100
+        -- Mp +110
         left_ring="Mephitas's Ring +1",
-        -- Mp +60, macc 7
-        right_ring="Etana Ring",
+        -- Mp +80
+        right_ring="Persis Ring",
         -- Mp +90
         back={ name="Bane Cape", augments={'Elem. magic skill +10','Dark magic skill +6','"Mag.Atk.Bns."+1',}},
     }

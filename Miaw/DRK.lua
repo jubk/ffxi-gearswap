@@ -15,7 +15,7 @@ function get_sets()
         left_ear="Bladeborn Earring",
         right_ear="Steelflash Earring",
         left_ring="Cacoethic Ring",
-        right_ring="Strigoi Ring",
+        right_ring="Cacoethic Ring +1",
         back="Kayapa Cape",
     }
 

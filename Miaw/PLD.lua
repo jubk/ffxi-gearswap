@@ -127,8 +127,8 @@ function get_sets()
             -- acc +10
             left_ring="Cacoethic Ring",
 
-            -- acc +7
-            right_ring = "Patricius Ring",
+            -- acc +11
+            right_ring = "Cacoethic Ring +1",
         }
     );
     sets.ws['Atonement'] = sets.enmity;
