@@ -30,8 +30,9 @@ function get_sets()
         "Corsair Bullet",
         "Steel Bullet",
         "Orichalc. Bullet",
-        "Eminent Bullet",
         "Midrium Bullet",
+        "Eminent Bullet",
+        "Divine Bullet",
     };
 
     -- SlugwinderAmmo defaults to HighDamAmmo, but uses these if available:
@@ -207,8 +208,8 @@ function get_sets()
             legs="Meg. Chausses +1",
             -- racc +46
             feet="Meg. Jam. +2",
-            -- racc +10, ratk 10, stp 4, rapid shot 5
-            neck="Yemaya Belt",
+            -- racc +10, ratk 10
+            neck="Sanctity Necklace",
             -- racc +15
             waist="Eschan Stone",
             -- racc +15
@@ -228,15 +229,46 @@ function get_sets()
         sets.base,
         {
             -- macc 9, matk 19, wsdam 2, AGI 25
-            head="Herculean Helm",
+            head={
+                name="Herculean Helm",
+                augments={
+                    'Mag. Acc.+14 "Mag.Atk.Bns."+14',
+                    'Weapon skill damage +2%',
+                    'INT+4',
+                    '"Mag.Atk.Bns."+13',
+                }
+            },
             -- matk 25, AGI 30
             body="Rawhide Vest",
             -- macc 12, matk 24, wsdam 1, AGI 8
-            hands="Herculean Gloves",
+            hands={
+                name="Herculean Gloves",
+                augments={
+                    '"Mag.Atk.Bns."+24',
+                    'Weapon skill damage +1%',
+                    'MND+10',
+                    'Mag. Acc.+12',
+                }
+            },
             -- macc 5, matk 21, wsdam 1, AGI 32
-            legs="Herculean Trousers",
+            legs={
+                name="Herculean Trousers",
+                augments={
+                    '"Mag.Atk.Bns."+21',
+                    'Weapon skill damage +1%',
+                    'Mag. Acc.+5',
+                }
+            },
             -- macc 17, matk 15, wsdam 4, AGI 43
-            feet="Herculean Boots",
+            feet={
+                name="Herculean Boots",
+                augments={
+                    'Mag. Acc.+7',
+                    'Weapon skill damage +4%',
+                    'INT+5',
+                    '"Mag.Atk.Bns."+5',
+                }
+            },
             -- WS boost
             neck="Fotia Gorget",
             -- WS boost
@@ -256,6 +288,33 @@ function get_sets()
     )
 
     sets.ranged_ws = set_combine(sets.ranged_accuracy, {
+        head={
+            name="Herculean Helm",
+            augments={
+                'Weapon skill damage +4%',
+                'DEX+9',
+                'Rng.Acc.+6',
+                'Rng.Atk.+10',
+            }
+        },
+        legs={
+            name="Herculean Trousers",
+            augments={
+                'Rng.Acc.+15',
+                'Weapon skill damage +3%',
+                'STR+10',
+                'Rng.Atk.+13',
+            }
+        },
+        feet={
+            name="Herculean Boots",
+            augments={
+                'Rng.Acc.+14 Rng.Atk.+14',
+                'Weapon skill damage +3%',
+                'Rng.Acc.+2',
+                'Rng.Atk.+12',
+            }
+        },
         -- WS boost
         neck="Fotia Gorget",
         -- WS boost
@@ -371,7 +430,7 @@ function precast(spell)
                 -- Ammo damage has no effect on leaden salute
                 chosenSet.ammo = CheapAmmo;
             end
-            chosenSet = set_combine(chosenSet, { ammo = chosenAmmo });
+            equip(chosenSet)
         else
             if sets.ws[spell.english] then
                 equip(sets.ws[spell.english])

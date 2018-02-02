@@ -10,16 +10,16 @@ function get_sets()
         ammo="Staunch Tathlum",
         -- dt -6%, acc 44, store tp 10
         head="Sulevia's Mask +2",
-        -- dt -10, mdef +6, meva +80, absorb.m 5, acc 40
-        body="Tartarus Platemail",
+        -- HP +254, dt -11, mdef +5, meva 68, enmity +10, fastcast +10
+        body="Rev. Surcoat +3",
         -- mdef +4, regen +1, refresh +1
         neck = "Coatl Gorget +1",
         -- acc +9, bird killer 4, bdt -1
         left_ear="Zwazo Earring",
         -- acc +10, subtle blow 5, store tp 3
         right_ear="Digni. Earring",
-        -- acc +37, atk +41, dt -4
-        hands="Sulev. Gauntlets +2",
+        -- HP+239, acc +32, atk +32, mdt -5, phalanx +5, enmity +9
+        hands = "Souv. Handsch. +1",
         -- cure recieved +5, dt -7, knockback dist -2
         ring1 = "Vocane Ring",
         -- dt -10
@@ -27,11 +27,13 @@ function get_sets()
         -- acc +15, dt -3, enmity +3, phalanx +4
         back = "Weard Mantle",
         -- acc 14, doubleatk 3, store tp 1~5
-        waist="Kentarch Belt +1",
-        -- dt -7, acc 45, atk 49
-        legs="Sulevi. Cuisses +2",
-        -- dt -4, acc 42, atk 46
-        feet="Sulev. Leggings +2",
+        waist = "Kentarch Belt +1",
+        -- HP+162, dt -4, acc 36, meva +86, enmity +9
+        legs = "Souv. Diechlings +1",
+        -- HP +227, pdt -5, phalanx +5, shield block +3, enmity +9
+        feet = "Souveran Schuhs +1",
+
+        -- Souveran +1 set bonus (3 pieces): -6 dt
     }
 
     sets.enmity = set_combine(
@@ -43,14 +45,20 @@ function get_sets()
             ammo = "Sapience Orb",
             -- enmity +5
             neck = "Invidia Torque",
-            -- enmity +10
-            body = "Creed Cuirass +2",
-            -- mdef +1, haste +4, enmity +7, shield bash +25
-            hands = "Cab. Gauntlets +1",
-            -- enmity +6
-            legs = "Cab. Breeches",
-            -- enmity +6
-            feet="Cab. Leggings +1",
+            -- HP +254, dt -11, mdef +5, meva 68, enmity +10, fastcast +10
+            body="Rev. Surcoat +3",
+            -- HP+239, acc +32, atk +32, mdt -5, phalanx +5, enmity +9
+            hands = "Souv. Handsch. +1",
+            -- HP+162, dt -4, acc 36, meva +86, enmity +9
+            legs={
+                name="Souv. Diechlings +1",
+                augments={
+                    'HP+105','Enmity+9',
+                    'Potency of "Cure" effect received +15%',
+                }
+            },
+            -- HP +227, pdt -5, phalanx +5, shield block +3, enmity +9
+            feet = "Souveran Schuhs +1",
             -- enmity +4
             left_ear = "Trux Earring",
             -- enmity +3
@@ -59,8 +67,8 @@ function get_sets()
             right_ring="Begrudging Ring",
             -- enmity +5, mdef +4
             waist = "Creed Baudrier",
-            -- enmity +6, evasion +15, resist gravity +15
-            back = "Fravashi Mantle",
+            -- HP+130, enmity +6, mdt -8, enemy crit -3
+            back="Reiki Cloak",
         }
     );
 
@@ -71,20 +79,22 @@ function get_sets()
             ammo = "Incantor Stone",
             -- fast cast +12
             head="Carmine Mask",
+            -- HP +254, dt -11, mdef +5, meva 68, enmity +10, fastcast +10
+            body="Rev. Surcoat +3",
             -- fast cast +4
             neck = "Voltsurge Torque",
             -- Fast cast +2
             right_ear="Loquac. Earring",
             -- Fast cast +10
-            feet="Odyssean Greaves"
+            feet="Odyssean Greaves",
+            -- HP+130, enmity +6, mdt -8, enemy crit -3
+            back="Reiki Cloak",
         }
     );
 
     sets.fastcast_cure = set_combine(
         sets.fastcast,
         {
-            -- cure spellcasting time -10%
-            body="Jumalik Mail",
             -- cure spellcasting time -4%
             neck="Diemer gorget",
             -- Cure spellcasting time -5%
@@ -94,18 +104,14 @@ function get_sets()
     sets.cure = set_combine(
         sets.enmity,
         {
-            -- cure potency +15, mnd+16
-            body="Jumalik Mail",
             -- Cure potency 5-6, MND +3
-            ear1 = "Nourish. Earring",
+            left_ear = "Nourish. Earring",
+            -- Cure spellcasting time -5%, cure potency +5
+            right_ear="Mendi. Earring",
             -- Cure effect recieved +5
             left_ring="Vocane Ring",
-            -- Cure effect recieved +7
-            legs="Souveran Diechlings",
             -- Cure potency +7
             feet="Odyssean Greaves",
-            -- Cure potency +7
-            back="Solemnity Cape",
         }
     );
 

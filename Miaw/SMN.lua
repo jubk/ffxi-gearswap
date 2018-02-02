@@ -6,7 +6,7 @@ function get_sets()
     sets.base = {
         main = "Espiritus",
         sub="Elan Strap",
-        ammo="Seraphicaller",
+        ammo="Sancus Sachet +1",
         head="Tali'ah Turban +1",
         body="Tali'ah Manteel +2",
         hands="Tali'ah Gages +1",
@@ -107,9 +107,12 @@ function get_sets()
 
     sets.bloodpacts = {}
     sets.bloodpacts.precast = set_combine(sets.base, {
+        -- Blood pact ability delay -9
         head="Accord Hat +1",
         -- Blood pact delay -7
         body="Shomonjijoe",
+        -- Blood pact ability delay -6
+        hands="Con. Bracers +1",
         -- perp. cost -2, blood pact delay -2
         right_ear="Evans Earring",
     })
@@ -124,6 +127,8 @@ function get_sets()
         -- TODO: waist: Incarnation Sash, from Plouton in Vagary
         -- TODO: ear: Enmerkar Earring, from Kyou in Omen
 
+        -- blood pact damage +10
+        body="Con. Doublet +1",
         -- pet:atk +20, pet:matk+20, blood pact +5
         hands="Merlinic Dastanas",
         -- pet:acc 8, pet:racc: 8, pet:acc: 7, blood pact +12
@@ -165,10 +170,15 @@ function precast(spell)
             if Magic_BPs:contains(spell.english) then
                 -- Nothing
             else
-                -- Nothing
+                MidCastGear = sets.bloodpacts.damage
             end
         elseif spell.type=="BloodPactMagic" then
             -- Nothing
+        end
+        -- If doing Astral Conduit, go straight for MidCastGear since BP
+        -- is instant.
+        if buffactive["Astral Conduit"] then
+            equip(MidCastGear)
         end
     elseif '/magic' == spell.prefix then
         -- Show recast for any spell

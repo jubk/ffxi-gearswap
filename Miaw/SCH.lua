@@ -40,8 +40,8 @@ function get_sets()
         -- pdt -20%
         main="Terra's staff",
 
-        -- dt -1
-        sub="Umbra Strap",
+        -- dt -2
+        sub="Alber Strap",
 
         -- mdam +10, INT 2-6
         ammo="Ghastly Tathlum",
@@ -50,7 +50,7 @@ function get_sets()
         head="Acad. Mortar. +2",
 
         -- macc 40, 22 dark arts skills, refresh +3
-        body="Acad. Gown +2",
+        body="Acad. Gown +3",
 
         -- Haste +3%, Fast Cast +7%, int 24, mnd 38
         hands="Acad. Bracers +2",
@@ -144,8 +144,8 @@ function get_sets()
             -- matk 4, macc 8, int 4
             ammo="Pemphredo Tathlum",
 
-            -- macc 40, 22 dark arts skill, set acc bonus, refresh +2
-            body="Acad. Gown +2",
+            -- macc 50, 24 dark arts skill, set acc bonus, refresh +3
+            body="Acad. Gown +3",
 
             -- macc +44, matk+52
             hands = "Chironic Gloves",
@@ -204,8 +204,8 @@ function get_sets()
             -- matk 8, mb bonus 10%
             neck="Mizu. Kubikazari",
 
-            -- macc 40, 22 dark arts skill, mb+5
-            body="Acad. Gown +2",
+            -- macc 50, 24 dark arts skill, set acc bonus, refresh +3, mb +10
+            body="Acad. Gown +3",
 
             -- MB II+5, macc 15, matk 38, elem. magic skill +13
             hands=aug_gear.burst.hands,
@@ -219,7 +219,7 @@ function get_sets()
             -- skillchain bonus, mb II 5%
             right_ring="Mujin Band",
 
-            -- 49% MB I, 10 MB II
+            -- 59% MB I, 10 MB II
         }
     );
 
@@ -316,8 +316,8 @@ function get_sets()
             ammo="Pemphredo Tathlum",
             -- macc 42, set bonus
             head="Acad. Mortar. +2",
-            -- macc 40, set bonus
-            body="Acad. Gown +2",
+            -- macc 50, set bonus
+            body="Acad. Gown +3",
             -- macc 38, set bonus
             hands="Acad. Bracers +2",
             -- macc 57
@@ -635,7 +635,7 @@ function precast(spell)
             if "BlackMagic" == spell.type then
                 -- +22 enf. skill from Dark Arts
                 if grimoire_is_active(spell) then
-                   extraGear.body = "Acad. Gown +2";
+                   extraGear.body = "Acad. Gown +3";
                 end
 
                 MidcastGear = set_combine(

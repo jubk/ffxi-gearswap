@@ -34,7 +34,7 @@ function get_sets()
 
             hands="Merlinic Dastanas",
             legs="Assiduity Pants",
-            feet="Geo. Sandals +2",
+            feet="Geo. Sandals +3",
             neck="Sanctity Necklace",
             waist="Refoccilation Stone",
             left_ear="Mendi. Earring",
@@ -323,7 +323,7 @@ function get_sets()
     sets.idle = {}
     sets.idle['base'] = {
         -- Runspeed +12
-        feet="Geo. Sandals +2",
+        feet="Geo. Sandals +3",
     }
     sets.idle['refresh'] = set_combine(
         sets.engaged['refresh'],
