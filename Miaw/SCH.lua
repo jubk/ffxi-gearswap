@@ -196,10 +196,15 @@ function get_sets()
     sets.magicburst = set_combine(
         sets.nuking,
         {
+            -- TODO: relic head +3
+
             -- SCH staff is mbdam 10
 
-            -- matk 13, macc 13, mb 13%
-            head=aug_gear.burst.head,
+            -- MB II+2, macc 27, matk 42, mb acc +10
+            head={
+                name="Peda. M.Board +2",
+                augments={'Enh. "Altruism" and "Focalization"',}
+            },
 
             -- matk 8, mb bonus 10%
             neck="Mizu. Kubikazari",
@@ -210,16 +215,14 @@ function get_sets()
             -- MB II+5, macc 15, matk 38, elem. magic skill +13
             hands=aug_gear.burst.hands,
 
-            -- MB+9, macc 54, matk 47, mdam +13
+            -- MB+10, macc 43, matk 37, mdam +13
             legs=aug_gear.burst.legs,
-
-            -- macc 6, matk 3, mb bonus 2%
-            left_ring="Jhakri Ring",
 
             -- skillchain bonus, mb II 5%
             right_ring="Mujin Band",
 
-            -- 59% MB I, 10 MB II
+            -- Cap is 40 for MB I, unknown for MB II
+            -- 40% MB I, 12 MB II
         }
     );
 
@@ -246,7 +249,6 @@ function get_sets()
         --  * Pinga tunic, fc 13 (+5), 9 mill
         --  * Pinga Pants, fc 11 (+7), 8 mill
         --  * Enchntr. Earring +1, fc 2 (+2), 5 mill
-        --  * Rahab Ring, fc 2 (+2), AA TT
 
         -- Weapon and sub: 11%
 
@@ -285,16 +287,17 @@ function get_sets()
         },
         -- Fast cast +2
         right_ear="Loquac. Earring",
+        -- Fast cast +4
+        left_ring="Kishar Ring",
         -- Fast cast +2
-        left_ring="Prolix Ring",
-
+        right_ring="Prolix Ring",
         -- Elem. magic cast time -3%, auto-included when casting elemental
         -- magic
         -- left_ear="Barkaro. Earring",
 
 
-        -- Total: 70%
-        -- Total under grimoire: (total - 24) = 46%
+        -- Total: 74%
+        -- Total under grimoire: (total - 24) = 50%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
@@ -332,8 +335,8 @@ function get_sets()
             left_ear="Barkaro. Earring",
             -- macc 10
             right_ear="Digni. Earring",
-            -- macc 3
-            left_ring="Arvina Ringlet +1",
+            -- Fast cast +4, enf. duration +10
+            left_ring="Kishar Ring",
             -- macc 7
             right_ring="Etana Ring",
             -- macc 20
@@ -384,39 +387,31 @@ function get_sets()
     sets.enhancing = set_combine(
         sets.standard,
         {
-            -- Possible upgrades
-            -- Grioavolr augs, +9 duration (+3)
+            -- Regen +10
+            main="Bolelabunga",
+            -- enh. duration +10
+            sub="Ammurapi Shield",
+            -- enh duration +8
 
-            main={
-                name="Grioavolr",
-                augments={
-                    'Enh. Mag. eff. dur. +6',
-                    'INT+14','Mag. Acc.+18',
-                    '"Mag.Atk.Bns."+15',
-                    'Magic Damage +1',
-                }
-            },
-
-            -- Enh.magic +12, regen +10
-            head="Arbatel Bonnet",
-
-            -- Enh.magic +12, regen dur +12, haste +3, enh. dura. +5
-            body = "Telchine Chas.",
-
-            -- Enhancing duration +10
-            hands="Telchine Gloves",
+            -- enhancing duration +9
+            head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +9',}},
+            -- enhancing duration +9
+            body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +9',}},
+            -- enhancing duration +10
+            hands={ name="Telchine Gloves",
+                   augments={'"Cure" potency +4%','Enh. Mag. eff. dur. +10',}},
+            -- enhancing duration +10
+            legs={ name="Telchine Braconi",
+                  augments={'Enh. Mag. eff. dur. +10',}},
+            -- enhancing duration +9
+            feet={ name="Telchine Pigaches",
+                  augments={'Enh. Mag. eff. dur. +9',}},
 
             -- MND +5, INT +5
             waist = "Penitent's Rope",
 
-            -- Enhancing duration +10
-            legs="Telchine Braconi",
-
             -- MND +8
             back="Pahtli Cape",
-
-            -- Enh.magic +20
-            feet="Kaykaus Boots",
 
             -- Enh.magic +7
             left_ear="Andoaa Earring",
@@ -433,6 +428,8 @@ function get_sets()
             main="Bolelabunga",
             -- Defence
             sub="Genmei Shield",
+            -- Enh.magic +12, regen +10
+            head="Arbatel Bonnet",
             -- Regen +9
             back="Bookworm's Cape",
         }
@@ -683,8 +680,8 @@ function precast(spell)
             if not jobabilities_cancels_grimoire_fastcast() then
                 -- Grimoire cast time -10
                 precast_extra.feet = "Acad. Loafers +2";
-                -- Grimoire cast time -10
-                precast_extra.head = "Peda. M.Board"
+                -- Grimoire cast time -12
+                precast_extra.head = "Peda. M.Board +2"
             end
         end
 
@@ -707,7 +704,7 @@ function precast(spell)
         end
 
         if (buffactive["Altruism"] or buffactive["Focalization"]) then
-            MidcastGear.head = "Peda. M.Board";
+            MidcastGear.head = "Peda. M.Board +2";
         end
 
         equip(set_combine(

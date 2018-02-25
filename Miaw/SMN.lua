@@ -115,6 +115,8 @@ function get_sets()
         hands="Con. Bracers +1",
         -- perp. cost -2, blood pact delay -2
         right_ear="Evans Earring",
+        -- blood pact delay -3
+        back="Samanisi Cape",
     })
     sets.bloodpacts.base = set_combine(sets.base, {
         --  Blood pact +3
