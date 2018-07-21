@@ -22,7 +22,7 @@ local modesets = require("modesets");
 --   head    |      |         |         |    |       |       |   X   |
 --   body    |      |         |         |    |       |       |   X   |
 --   hands   |      |         |         |  X |       |       |       |
---   legs    |      |         |         |    |   X   |       |       |
+--   legs    |      |         |         |    |       |       |   X   |
 --   feet    |      |         |         |    |   X   |       |       |
 --
 --  Empyrean | Base | Base +1 | Base +2 | RF | Rf +1 |
