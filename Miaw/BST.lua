@@ -7,7 +7,7 @@ function get_sets()
         ammo="Pet Food Theta",
         head="Meghanada Visor +2",
         body="Meg. Cuirie +1",
-        hands="Meg. Gloves +1",
+        hands="Meg. Gloves +2",
         legs="Valor. Hose",
         feet="Meg. Jam. +1",
         neck="Sanctity Necklace",
@@ -23,7 +23,7 @@ function get_sets()
         sets.base,
         {
             ammo = nil,
-            hands="Ankusa Gloves +1",
+            hands="Ankusa Gloves +2",
         }
     )
     -- Do not remove pet jug from ammo slot

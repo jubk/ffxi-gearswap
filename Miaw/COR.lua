@@ -121,7 +121,7 @@ function get_sets()
     sets.base = {
         head="Meghanada Visor +2",
         body="Meg. Cuirie +1",
-        hands="Meg. Gloves +1",
+        hands="Meg. Gloves +2",
         legs="Meg. Chausses +1",
         feet="Meg. Jam. +2",
         neck="Sanctity Necklace",
@@ -206,8 +206,8 @@ function get_sets()
             head="Meghanada Visor +2",
             -- racc +44
             body="Meg. Cuirie +1",
-            -- racc +41
-            hands="Meg. Gloves +1",
+            -- racc +47
+            hands="Meg. Gloves +2",
             -- racc +43
             legs="Meg. Chausses +1",
             -- racc +46
