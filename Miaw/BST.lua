@@ -5,7 +5,7 @@ function get_sets()
     -- set_has_hachirin_no_obi(true);
     sets.base = {
         ammo="Pet Food Theta",
-        head="Meghanada Visor +1",
+        head="Meghanada Visor +2",
         body="Meg. Cuirie +1",
         hands="Meg. Gloves +1",
         legs="Valor. Hose",

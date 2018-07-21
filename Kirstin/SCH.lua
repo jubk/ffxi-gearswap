@@ -151,8 +151,8 @@ function get_sets()
         ammo="Incantor Stone",
         -- fastcast +5
         body="Vrikodara Jupon",
-        -- fastcast 4
-        legs="Gyve Trousers",
+        -- fastcast 5
+        legs="Artsieq Hose",
         -- fastcast 4-6
         feet="Regal Pumps",
         -- fastcast +2
@@ -161,6 +161,8 @@ function get_sets()
         right_ear="Loquac. Earring",
         -- fastcast +2
         left_ring="Prolix Ring",
+        -- Fast cast +4
+        right_ring="Kishar Ring",
         -- fastcast +3
         back="Swith Cape",
     }

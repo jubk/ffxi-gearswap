@@ -35,8 +35,8 @@ function get_sets()
         hands=aug_gear.burst.hands,
         -- macc 57, matk 53
         legs=aug_gear.nuke.legs,
-        -- macc 36, matk 36
-        feet="Jhakri Pigaches +1",
+        -- mb +7, macc 42, matk 39
+        feet="Jhakri Pigaches +2",
         -- macc 5, matk 11
         neck="Eddy Necklace",
         -- macc 4, matk 10
@@ -109,8 +109,8 @@ function get_sets()
             hands="Jhakri Cuffs +1",
             -- macc 57, matk 53
             legs=aug_gear.nuke.legs,
-            -- macc 36, matk 36
-            feet="Jhakri Pigaches +1",
+            -- mb +7, macc 42, matk 39
+            feet="Jhakri Pigaches +2",
             -- macc 5, matk 11
             neck="Eddy Necklace",
             -- macc 4, matk 10

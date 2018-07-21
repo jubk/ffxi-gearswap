@@ -61,6 +61,8 @@ function get_sets()
         left_ear="Loquac. Earring",
         -- Fast cast +2
         left_ring="Prolix Ring",
+        -- Fast cast +4
+        right_ring="Kishar Ring",
         -- Fast cast +7
         back={
             name="Lifestream Cape",

@@ -159,8 +159,6 @@ function get_sets()
             ammo="Ghastly Tathlum",
             -- macc 20/matk 15/mdam 20
             head="Jumalik Helm",
-            -- matk/macc +35
-            body="Found. Breastplate",
             -- matk/macc +34
             feet="Founder's Greaves",
             -- matk +6
@@ -182,7 +180,48 @@ function get_sets()
 
     sets.ws['Gust Slash'] = sets.ws.magic
     sets.ws['Cyclone'] = sets.ws.magic
-    sets.ws['Aoelian Edge'] = sets.ws.magic
+    sets.ws['Aeolian Edge'] = set_combine(
+        sets.ws.magic,
+        {
+            ammo="Ghastly Tathlum",
+            head={
+                name="Jumalik Helm",
+                augments={
+                    'MND+10','"Mag.Atk.Bns."+15','Magic burst dmg.+10%',
+                    '"Refresh"+1',
+                }
+            },
+            body={
+                name="Found. Breastplate",
+                augments={
+                    'Accuracy+15','Mag. Acc.+15','Attack+15',
+                    '"Mag.Atk.Bns."+15',
+                }
+            },
+            hands={
+                name="Founder's Gauntlets",
+                augments={
+                    'STR+8','Attack+15','"Mag.Atk.Bns."+13',
+                    'Phys. dmg. taken -3%',
+                }
+            },
+            legs="Augury Cuisses",
+            feet={
+                name="Founder's Greaves",
+                augments={
+                    'VIT+9','Accuracy+14','"Mag.Atk.Bns."+13',
+                    'Mag. Evasion+15',
+                }
+            },
+            neck="Fotia Gorget",
+            waist="Fotia Belt",
+            left_ear="Hecate's Earring",
+            right_ear="Friomisi Earring",
+            left_ring="Arvina Ringlet +1",
+            right_ring="Shiva Ring +1",
+            back="Argocham. Mantle",
+        }
+    )
 
     sets.ws['Frostbite'] = sets.ws.magic
     sets.ws['Freezebite'] = sets.ws.magic

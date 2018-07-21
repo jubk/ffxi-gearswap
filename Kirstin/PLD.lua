@@ -45,6 +45,8 @@ function get_sets()
             ammo = "Incantor Stone",
             hands = "Leyline Gloves",
             feet = "Odyssean Greaves",
+            -- Fast cast +4
+            left_ring="Kishar Ring",
             right_ring="Prolix Ring",
             right_ear="Loquac. Earring",
         }

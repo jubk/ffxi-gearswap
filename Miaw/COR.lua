@@ -3,6 +3,8 @@ include("remove_silence");
 include("cancel_buffs");
 include("elemental_obis");
 
+local herc_matk = require("shared/herc_matk_gear");
+
 function get_sets()
     -- Variables
 
@@ -33,11 +35,13 @@ function get_sets()
         "Midrium Bullet",
         "Eminent Bullet",
         "Divine Bullet",
+        "Devastating Bullet",
     };
 
     -- SlugwinderAmmo defaults to HighDamAmmo, but uses these if available:
     SlugWinderAmmoList = {
-        "Corsair Bullet"
+        "Corsair Bullet",
+        "Devastating Bullet",
     };
     -- QuickDrawAmmo defaults to HighDamAmmo, but uses these if available:
     QuickDrawAmmoList = {
@@ -115,7 +119,7 @@ function get_sets()
 
     -- sets
     sets.base = {
-        head="Meghanada Visor +1",
+        head="Meghanada Visor +2",
         body="Meg. Cuirie +1",
         hands="Meg. Gloves +1",
         legs="Meg. Chausses +1",
@@ -199,7 +203,7 @@ function get_sets()
         sets.base,
         {
             -- racc +42
-            head="Meghanada Visor +1",
+            head="Meghanada Visor +2",
             -- racc +44
             body="Meg. Cuirie +1",
             -- racc +41
@@ -228,47 +232,11 @@ function get_sets()
     sets.magic_ws = set_combine(
         sets.base,
         {
-            -- macc 9, matk 19, wsdam 2, AGI 25
-            head={
-                name="Herculean Helm",
-                augments={
-                    'Mag. Acc.+14 "Mag.Atk.Bns."+14',
-                    'Weapon skill damage +2%',
-                    'INT+4',
-                    '"Mag.Atk.Bns."+13',
-                }
-            },
-            -- matk 25, AGI 30
+            head=herc_matk.head,
             body="Rawhide Vest",
-            -- macc 12, matk 24, wsdam 1, AGI 8
-            hands={
-                name="Herculean Gloves",
-                augments={
-                    '"Mag.Atk.Bns."+24',
-                    'Weapon skill damage +1%',
-                    'MND+10',
-                    'Mag. Acc.+12',
-                }
-            },
-            -- macc 5, matk 21, wsdam 1, AGI 32
-            legs={
-                name="Herculean Trousers",
-                augments={
-                    '"Mag.Atk.Bns."+21',
-                    'Weapon skill damage +1%',
-                    'Mag. Acc.+5',
-                }
-            },
-            -- macc 17, matk 15, wsdam 4, AGI 43
-            feet={
-                name="Herculean Boots",
-                augments={
-                    'Mag. Acc.+7',
-                    'Weapon skill damage +4%',
-                    'INT+5',
-                    '"Mag.Atk.Bns."+5',
-                }
-            },
+            hands=herc_matk.hands,
+            legs=herc_matk.legs,
+            feet=herc_matk.feet,
             -- WS boost
             neck="Fotia Gorget",
             -- WS boost
@@ -352,9 +320,10 @@ end
 
 function get_roll_equipment(spellname)
     local rollEquip = {
-        hands = "Navarch's Gants +2",
+        hands="Chasseur's Gants +1",
         head = "Comm. Tricorne",
-        right_ring = "Barataria Ring"
+        neck="Regal Necklace",
+        left_ring="Luzaf's Ring",
     }
 
     if "Courser's Roll" == spellname then

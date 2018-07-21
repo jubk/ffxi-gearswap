@@ -29,6 +29,12 @@ function get_sets()
     }
 
     sets.idle = set_combine(sets.base, {})
+    sets.idle_pet = set_combine(sets.idle, {
+        -- perp. cost -6
+        body="Beck. Doublet +1",
+        -- perp cost -4
+        feet="Con. Pigaches +1",
+    })
     sets.rest = set_combine(sets.base, {})
 
     sets.fastcast = set_combine(sets.base, {
@@ -129,8 +135,8 @@ function get_sets()
         -- TODO: waist: Incarnation Sash, from Plouton in Vagary
         -- TODO: ear: Enmerkar Earring, from Kyou in Omen
 
-        -- blood pact damage +10
-        body="Con. Doublet +1",
+        -- smn skill +14, blood pact damage +11
+        body="Beck. Doublet +1",
         -- pet:atk +20, pet:matk+20, blood pact +5
         hands="Merlinic Dastanas",
         -- pet:acc 8, pet:racc: 8, pet:acc: 7, blood pact +12
@@ -154,7 +160,11 @@ function precast(spell)
         return
     end
 
-    AfterCastGear = sets.base
+    if pet.isvalid then
+        AfterCastGear = sets.idle_pet
+    else
+        AfterCastGear = sets.base
+    end
     MidCastGear = nil
 
     if "/pet" == spell.prefix then
@@ -186,6 +196,10 @@ function precast(spell)
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
 
+        if spell.type == "SummonerPact" then
+            AfterCastGear = sets.idle_pet
+        end
+
         equip(sets.fastcast)
         MidCastGear = sets.magic_accuracy
     else
@@ -207,7 +221,11 @@ end
 
 function status_change(new,old)
     if "Idle" == new then
-        equip(sets.idle);
+        if pet.isvalid then
+            equip(sets.idle_pet)
+        else
+            equip(sets.idle)
+        end
     elseif "Engaged" == new then
         -- Nothing
     elseif "Resting" == new then

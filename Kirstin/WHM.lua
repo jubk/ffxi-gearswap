@@ -47,12 +47,14 @@ function get_sets()
         body="Vrikodara Jupon",
         -- Haste +3%
         hands="Theophany Mitts",
-        -- Fast cast +4%
-        legs="Gyve Trousers",
+        -- fastcast 5
+        legs="Artsieq Hose",
         -- Fast cast +4-6%
         feet="Regal Pumps",
         -- Enhances fast cast
         left_ear="Loquac. Earring",
+        -- Fast cast +4
+        right_ring="Kishar Ring",
         -- TODO: back="Swith Cape"
     });
     sets.cure_fastcast = set_combine(

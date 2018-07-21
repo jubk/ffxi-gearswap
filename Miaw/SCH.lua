@@ -12,24 +12,24 @@ local modesets = require("modesets");
 --              AF/Relic/Empyrean gear status
 --
 --  AF       | Base | B +1 | Rf | Rf +1 | Rf +2 | Rf +3 |
---   head    |      |      |    |       |   X   |       |
---   body    |      |      |    |       |   X   |       |
+--   head    |      |      |    |       |       |   X   |
+--   body    |      |      |    |       |       |   X   |
 --   hands   |      |      |    |       |   X   |       |
---   legs    |      |      |    |       |   X   |       |
+--   legs    |      |      |    |       |       |   X   |
 --   feet    |      |      |    |       |   X   |       |
 --
---  Relic    | Base | Base +1 | Base +2 | RF | Rf +1 |
---   head    |      |         |         |  X |       |
---   body    |      |         |         |  X |       |
---   hands   |   X  |         |         |    |       |
---   legs    |      |         |         |    |       |
---   feet    |      |         |         |  X |       |
+--  Relic    | Base | Base +1 | Base +2 | RF | Rf +1 | Rf +2 | Rf +3 |
+--   head    |      |         |         |    |       |       |   X   |
+--   body    |      |         |         |    |       |       |   X   |
+--   hands   |      |         |         |  X |       |       |       |
+--   legs    |      |         |         |    |   X   |       |       |
+--   feet    |      |         |         |    |   X   |       |       |
 --
 --  Empyrean | Base | Base +1 | Base +2 | RF | Rf +1 |
---   head    |      |         |         |  X |       |
+--   head    |      |         |         |    |   X   |
 --   body    |      |         |         |  X |       |
---   hands   |      |         |         |  X |       |
---   legs    |      |         |         |  X |       |
+--   hands   |      |         |         |    |   X   |
+--   legs    |      |         |         |    |   X   |
 --   feet    |      |         |         |    |   X   |
 --
 
@@ -46,8 +46,8 @@ function get_sets()
         -- mdam +10, INT 2-6
         ammo="Ghastly Tathlum",
 
-        -- Sublimation +3, haste +6%, matk +15, macc +42, int 32, mnd 32
-        head="Acad. Mortar. +2",
+        -- Sublimation +4, fastcast +8%, matk +20, macc +52, int 37, mnd 37
+        head="Acad. Mortar. +3",
 
         -- macc 40, 22 dark arts skills, refresh +3
         body="Acad. Gown +3",
@@ -55,12 +55,12 @@ function get_sets()
         -- Haste +3%, Fast Cast +7%, int 24, mnd 38
         hands="Acad. Bracers +2",
 
-        -- haste +5%, int 39, mnd 34
-        -- Light Arts +22
-        legs="Acad. Pants +2",
+        -- haste +5%, int 44, mnd 39
+        -- Light Arts +24
+        legs="Acad. Pants +3",
 
-        -- Casting time -10%, haste +3%, Enmity -7, int 27, mnd 24
-        feet="Acad. Loafers +2",
+        -- Casting time -12%, haste +3%, Enmity -7, int 27, mnd 24
+        feet="Acad. Loafers +3",
 
         -- macc 5, matk 11
         neck="Eddy Necklace",
@@ -82,9 +82,8 @@ function get_sets()
         -- dam.taken -7
         right_ring="Vocane Ring",
 
-        -- matk +10, mdam +10, elem.skill +8, dark.skill +8, int +1, mnd +2,
-        -- helix.duration +19
-        back="Bookworm's Cape",
+        -- dam.taken -5
+        back="Lugh's Cape",
     };
 
     sets.standard_idle = set_combine(sets.standard, {});
@@ -94,14 +93,14 @@ function get_sets()
             -- Sublimation +1
             main = "Siriti",
 
-            -- Sublimation +3
-            head="Acad. Mortar. +2",
+            -- Sublimation +4
+            head="Acad. Mortar. +3",
 
             -- defense / shield blocks
             sub = "Genmei Shield",
 
-            -- Sublimation +2
-            body = "Pedagogy Gown",
+            -- Sublimation +5
+            body="Peda. Gown +3",
 
             -- Sublimation +1
             left_ear = "Savant's Earring",
@@ -153,8 +152,8 @@ function get_sets()
             -- matk +8, macc 8
             left_ear="Barkaro. Earring",
 
-            -- matk + 10
-            right_ear="Friomisi Earring",
+            -- matk +7, INT +10
+            right_ear="Regal Earring",
 
             -- int +43, macc 52, matk +53, haste +5%
             legs=aug_gear.nuke.legs,
@@ -165,13 +164,13 @@ function get_sets()
             -- macc +2, matk +4
             right_ring="Shiva ring +1",
 
-            -- macc 36, matk 36
-            feet="Jhakri Pigaches +1",
+            -- mb +7, macc 42, matk 39
+            feet="Jhakri Pigaches +2",
 
             -- matk 10, macc 10
             neck="Sanctity Necklace",
 
-            -- macc 20, matk 10, mdam 20, int+20
+            -- macc 20, matk 10, mdam 20, int+26
             back="Lugh's Cape",
         }
     );
@@ -179,8 +178,8 @@ function get_sets()
     sets.skillchain = set_combine(
         sets.nuking,
         {
-            -- Immanence: +10% damage
-            hands="Arbatel Bracers",
+            -- Immanence: +11% damage
+            hands="Arbatel Bracers +1",
 
             -- TODO: skillchain bonus +8
             -- legs="Amalric Slops",
@@ -196,33 +195,38 @@ function get_sets()
     sets.magicburst = set_combine(
         sets.nuking,
         {
-            -- TODO: relic head +3
-
             -- SCH staff is mbdam 10
 
-            -- MB II+2, macc 27, matk 42, mb acc +10
+            -- MB II+4, macc 37, matk 49, mb acc +15, elem magic skill +19
             head={
-                name="Peda. M.Board +2",
+                name="Peda. M.Board +3",
                 augments={'Enh. "Altruism" and "Focalization"',}
             },
 
-            -- matk 8, mb bonus 10%
+            -- MB+10, matk 8
             neck="Mizu. Kubikazari",
 
-            -- macc 50, 24 dark arts skill, set acc bonus, refresh +3, mb +10
+            -- mb +10, macc 50, 24 dark arts skill, set acc bonus, refresh +3
             body="Acad. Gown +3",
 
             -- MB II+5, macc 15, matk 38, elem. magic skill +13
             hands=aug_gear.burst.hands,
 
-            -- MB+10, macc 43, matk 37, mdam +13
-            legs=aug_gear.burst.legs,
+            -- int +43, macc 52, matk +53, haste +5%
+            legs=aug_gear.nuke.legs,
+
+            -- mb +7, macc 42, matk 39
+            feet="Jhakri Pigaches +2",
+
+            -- mb +5, macc 6, matk 3
+            left_ring="Locus Ring",
 
             -- skillchain bonus, mb II 5%
             right_ring="Mujin Band",
 
+
             -- Cap is 40 for MB I, unknown for MB II
-            -- 40% MB I, 12 MB II
+            -- 42% MB I, 14 MB II
         }
     );
 
@@ -246,9 +250,8 @@ function get_sets()
         --  * Augmented merlinic hood, 15 fast cast (+1)
         --  * Augmented merlinic feet, 12 fc (+2)
         --  * Grioavolr staff, up to +11 fastcast (+2), Bashmu reisen NM
-        --  * Pinga tunic, fc 13 (+5), 9 mill
         --  * Pinga Pants, fc 11 (+7), 8 mill
-        --  * Enchntr. Earring +1, fc 2 (+2), 5 mill
+        --  * Enchntr. Earring +1, fc 2 (+1), 5 mill
 
         -- Weapon and sub: 11%
 
@@ -262,8 +265,8 @@ function get_sets()
                 'CHR+5',
             }
         },
-        -- Fast cast +8
-        body="Shango Robe",
+        -- Fast cast +13
+        body="Pinga Tunic",
         -- Fast cast +4
         neck = "Voltsurge Torque",
         -- Fast cast +2
@@ -277,7 +280,7 @@ function get_sets()
         -- Fast cast +4
         legs="Gyve Trousers",
         -- Fast cast +10
-        -- Note: Replaced with Acad. Loafers +2 under grimoire
+        -- Note: Replaced with Acad. Loafers +3 under grimoire
         feet={
             name="Merlinic Crackows",
             augments={
@@ -285,6 +288,8 @@ function get_sets()
                 '"Mag.Atk.Bns."+4',
             }
         },
+        -- Fast cast +1
+        left_ear="Etiolation Earring",
         -- Fast cast +2
         right_ear="Loquac. Earring",
         -- Fast cast +4
@@ -296,8 +301,8 @@ function get_sets()
         -- left_ear="Barkaro. Earring",
 
 
-        -- Total: 74%
-        -- Total under grimoire: (total - 24) = 50%
+        -- Total: 80%
+        -- Total under grimoire: (total - 24) = 56%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
@@ -309,30 +314,46 @@ function get_sets()
         head="Pixie Hairpin +1",
         -- Macc 17, dark magic skill 10, drain/aspir +5
         neck="Erra Pendant",
-        waist = "Fucho-no-Obi"
+        -- drain/aspir +10
+        right_ring="Evanescence Ring",
+        -- drain/aspir +8
+        waist = "Fucho-no-Obi",
+        -- drain/aspir +15, dark magic skill +19
+        legs = "Peda. Pants +3",
+        -- drain/aspir +7
+        feet={
+            name="Merlinic Crackows",
+            augments={
+                '"Fast Cast"+5',
+                '"Mag.Atk.Bns."+4',
+            }
+        },
+        -- matk +10, mdam +10, elem.skill +8, dark.skill +8, int +1, mnd +2,
+        -- helix.duration +19
+        back="Bookworm's Cape",
     })
 
     sets.enfeebling_magic = set_combine(
-        -- Set bonus from Academic gear: 45 macc from 3 pieces
+        -- Set bonus from Academic gear: 60 macc from 5 pieces
         sets.nuking, {
             -- macc 8
             ammo="Pemphredo Tathlum",
-            -- macc 42, set bonus
-            head="Acad. Mortar. +2",
+            -- macc 52, set bonus
+            head="Acad. Mortar. +3",
             -- macc 50, set bonus
             body="Acad. Gown +3",
             -- macc 38, set bonus
             hands="Acad. Bracers +2",
             -- macc 57
             legs=aug_gear.acc.legs,
-            -- macc 36, set bonus
-            feet = "Acad. Loafers +2";
+            -- macc 46, set bonus
+            feet = "Acad. Loafers +3";
             -- macc 10
             neck="Sanctity Necklace",
             -- macc 7
             waist="Eschan Stone",
-            -- macc 8
-            left_ear="Barkaro. Earring",
+            -- INT 10, MND 10, set bonus
+            left_ear="Regal Earring",
             -- macc 10
             right_ear="Digni. Earring",
             -- Fast cast +4, enf. duration +10
@@ -355,14 +376,14 @@ function get_sets()
             -- Cure pot +5
             neck="Nodens Gorget",
 
-            -- MND +18, healing.skill +12
-            body = "Pedagogy Gown",
+            -- MND +39, healing.skill +19
+            body="Peda. Gown +3",
 
             -- cure.pot +14%, MND +33
             hands="Telchine Gloves",
 
-            -- Cure.pot +10
-            legs="Gyve Trousers",
+            -- Cure.pot +15
+            legs="Acad. Pants +3",
 
             -- Cure potency +10%, healing magic +20
             feet = "Vanya Clogs",
@@ -395,8 +416,8 @@ function get_sets()
 
             -- enhancing duration +9
             head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +9',}},
-            -- enhancing duration +9
-            body={ name="Telchine Chas.", augments={'Enh. Mag. eff. dur. +9',}},
+            -- enhancing duration +12
+            body="Peda. Gown +3",
             -- enhancing duration +10
             hands={ name="Telchine Gloves",
                    augments={'"Cure" potency +4%','Enh. Mag. eff. dur. +10',}},
@@ -428,9 +449,10 @@ function get_sets()
             main="Bolelabunga",
             -- Defence
             sub="Genmei Shield",
-            -- Enh.magic +12, regen +10
-            head="Arbatel Bonnet",
-            -- Regen +9
+            -- Enh.magic +14, regen +15
+            head="Arbatel Bonnet +1",
+            -- matk +10, mdam +10, elem.skill +8, dark.skill +8, int +1, mnd +2,
+            -- helix.duration +19
             back="Bookworm's Cape",
         }
     );
@@ -541,11 +563,10 @@ function precast(spell)
                 sets.idle = sets.sublimation_idle;
             end
         elseif "Enlightenment" == spell.english then
-            equip({body = "Pedagogy Gown"});
+            equip({body = "Peda. Gown +3"});
         elseif "Tabula Rasa" == spell.english then
-            -- TODO: Need to get these
-            -- equip({body = "Argute Pants +2"});
-            -- equip({body = "Pedagody Pants +2"});
+            -- +30 sec Tabula Rasa
+            equip({legs="Peda. Pants +3"});
         end
     elseif '/magic' == spell.prefix then
         local precast_extra = {}
@@ -561,7 +582,7 @@ function precast(spell)
 
             -- Use Arbatel Bonnet during rapture
             if buffactive["Rapture"] then
-                precast_extra.head = "Arbatel Bonnet";
+                precast_extra.head = "Arbatel Bonnet +1";
             end
 
             -- Use Pahtli cape for cure casting time
@@ -588,7 +609,7 @@ function precast(spell)
             end
             -- +20% extra damage from Ebullience
             if buffactive["Ebullience"] then
-                extraGear.head = "Arbatel Bonnet";
+                extraGear.head = "Arbatel Bonnet +1";
             end
             -- Straight 10% damage buff if we have klimaform active during
             -- correct weather.
@@ -620,13 +641,13 @@ function precast(spell)
                 return;
             end
             if buffactive["Ebullience"] then
-                extraGear.head = "Arbatel Bonnet";
+                extraGear.head = "Arbatel Bonnet +1";
             end
 
             -- This should give more acc, even on light arts, as it gives
-            -- enf +10 and macc +21.
+            -- enf +18 and macc +26.
             if grimoire_is_active(spell) then
-                extraGear.legs = "Arbatel Pants"
+                extraGear.legs = "Arbatel Pants +1"
             end
 
             if "BlackMagic" == spell.type then
@@ -641,9 +662,9 @@ function precast(spell)
                     miaw_staves.accuracy[spell.element]
                 );
             else
-                -- +22 enf. skill from Light Arts
+                -- +24 enf. skill from Light Arts
                 if grimoire_is_active(spell) then
-                   extraGear.body = "Acad. Pants +2";
+                   extraGear.body = "Acad. Pants +3";
                 end
                 MidcastGear = set_combine(
                     sets.enfeeble_light,
@@ -678,10 +699,10 @@ function precast(spell)
         if grimoire_is_active(spell) then
             -- Certain job abilites does not stack with grimoire fastcast gear
             if not jobabilities_cancels_grimoire_fastcast() then
-                -- Grimoire cast time -10
-                precast_extra.feet = "Acad. Loafers +2";
                 -- Grimoire cast time -12
-                precast_extra.head = "Peda. M.Board +2"
+                precast_extra.feet = "Acad. Loafers +3";
+                -- Grimoire cast time -12
+                precast_extra.head = "Peda. M.Board +3"
             end
         end
 
@@ -690,21 +711,21 @@ function precast(spell)
 
             if spell.element == world.weather_element or
                (stormBuff and buffactive[stormBuff]) then
-                precast_extra.feet = "Peda. Loafers";
-                MidcastGear.feet = "Peda. Loafers";
+                precast_extra.feet = "Peda. Loafers +1";
+                MidcastGear.feet = "Peda. Loafers +1";
             end
         end
 
         if (buffactive["Perpetuance"] or buffactive["Immanence"]) then
-            MidcastGear.hands = "Arbatel Bracers";
+            MidcastGear.hands = "Arbatel Bracers +1";
         end
 
         if (buffactive["Penury"] or buffactive["Parsimony"]) then
-            MidcastGear.legs = "Arbatel Pants";
+            MidcastGear.legs = "Arbatel Pants +1";
         end
 
         if (buffactive["Altruism"] or buffactive["Focalization"]) then
-            MidcastGear.head = "Peda. M.Board +2";
+            MidcastGear.head = "Peda. M.Board +3";
         end
 
         equip(set_combine(
