@@ -41,5 +41,5 @@ miaw_staves = {
         Earth = { main = fc_staff, sub = "Clerisy Strap" },
         Water = { main = fc_staff, sub = "Clerisy Strap" },
     },
-    healing = { main = "Chatoyant Staff", sub = "Raptor Strap +1" }
+    healing = { main = "Chatoyant Staff", sub = "Enki Strap" }
 }
