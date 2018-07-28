@@ -11,7 +11,7 @@ function get_sets()
         body="Meg. Cuirie +1",
         hands="Plun. Armlets +1",
         legs="Meg. Chausses +1",
-        feet="Skulk. Poulaines",
+        feet="Jute Boots +1",
         neck="Sanctity Necklace",
         waist="Kentarch Belt +1",
         left_ear="Steelflash Earring",
@@ -24,7 +24,9 @@ function get_sets()
         },
     }
 
-    sets.idle = set_combine(sets.base, {})
+    sets.idle = set_combine(sets.base, {
+        feet="Skulk. Poulaines",
+    })
     sets.resting = set_combine(sets.base, {})
     sets.engaged = set_combine(sets.base, {})
 

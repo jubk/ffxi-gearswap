@@ -61,6 +61,8 @@ function get_sets()
             feet = "Souveran Schuhs +1",
             -- enmity +4
             left_ear = "Trux Earring",
+            -- enmity +4
+            right_ear="Cryptic Earring",
             -- enmity +3
             left_ring = "Vengeful Ring",
             -- enmity +5

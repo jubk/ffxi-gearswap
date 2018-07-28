@@ -474,6 +474,8 @@ function precast(spell)
             equip({ body = "Navarch's Frac +2" })
         elseif 'Random Deal' == spell.english then
             equip({ body = "Lanun Frac +1" })
+        elseif 'Wild Card' == spell.english then
+            equip({ feet = "Lanun Bottes" })
         end
     end
 end

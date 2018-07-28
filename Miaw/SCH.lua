@@ -16,14 +16,14 @@ local modesets = require("modesets");
 --   body    |      |      |    |       |       |   X   |
 --   hands   |      |      |    |       |   X   |       |
 --   legs    |      |      |    |       |       |   X   |
---   feet    |      |      |    |       |   X   |       |
+--   feet    |      |      |    |       |       |   X   |
 --
 --  Relic    | Base | Base +1 | Base +2 | RF | Rf +1 | Rf +2 | Rf +3 |
 --   head    |      |         |         |    |       |       |   X   |
 --   body    |      |         |         |    |       |       |   X   |
---   hands   |      |         |         |  X |       |       |       |
+--   hands   |      |         |         |    |       |   X   |       |
 --   legs    |      |         |         |    |       |       |   X   |
---   feet    |      |         |         |    |   X   |       |       |
+--   feet    |      |         |         |    |       |   X   |       |
 --
 --  Empyrean | Base | Base +1 | Base +2 | RF | Rf +1 |
 --   head    |      |         |         |    |   X   |
@@ -117,17 +117,8 @@ function get_sets()
             -- rmp +2
             ammo = "Clarus Stone",
 
-            -- rmp +5
-            body = "Errant Hpl.",
-
-            -- rmp +4
-            neck = "Eidolon Pendant",
-
             -- rmp +4
             waist = "Austerity Belt",
-
-            -- rmp +4
-            legs = "Nisse Slacks",
 
             -- rmp +3
             back = "Felicitas Cape",
@@ -350,8 +341,8 @@ function get_sets()
             feet = "Acad. Loafers +3";
             -- macc 10
             neck="Sanctity Necklace",
-            -- macc 7
-            waist="Eschan Stone",
+            -- macc 10
+            waist="Luminary Sash",
             -- INT 10, MND 10, set bonus
             left_ear="Regal Earring",
             -- macc 10
@@ -379,8 +370,8 @@ function get_sets()
             -- MND +39, healing.skill +19
             body="Peda. Gown +3",
 
-            -- cure.pot +14%, MND +33
-            hands="Telchine Gloves",
+            -- Healing magic skill +19, cure pot II +3
+            hands="Peda. Bracers +3",
 
             -- Cure.pot +15
             legs="Acad. Pants +3",
@@ -412,7 +403,6 @@ function get_sets()
             main="Bolelabunga",
             -- enh. duration +10
             sub="Ammurapi Shield",
-            -- enh duration +8
 
             -- enhancing duration +9
             head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +9',}},
@@ -711,8 +701,8 @@ function precast(spell)
 
             if spell.element == world.weather_element or
                (stormBuff and buffactive[stormBuff]) then
-                precast_extra.feet = "Peda. Loafers +1";
-                MidcastGear.feet = "Peda. Loafers +1";
+                precast_extra.feet = "Peda. Loafers +2";
+                MidcastGear.feet = "Peda. Loafers +2";
             end
         end
 

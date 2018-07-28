@@ -76,17 +76,8 @@ function get_sets()
             -- rmp +2
             ammo = "Clarus Stone",
 
-            -- rmp +5
-            body = "Errant Hpl.",
-
-            -- rmp +4
-            neck = "Eidolon Pendant",
-
             -- rmp +4
             waist = "Austerity Belt",
-
-            -- rmp +4
-            legs = "Nisse Slacks",
 
             -- rmp +3
             back = "Felicitas Cape",
@@ -147,8 +138,19 @@ function get_sets()
     sets.magicburst = set_combine(
         sets.nuking,
         {
-            -- matk 13, macc 13, mb 13
+            -- mb 10
             head=aug_gear.burst.head,
+
+            -- mb 10
+            body={
+                name="Merlinic Jubbah",
+                augments={
+                    '"Mag.Atk.Bns."+27',
+                    'Magic burst dmg.+10%',
+                    'INT+13',
+                    'Mag. Acc.+3',
+                }
+            },
 
             -- matk 8, mb bonus 10
             neck="Mizu. Kubikazari",
@@ -156,11 +158,8 @@ function get_sets()
             -- MB II+5, macc 15, matk 38, elem. magic skill +13
             hands=aug_gear.burst.hands,
 
-            -- mb 8
-            legs=aug_gear.burst.legs,
-
-            -- mb 10, macc 21, matk 5
-            feet=aug_gear.burst.feet,
+            -- mb +7, macc 42, matk 39
+            feet="Jhakri Pigaches +2",
 
             -- mb bonus 5, exceeds cap
             right_ring="Mujin Band",
@@ -201,8 +200,8 @@ function get_sets()
             -- macc +38
             head = "Jhakri Coronal +1",
 
-            -- int +7, macc +5
-            waist = "Porous Robe",
+            -- macc 10
+            waist="Luminary Sash",
 
             -- macc 8
             left_ear="Barkaro. Earring",
@@ -226,20 +225,19 @@ function get_sets()
             -- macc +38
             head = "Jhakri Coronal +1",
 
-            -- macc +15
-            body = "Arbatel Gown",
+            -- macc +40
+            body = "Jhakri Robe +1",
 
-            -- macc +44, matk+52
-            hands = "Chironic Gloves",
+            -- macc +37, matk+37
+            hands = "Jhakri Cuffs +1",
+
+            -- macc 10
+            waist="Luminary Sash",
 
             -- macc 8
             left_ear="Barkaro. Earring",
             -- macc 10
             right_ear="Digni. Earring",
-
-            -- TODO: Tengu-no-Obi
-            -- mnd +7, macc +5
-            waist = "Porous Robe",
 
             -- macc +3
             left_ring="Arvina Ringlet +1",
@@ -258,23 +256,14 @@ function get_sets()
             -- Cure pot +5
             neck="Nodens Gorget",
 
-            -- MND +18, healing.skill +12
-            body = "Pedagogy Gown",
-
             -- cure.pot +10%, MND +33
             hands="Telchine Gloves",
 
             -- Cure.pot +10
             legs="Gyve Trousers",
 
-            -- Healing magic skill +14, mnd+12
-            feet = "Peda. Loafers",
-
             -- MND +8
             back = "Pahtli Cape",
-
-            -- mnd +7
-            waist = "Porous Robe",
 
             -- MND +5
             left_ring="Solemn Ring",

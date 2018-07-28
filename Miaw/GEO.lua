@@ -56,17 +56,8 @@ function get_sets()
             -- rmp +2
             ammo = "Clarus Stone",
 
-            -- rmp +5
-            body = "Errant Hpl.",
-
-            -- rmp +4
-            neck = "Eidolon Pendant",
-
             -- rmp +4
             waist = "Austerity Belt",
-
-            -- rmp +4
-            legs = "Nisse Slacks",
 
             -- rmp +3
             back = "Felicitas Cape",
@@ -163,6 +154,9 @@ function get_sets()
             -- macc +38
             head = "Jhakri Coronal +1",
 
+            -- macc 10
+            waist="Luminary Sash",
+
             -- macc 8
             left_ear="Barkaro. Earring",
             -- macc 10
@@ -182,20 +176,19 @@ function get_sets()
             -- macc +38
             head = "Jhakri Coronal +1",
 
-            -- macc +15
-            body = "Arbatel Gown",
+            -- macc +40
+            body = "Jhakri Robe +1",
 
-            -- macc +44, matk+52
-            hands = "Chironic Gloves",
+            -- macc +37, matk+37
+            hands = "Jhakri Cuffs +1",
+
+            -- macc 10
+            waist="Luminary Sash",
 
             -- macc 8
             left_ear="Barkaro. Earring",
             -- macc 10
             right_ear="Digni. Earring",
-
-            -- TODO: Tengu-no-Obi
-            -- mnd +7, macc +5
-            waist = "Porous Robe",
 
             -- macc +3
             left_ring="Arvina Ringlet +1",
@@ -214,23 +207,14 @@ function get_sets()
             -- Cure pot +5
             neck="Nodens Gorget",
 
-            -- MND +18, healing.skill +12
-            body = "Pedagogy Gown",
-
             -- cure.pot +10%, MND +33
             hands="Telchine Gloves",
 
             -- Cure.pot +10
             legs="Gyve Trousers",
 
-            -- Healing magic skill +14, mnd+12
-            feet = "Peda. Loafers",
-
             -- MND +8
             back = "Pahtli Cape",
-
-            -- mnd +7
-            waist = "Porous Robe",
 
             -- MND +5
             left_ring="Solemn Ring",

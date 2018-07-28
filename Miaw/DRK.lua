@@ -24,6 +24,8 @@ function get_sets()
         ammo="Sapience Orb",
         -- fast cast +12
         head="Carmine Mask",
+        -- fast cast +9
+        body="Odyss. Chestplate",
         -- fast cast 10
         feet={ name="Odyssean Greaves", augments={'Accuracy+10','"Fast Cast"+5','Attack+13',}},
         -- fast cast 4
