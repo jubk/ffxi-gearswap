@@ -13,6 +13,7 @@ function get_sets()
     CurrentUnlucky = 0;
 
     CheapAmmoList = {
+        "Devastating Bullet",
         "Orichalc. Bullet",
         "Steel Bullet",
         "Bullet",
