@@ -5,6 +5,31 @@ include("elemental_obis");
 
 local herc_matk = require("shared/herc_matk_gear");
 
+
+--              AF/Relic/Empyrean gear status
+--
+--  AF       | Base | B +1 | Rf | Rf +1 | Rf +2 | Rf +3 |
+--   head    |      |      |    |   X   |       |       |
+--   body    |      |      | X  |       |       |       |
+--   hands   |      |      |    |   X   |       |       |
+--   legs    |      |      |    |       |   X   |       |
+--   feet    |      |      |    |       |       |       |
+--
+--  Relic    | Base | Base +1 | Base +2 | RF | Rf +1 | Rf +2 | Rf +3 |
+--   head    |      |         |         | X  |       |       |       |
+--   body    |      |         |         |    |   X   |       |       |
+--   hands   |      |         |         |    |   X   |       |       |
+--   legs    |      |         |         | X  |       |       |       |
+--   feet    |      |         |         | X  |       |       |       |
+--
+--  Empyrean | Base | Base +1 | Base +2 | RF | Rf +1 |
+--   head    |      |         |         | X  |       |
+--   body    |      |         |         | X  |       |
+--   hands   |      |         |         |    |   X   |
+--   legs    |      |         |    X    |    |       |
+--   feet    |      |         |         | X  |       |
+--
+
 function get_sets()
     -- Variables
 
@@ -217,10 +242,10 @@ function get_sets()
             neck="Sanctity Necklace",
             -- racc +15
             waist="Eschan Stone",
-            -- racc +15
-            left_ring="Cacoethic Ring",
             -- racc +16
-            right_ring="Cacoethic Ring +1",
+            left_ring="Cacoethic Ring +1",
+            -- racc +15
+            right_ring="Cacoethic Ring",
             -- racc +20
             back="Gunslinger's Cape",
             -- TODO: Envervating Earring, vagary body boss
@@ -322,15 +347,21 @@ end
 function get_roll_equipment(spellname)
     local rollEquip = {
         hands="Chasseur's Gants +1",
-        head = "Comm. Tricorne",
+        head = "Lanun Tricorne",
         neck="Regal Necklace",
         left_ring="Luzaf's Ring",
     }
 
-    if "Courser's Roll" == spellname then
-        rollEquip.feet = "Chasseur's Bottes";
+    if "Blitzer's Roll" == spellname then
+        rollEquip.head = "Chass. Tricorne";
+    elseif "Allies' Roll" == spellname then
+        rollEquip.hands = "Chasseur's Gants +1";
     elseif "Tactician's Roll" == spellname  then
-        rollEquip.body = "Navarch's Frac +2"
+        rollEquip.body = "Chasseur's Frac"
+    elseif "Caster's Roll" == spellname  then
+        rollEquip.legs = "Chas. Culottes"
+    elseif "Courser's Roll" == spellname then
+        rollEquip.feet = "Chasseur's Bottes";
     end
 
     return rollEquip;
@@ -472,11 +503,13 @@ function precast(spell)
 
             equip(set_combine(sets.quickdraw, qdEquip))
         elseif 'Triple Shot' == spell.name then
-            equip({ body = "Navarch's Frac +2" })
+            equip({ body = "Chasseur's Frac" })
         elseif 'Random Deal' == spell.english then
             equip({ body = "Lanun Frac +1" })
         elseif 'Wild Card' == spell.english then
             equip({ feet = "Lanun Bottes" })
+        elseif 'Snake Eye' == spell.english then
+            equip({ legs = "Lanun Trews" })
         end
     end
 end

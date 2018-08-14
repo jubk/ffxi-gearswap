@@ -21,7 +21,7 @@ local modesets = require("modesets");
 --  Relic    | Base | Base +1 | Base +2 | RF | Rf +1 | Rf +2 | Rf +3 |
 --   head    |      |         |         |    |       |       |   X   |
 --   body    |      |         |         |    |       |       |   X   |
---   hands   |      |         |         |    |       |   X   |       |
+--   hands   |      |         |         |    |       |       |   X   |
 --   legs    |      |         |         |    |       |       |   X   |
 --   feet    |      |         |         |    |       |   X   |       |
 --
@@ -43,8 +43,8 @@ function get_sets()
         -- dt -2
         sub="Alber Strap",
 
-        -- mdam +10, INT 2-6
-        ammo="Ghastly Tathlum",
+        -- dt -2, resistance to status debuffs 10, SIR -10
+        ammo="Staunch Tathlum",
 
         -- Sublimation +4, fastcast +8%, matk +20, macc +52, int 37, mnd 37
         head="Acad. Mortar. +3",
@@ -62,8 +62,8 @@ function get_sets()
         -- Casting time -12%, haste +3%, Enmity -7, int 27, mnd 24
         feet="Acad. Loafers +3",
 
-        -- macc 5, matk 11
-        neck="Eddy Necklace",
+        -- dt -5
+        neck="Twilight Torque",
 
         -- macc +4, matk +10
         waist="Refoccilation Stone",
@@ -73,8 +73,8 @@ function get_sets()
             '"Mag.Atk.Bns."+4','Latent effect: "Refresh"+1',}
         },
 
-        -- matk + 10
-        right_ear="Friomisi Earring",
+        -- mdt -3, Fast cast +1
+        left_ear="Etiolation Earring",
 
         -- dam.taken -10
         left_ring="Defending Ring",
@@ -353,7 +353,6 @@ function get_sets()
             right_ring="Etana Ring",
             -- macc 20
             back="Lugh's Cape",
-            
         }
     )
 
@@ -701,8 +700,8 @@ function precast(spell)
 
             if spell.element == world.weather_element or
                (stormBuff and buffactive[stormBuff]) then
-                precast_extra.feet = "Peda. Loafers +2";
-                MidcastGear.feet = "Peda. Loafers +2";
+                precast_extra.feet = "Peda. Loafers +3";
+                MidcastGear.feet = "Peda. Loafers +3";
             end
         end
 

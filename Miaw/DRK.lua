@@ -69,6 +69,10 @@ function get_sets()
     })
 
 
+    sets.idle = set_combine(sets.base, {})
+    sets.resting = set_combine(sets.base, {})
+    sets.engaged = set_combine(sets.base, {})
+
     MidCastGear = nil
     AfterCastGear = {}
 
@@ -110,4 +114,14 @@ end
 
 function aftercast(spell)
     equip(AfterCastGear)
+end
+
+function status_change(new,old)
+    if "Idle" == new then
+        equip(sets.idle)
+    elseif "Resting" == new then
+        equip(sets.resting)
+    elseif "Engaged" == new then
+        equip(sets.engaged)
+    end
 end
