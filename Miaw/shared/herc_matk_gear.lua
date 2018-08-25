@@ -10,18 +10,18 @@ local herculean_matk = {
     hands={
         name="Herculean Gloves",
         augments={
-            'Attack+25',
-            'Weapon skill damage +4%',
-            'AGI+7','Rng.Atk.+7',
+            'Mag. Acc.+20 "Mag.Atk.Bns."+20',
+            'STR+4',
+            'Mag. Acc.+10',
+            '"Mag.Atk.Bns."+10',
         }
     },
     legs={
         name="Herculean Trousers",
         augments={
-            'Mag. Acc.+17 "Mag.Atk.Bns."+17',
-            'Weapon skill damage +4%',
-            'STR+8',
-            'Mag. Acc.+4',
+            'Mag. Acc.+19 "Mag.Atk.Bns."+19',
+            'INT+4',
+            '"Mag.Atk.Bns."+12',
         }
     },
     feet={

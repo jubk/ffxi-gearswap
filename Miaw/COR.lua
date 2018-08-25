@@ -193,14 +193,11 @@ function get_sets()
     sets.quickdraw = set_combine(
         sets.base,
         {
-            -- Quick draw +10
-            head="Lak. Hat +1",
-            -- matk +25
-            body="Rawhide Vest",
-            -- matk +20
-            hands="Pursuer's Cuffs",
-            -- matk +20
-            legs="Lak. Trews +2",
+            head=herc_matk.head,
+            -- matk +29, macc +30
+            body="Samnuha Coat",
+            hands=herc_matk.hands,
+            legs=herc_matk.legs,
             -- Quickdraw +22
             feet="Chasseur's Bottes",
             -- matk 10, macc 10
@@ -259,10 +256,17 @@ function get_sets()
         sets.base,
         {
             head=herc_matk.head,
-            body="Rawhide Vest",
+            -- matk +29, macc +30
+            body="Samnuha Coat",
             hands=herc_matk.hands,
             legs=herc_matk.legs,
-            feet=herc_matk.feet,
+            -- matk +48, WSD+5
+            feet={
+                name="Lanun Bottes +2",
+                augments={
+                    'Enhances "Wild Card" effect',
+                }
+            },
             -- WS boost
             neck="Fotia Gorget",
             -- WS boost
@@ -322,9 +326,13 @@ function get_sets()
         -- WS boost
         waist="Fotia Belt",
     })
-    sets.ws["Wildfire"] = set_combine(sets.magic_ws, {});
-    sets.ws["Leaden Salute"] = set_combine(sets.wildfire, {
+    sets.ws["Wildfire"] = set_combine(sets.magic_ws, {
+        neck="Sanctity Necklace",
+        waist="Eschan Stone",
+    });
+    sets.ws["Leaden Salute"] = set_combine(sets.ws.Wildfire, {
         head="Pixie Hairpin +1",
+        left_ring="Apate Ring",
     });
 
     sets.fastcast = set_combine(
@@ -334,6 +342,8 @@ function get_sets()
             head="Carmine Mask",
             -- fast cast +4
             neck = "Voltsurge Torque",
+            -- fast cast +2
+            body="Samnuha Coat",
             -- Fast cast +2
             right_ear="Loquac. Earring",
             -- fast cast 2
@@ -346,10 +356,16 @@ end
 
 function get_roll_equipment(spellname)
     local rollEquip = {
+        -- duration +50
         hands="Chasseur's Gants +1",
+        -- phantom roll effects +50 (chance to proc job-present-boost)
         head = "Lanun Tricorne",
+        -- phantom roll +7
         neck="Regal Necklace",
+        -- increased area of effect
         left_ring="Luzaf's Ring",
+        -- duration +30
+        back="Camulus's Mantle",
     }
 
     if "Blitzer's Roll" == spellname then

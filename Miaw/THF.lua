@@ -28,7 +28,13 @@ function get_sets()
         feet="Jute Boots +1",
     })
     sets.resting = set_combine(sets.base, {})
-    sets.engaged = set_combine(sets.base, {})
+    sets.engaged = {
+        Damage = set_combine(sets.base, {
+            hands="Meg. Gloves +2",
+            feet="Meg. Jam. +2",
+        }),
+        TH = set_combine(sets.base, {}),
+    }
 
     sets.fastcast = set_combine(sets.base, {})
     sets.magic_accuracy = set_combine(sets.base, {})
@@ -61,6 +67,26 @@ function get_sets()
     MidCastGear = nil
     AfterCastGear = {}
 
+    engaged_mode = 'Damage'
+    engaged_modes = {'Damage', 'TH'}
+    engaged_idx = 1
+
+end
+
+function cycle_engaged()
+    engaged_idx = engaged_idx + 1
+    if engaged_idx > 2 then
+        engaged_idx = 1
+    end
+    engaged_mode = engaged_modes[engaged_idx]
+    add_to_chat(128, "Engaged mode set to '" .. engaged_mode .. "'")
+end
+
+function filtered_action(spell)
+    if "Thunder IV" == spell.english then
+        cycle_engaged()
+        return cancel_spell()
+    end
 end
 
 function precast(spell)
@@ -113,6 +139,6 @@ function status_change(new,old)
     elseif "Resting" == new then
         equip(sets.resting)
     elseif "Engaged" == new then
-        equip(sets.engaged)
+        equip(sets.engaged[engaged_mode])
     end
 end
