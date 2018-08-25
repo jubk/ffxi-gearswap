@@ -38,19 +38,6 @@ end
 
 
 function job_setup()
-    _global.debug_mode = true
-    _settings.debug_mode = true
-
-    -- Do not bind stuff to keys that you need to play the game >_<
-	send_command('unbind f9')
-	send_command('unbind f10')
-	send_command('unbind f11')
-	send_command('unbind f12')
-    -- Don't bind anything for idle-mode since that should change
-    -- automatically
-    send_command('unbind ^f12')
-
-
     setup_spellcost_map(player);
 
     auto_sc = AutoImmanence({
