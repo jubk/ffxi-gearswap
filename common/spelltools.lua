@@ -517,7 +517,16 @@ function setup_spellcost_map(player, spells_to_downgrade)
     end
 end
 
-function check_addendum(spell)
+-- Makes sure a spell is cancelled whether or not mote-liraries are used
+function _cancel_spell(eventArgs)
+    if eventArgs then
+        eventArgs.cancel = true;
+    else
+        cancel_spell()
+    end
+end
+
+function check_addendum(spell, eventArgs)
     local spellname = spell.english
     local buffneeded = addendum_map[spellname];
 
@@ -536,10 +545,10 @@ function check_addendum(spell)
         if buffactive["Light Arts"] then
             add_to_chat(128, "~~~~ Auto-enabling " .. buffneeded .. ' ~~~~');
             send_command('input /ja "' .. buffneeded .. '" <me>')
-            cancel_spell();
+            _cancel_spell(eventArgs)
             return true;
         else
-            cancel_spell();
+            _cancel_spell(eventArgs)
             -- check if ready
             if (allRecasts[228] or 0) > 0 then
                 add_to_chat(128, '~~~~ Aborting Light Arts: Not ready ~~~~');
@@ -558,7 +567,7 @@ function check_addendum(spell)
         if buffactive["Dark Arts"] then
             add_to_chat(128, "~~~~ Auto-enabling " .. buffneeded .. ' ~~~~');
             send_command('input /ja "' .. buffneeded .. '" <me>')
-            cancel_spell();
+            _cancel_spell(eventArgs)
             return true;
         else
             -- check if ready
@@ -573,7 +582,7 @@ function check_addendum(spell)
                 'input /ma "' .. spell.english .. '" ' .. spell.target.raw
             )
             send_command(cmd)
-            cancel_spell();
+            _cancel_spell(eventArgs)
             return true;
         end
     end
@@ -581,7 +590,7 @@ function check_addendum(spell)
     return false;
 end
 
-function activate_light_arts()
+function activate_light_arts(eventArgs)
     if not (
         buffactive["Light Arts"] or
         buffactive["Addendum: White"] or
@@ -589,13 +598,13 @@ function activate_light_arts()
     ) then
         send_command('input /ja "Light Arts" <me>');
         add_to_chat(128, '~~~~ Auto-enabling Light Arts ~~~~');
-        cancel_spell();
+        _cancel_spell(eventArgs)
         return true;
     end
     return false
 end
 
-function activate_dark_arts()
+function activate_dark_arts(eventArgs)
     if not (
         buffactive["Dark Arts"] or
         buffactive["Addendum: Black"] or
@@ -603,7 +612,7 @@ function activate_dark_arts()
     ) then
         send_command('input /ja "Dark Arts" <me>');
         add_to_chat(128, '~~~~ Auto-enabling Dark Arts ~~~~');
-        cancel_spell();
+        _cancel_spell(eventArgs)
         return true;
     end
     return false
@@ -630,7 +639,7 @@ function get_mp_cost_factor(spell)
     return 1
 end
 
-function downgrade_spell(player, spell)
+function downgrade_spell(player, spell, eventArgs)
     -- If no spells configured, do nothing
     if not downgrade_map then
         return false;
@@ -658,8 +667,8 @@ function downgrade_spell(player, spell)
         cost = cost * cost_factor
     end
     while tier > 0 and cost > player.mp do
-        cost = tier_table[tier] * cost_factor;
         tier = tier - 1;
+        cost = tier_table[tier] * cost_factor;
     end
     if tier > 0 and tier < s['tier'] then
         local newSpellName = s['basename'] .. tier_postfix[tier];
@@ -670,7 +679,7 @@ function downgrade_spell(player, spell)
         send_command(
             'input /ma "' .. newSpellName .. '" ' .. spell.target.raw
         );
-        cancel_spell();
+        _cancel_spell(eventArgs)
         return true;
     end
 

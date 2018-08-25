@@ -686,6 +686,9 @@ local AutoImmanence = function(options)
     end
 
     public.self_command = function(command)
+        if not command or not command.match then
+            return
+        end
         local action, args_str = command:match('(%a+)%s*(.*)')
         if action == "sc" then
             if args_str == "" then
