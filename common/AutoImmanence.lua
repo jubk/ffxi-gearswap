@@ -685,11 +685,20 @@ local AutoImmanence = function(options)
         end
     end
 
-    public.self_command = function(command)
-        if not command or not command.match then
-            return
+    public.self_command = function(command, eventArgs)
+        local action, args_str
+        -- Mote sends us a table with arguments, so we need to handle that
+        if type(command) == "table" then
+            action = command[1] or ""
+            args_str = command[2] or ""
+            idx = 3
+            while command[idx] do
+                args_str = args_str .. " " .. command[idx]
+                idx = idx + 1
+            end
+        else
+            action, args_str = command:match('(%a+)%s*(.*)')
         end
-        local action, args_str = command:match('(%a+)%s*(.*)')
         if action == "sc" then
             if args_str == "" then
                 add_to_chat(
