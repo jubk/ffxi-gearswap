@@ -89,6 +89,7 @@ local AutoImmanence = function(options)
         burst="\253\2\2\27W\253",
     }
 
+    local options = options or {}
     local command_alias = options['command_alias'] or 'sc'
 
     local t = function(msg)
