@@ -43,6 +43,8 @@ Latest version of this file can be downloaded from
 --]]
 
 -- Import functions that helps with calculating the need for weather gear.
+-- If you do not have all the Obis change the elemental_obi_table at the top
+-- of the file.
 -- Latest version can be downloaded from
 -- https://github.com/jubk/ffxi-gearswap/blob/master/common/day_and_weather.lua
 include("day_and_weather");
