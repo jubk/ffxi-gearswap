@@ -130,18 +130,13 @@ function job_setup()
 
     -- Setup AutoImmanence.
     auto_sc = AutoImmanence({
-        -- How much fastcast you get from gear when casting spells for
-        -- skillchains
-        gear_fastcast=56,
-        -- How much grimoire spellcasting time minus you get from gear like
-        -- academics loafers and pedagogy mortarboard used when casting
-        -- spells for skillchains.
-        -- 12 from academic's loafers +3, 13 from pedagogy's mortarboard +3
-        grimoire_gear_fastcast=25,
         -- The command alias to use, default is 'sc', so you can use
         -- //sc fusion to start a fusion skillchain
         command_alias='sc'
     })
+    -- Make it possible to abort skilchains with alt-q and ctrl-q
+    send_command('bind ^q gs c sc abort')
+    send_command('bind !q gs c sc abort')
 
     -- Tell day and weather we have the combined obi
     set_has_hachirin_no_obi(true);
@@ -175,6 +170,13 @@ function job_setup()
     -- Variable for storing the original casting mode when temporarily
     -- changing it.
     OriginalCastingMode = nil
+
+    -- Switch to default lockstyle
+    if buffactive['Dark Arts'] and dark_arts_lockstyleset then
+        send_command('input /lockstyleset ' .. dark_arts_lockstyleset)
+    elseif light_arts_lockstyleset then
+        send_command('input /lockstyleset ' .. light_arts_lockstyleset)
+    end
 
 end
 
@@ -709,6 +711,7 @@ function filtered_action(spell)
         cancel_spell();
         return;
     end
+    auto_sc.filtered_action(spell)
 end
 
 -- Ensures that idle set is Sublimation whenever sublimation is charging.
