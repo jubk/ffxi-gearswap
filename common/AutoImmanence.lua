@@ -206,13 +206,18 @@ local calculate_fast_cast = function(options)
     end
 
     local grimoire = 0.1
-    if options['uses_academics_loafers'] then
-        grimoire = grimoire + 0.08
-    elseif options['uses_scholars_loafers'] then
-        grimoire = grimoire + 0.05
+    local grimoire_gear_fastcast = options['grimoire_gear_fastcast'] or 0
+    -- 10% might be specified as 10 instead of 0.1...
+    if grimoire_gear_fastcast > 1 then
+        grimoire_gear_fastcast = grimoire_gear_fastcast * 0.01
     end
-    if options['uses_pedagogy_mortarboard'] then
-        grimoire = grimoire + 0.1
+    if grimoire_gear_fastcast > 0 then
+        grimoire = grimoire_gear_fastcast
+    end
+
+    -- Cap for gear and job fastcast is 80%
+    if job_and_gear > 0.8 then
+        job_and_gear = 0.8
     end
 
     return 1 * (1 - job_and_gear) * (1 - grimoire)
@@ -231,6 +236,7 @@ local AutoImmanence = function(options)
     local last_action_finished = os.clock()
     local last_skillchain_finished = os.clock() - 10
     local fastcast = calculate_fast_cast(options or {})
+    local command_alias = options['command_alias'] or 'sc'
 
     local public = {
         -- Translations
@@ -722,7 +728,7 @@ local AutoImmanence = function(options)
     end
 
     if not alias_initialized then
-        send_command("alias sc gs c sc")
+        send_command("alias " .. command_alias .. " gs c sc")
         alias_initialized = true
     end
 

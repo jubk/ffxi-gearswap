@@ -1,12 +1,69 @@
-include("remove_silence");
-include("day_and_weather");
-include("spelltools");
-include("shared/staves");
--- include("dumper");
+--[[
 
+This SCH gearswap file will help with the following apart from the standard
+functionality provided by the Mote libraries:
+
+- Try to remove silence with echo drops.
+- Downgrade high-tier spells to lower versions when low on MP.
+- Automatically equip weather related gear when it is beneficial.
+- Automatically idle in sublimation gear while sublimation is charging.
+- Provide a simple way to do skillchains with commands like //sc fusion.
+- Switch /lockstyleset depending on whether dark or ligth arts are up.
+- Automatically switch to skillchain gear when Immanence is up.
+- Always cast spells in MagicBurst gear as long as the MB window is up after
+  performing a skillchain.
+- Use relevant SCH Relic/AF/Empy gear when it is beneficial
+
+Commands:
+ //sc <skillchainname>
+  - Creates a skillchain using Immanence
+  - Example: //sc scission, //sc fusion
+ //sc <element>
+  - Creates a skillchain you can burst <element> on
+  - Examples: //sc stone, //sc light
+ //sc <name>+
+  - Creates a fusion skillchain and enables Ebulience
+  - Examples: //sc fusion+, //sc stone+
+ //sc <name>++
+  - Creates a fusion skillchain and enables Ebulience and Alacrity
+  - Example: //sc fusion++, //sc stone++
+
+Note that the //sc alias can be changed, as it might conflict with a popular
+addon. Search for "command_alias" in job_setup below.
+
+TODO:
+ - Make sublimation its own mode, so IdleMode can be used for actual
+   different idlemodes.
+ - Rewrite AutoImmanence to rely less on server feedback, since it sometimes
+   breaks due to lag.
+
+Latest version of this file can be downloaded from
+  https://github.com/jubk/ffxi-gearswap/blob/master/Miaw/SCH.lua
+
+--]]
+
+-- Import functions that helps with calculating the need for weather gear.
+-- Latest version can be downloaded from
+-- https://github.com/jubk/ffxi-gearswap/blob/master/common/day_and_weather.lua
+include("day_and_weather");
+
+-- Import AutoImmanence script that allows doing automatic skillchains.
+-- Latest version can be downloaded from
+-- https://github.com/jubk/ffxi-gearswap/blob/master/common/AutoImmanence.lua
 local AutoImmanence = require("AutoImmanence");
+
+-- Import mg_spelltools which will help with automatically switching to
+-- light/dark arts and their addendi and downgrade spell tiers when low on MP.
+-- Latest version can be downloaded from
+-- https://github.com/jubk/ffxi-gearswap/blob/master/common/mg_spelltools.lua
+local spelltools = require("mg_spelltools");
+
+-- Load in augmented gear shared with outher jobs. If you do not have such
+-- a file, remove this line and all references to "aug_gear" in the gearsets.
 local aug_gear = require("shared/aug_gear");
 
+-- Just for keeping track of AF/Relic/Empy progress:
+--
 --              AF/Relic/Empyrean gear status
 --
 --  AF       | Base | B +1 | Rf | Rf +1 | Rf +2 | Rf +3 |
@@ -31,6 +88,31 @@ local aug_gear = require("shared/aug_gear");
 --   feet    |      |         |         |    |   X   |
 --
 
+-- Update these tables when AF/relic/empy gear is upgraded
+local AF = {
+    head="Acad. Mortar. +3",
+    body="Acad. Gown +3",
+    hands="Acad. Bracers +3",
+    legs="Acad. Pants +3",
+    feet="Acad. Loafers +3",
+}
+
+local relic = {
+    head="Peda. M.Board +3",
+    body="Peda. Gown +3",
+    hands="Peda. Bracers +3",
+    legs="Peda. Pants +3",
+    feet="Peda. Loafers +3",
+}
+
+local empy = {
+    head="Arbatel Bonnet +1",
+    body="Arbatel Gown", -- Boo!
+    hands="Arbatel Bracers +1",
+    legs="Arbatel Pants +1",
+    feet="Arbatel Loafers +1",
+}
+
 function get_sets()
     mote_include_version = 2
     include('Mote-Include.lua');
@@ -38,12 +120,25 @@ end
 
 
 function job_setup()
-    setup_spellcost_map(player);
+    -- Switch to SCH macro book and page
+    set_macro_page(1, 10)
 
+    -- Initialise map of spells MP cost
+    spelltools.setup_spellcost_map(player);
+
+    -- Setup AutoImmanence.
     auto_sc = AutoImmanence({
-        gear_fastcast=54,
-        uses_academics_loafers=true,
-        uses_pedagogy_mortarboard=true,
+        -- How much fastcast you get from gear when casting spells for
+        -- skillchains
+        gear_fastcast=56,
+        -- How much grimoire spellcasting time minus you get from gear like
+        -- academics loafers and pedagogy mortarboard used when casting
+        -- spells for skillchains.
+        -- 12 from academic's loafers +3, 13 from pedagogy's mortarboard +3
+        grimoire_gear_fastcast=25,
+        -- The command alias to use, default is 'sc', so you can use
+        -- //sc fusion to start a fusion skillchain
+        command_alias='sc'
     })
 
     -- Tell day and weather we have the combined obi
@@ -51,6 +146,8 @@ function job_setup()
     -- And tell it we will be using tier II storm buffs
     set_stormbuff_level(2)
 
+    light_arts_lockstyleset = 3
+    dark_arts_lockstyleset = 18
 
     -- Add missing spell mappings
     extra_spell_mappings = {
@@ -92,20 +189,20 @@ function init_gear_sets()
         ammo="Staunch Tathlum",
 
         -- Sublimation +4, fastcast +8%, matk +20, macc +52, int 37, mnd 37
-        head="Acad. Mortar. +3",
+        head=AF.head,
 
         -- macc 40, 22 dark arts skills, refresh +3
-        body="Acad. Gown +3",
+        body=AF.body,
 
         -- Haste +3%, Fast Cast +7%, int 24, mnd 38
-        hands="Acad. Bracers +3",
+        hands=AF.hands,
 
         -- haste +5%, int 44, mnd 39
         -- Light Arts +24
-        legs="Acad. Pants +3",
+        legs=AF.legs,
 
         -- Casting time -12%, haste +3%, Enmity -7, int 27, mnd 24
-        feet="Acad. Loafers +3",
+        feet=AF.feet,
 
         -- dt -5
         neck="Twilight Torque",
@@ -142,10 +239,10 @@ function init_gear_sets()
             sub = "Genmei Shield",
 
             -- Sublimation +4
-            head="Acad. Mortar. +3",
+            head=AF.head,
 
             -- Sublimation +5
-            body="Peda. Gown +3",
+            body=relic.body,
 
             -- Sublimation +1
             left_ear = "Savant's Earring",
@@ -178,7 +275,19 @@ function init_gear_sets()
         --  * Pinga Pants, fc 11 (+7), 8 mill
         --  * Enchntr. Earring +1, fc 2 (+1), 5 mill
 
-        -- Weapon and sub: 11%
+        -- Fastcast +9
+        main={
+            name="Grioavolr",
+            augments={
+                '"Fast Cast"+5',
+                'MP+32',
+                'Mag. Acc.+9',
+                'Magic Damage +3',
+            }
+        },
+
+        -- Fastcast +2
+        sub="Clerisy Strap",
 
         -- Fast cast +14
         -- Note: Replaced with Peda. M.Board under grimoire
@@ -197,7 +306,7 @@ function init_gear_sets()
         -- Fast cast +2
         waist="Channeler's Stone",
         -- Fast Cast +7%
-        hands="Acad. Bracers +3",
+        hands=AF.hands,
         -- Fast cast +2
         ammo = "Incantor Stone",
         -- Fast cast +4
@@ -247,13 +356,16 @@ function init_gear_sets()
         }
     )
 
-    sets.precast.JA["Enlightenment"] = { body = "Peda. Gown +3" }
-    sets.precast.JA["Tabula Rasa"] = { legs="Peda. Pants +3" }
+    sets.precast.JA["Enlightenment"] = { body=relic.body }
+    sets.precast.JA["Tabula Rasa"] = { legs=relic.legs }
 
 
     sets.midcast['Elemental Magic'] = set_combine(
         sets.standard,
         {
+            main = "Akademos",
+            sub = "Niobid Strap",
+
             -- matk +47, macc +52 (aug)
             head=aug_gear.nuke.head,
 
@@ -261,7 +373,7 @@ function init_gear_sets()
             ammo="Pemphredo Tathlum",
 
             -- macc 50, 24 dark arts skill, set acc bonus, refresh +3
-            body="Acad. Gown +3",
+            body=AF.body,
 
             -- macc +44, matk+52
             hands = "Chironic Gloves",
@@ -299,7 +411,7 @@ function init_gear_sets()
         sets.midcast['Elemental Magic'].Nuking,
         {
             -- Immanence: +11% damage
-            hands="Arbatel Bracers +1",
+            hands=empy.hands,
 
             -- TODO: skillchain bonus +8
             -- legs="Amalric Slops",
@@ -318,16 +430,13 @@ function init_gear_sets()
             -- SCH staff is mbdam 10
 
             -- MB II+4, macc 37, matk 49, mb acc +15, elem magic skill +19
-            head={
-                name="Peda. M.Board +3",
-                augments={'Enh. "Altruism" and "Focalization"',}
-            },
+            head=relic.head,
 
             -- MB+10, matk 8
             neck="Mizu. Kubikazari",
 
             -- mb +10, macc 50, 24 dark arts skill, set acc bonus, refresh +3
-            body="Acad. Gown +3",
+            body=AF.body,
 
             -- MB II+5, macc 15, matk 38, elem. magic skill +13
             hands=aug_gear.burst.hands,
@@ -390,7 +499,7 @@ function init_gear_sets()
             -- drain/aspir +8
             waist = "Fucho-no-Obi",
             -- drain/aspir +15, dark magic skill +19
-            legs = "Peda. Pants +3",
+            legs = relic.legs,
             -- drain/aspir +7
             feet={
                 name="Merlinic Crackows",
@@ -410,18 +519,23 @@ function init_gear_sets()
         -- Set bonus from Academic gear: 60 macc from 5 pieces
         sets.midcast['Elemental Magic'].Nuking,
         {
+            -- Akademos: macc 25, macc skill 228
+            main = "Akademos",
+            -- Enki Strap: macc 10, int+10, mnd+10
+            sub = "Enki Strap",
+
             -- macc 8
             ammo="Pemphredo Tathlum",
             -- macc 52, set bonus
-            head="Acad. Mortar. +3",
+            head=AF.head,
             -- macc 50, set bonus
-            body="Acad. Gown +3",
+            body=AF.body,
             -- macc 38, set bonus
-            hands="Acad. Bracers +3",
+            hands=AF.hands,
             -- macc 57
             legs=aug_gear.acc.legs,
             -- macc 46, set bonus
-            feet = "Acad. Loafers +3";
+            feet = AF.feet;
             -- macc 10
             neck="Sanctity Necklace",
             -- macc 10
@@ -441,19 +555,21 @@ function init_gear_sets()
 
     sets.midcast['Healing Magic'] = set_combine(
         sets.standard,
-        miaw_staves.healing,
         {
+            main = "Chatoyant Staff",
+            sub = "Enki Strap",
+
             -- Cure pot +5
             neck="Nodens Gorget",
 
             -- MND +39, healing.skill +19
-            body="Peda. Gown +3",
+            body=relic.body,
 
             -- Healing magic skill +19, cure pot II +3
-            hands="Peda. Bracers +3",
+            hands=relic.hands,
 
             -- Cure.pot +15
-            legs="Acad. Pants +3",
+            legs=AF.legs,
 
             -- Cure potency +10%, healing magic +20
             feet = "Vanya Clogs",
@@ -486,7 +602,7 @@ function init_gear_sets()
             -- enhancing duration +9
             head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +9',}},
             -- enhancing duration +12
-            body="Peda. Gown +3",
+            body=relic.body,
             -- enhancing duration +10
             hands={ name="Telchine Gloves",
                    augments={'"Cure" potency +4%','Enh. Mag. eff. dur. +10',}},
@@ -519,7 +635,7 @@ function init_gear_sets()
             -- Defence
             sub="Genmei Shield",
             -- Enh.magic +14, regen +15
-            head="Arbatel Bonnet +1",
+            head=empy.head,
             -- matk +10, mdam +10, elem.skill +8, dark.skill +8, int +1, mnd +2,
             -- helix.duration +19
             back="Bookworm's Cape",
@@ -542,6 +658,25 @@ function job_self_command(command, eventArgs)
         return
     end
 end
+
+function remove_silence(spell)
+    -- Do nothing if "spell" is not magic
+    if not table.contains({'/magic','/ninjutsu','/song'}, spell.prefix) then
+        return false
+    end
+
+    if buffactive['silence'] then
+        if "DNC" == player.sub_job or "DNC" == player.main_job then
+            send_command('input /ja "Healing Waltz" <me>');
+        else
+            send_command('input /item "Echo Drops" <me>');
+        end
+        return true;
+    end
+
+    return false;
+end
+
 
 function jobabilities_cancels_grimoire_fastcast()
     if buffactive["Alacrity"] then return true end;
@@ -568,7 +703,7 @@ end
 function filtered_action(spell)
     -- Check whether we should activate arts/addendum instead of casting
     -- the spell.
-    if check_addendum(spell) then
+    if spelltools.check_addendum(spell) then
         cancel_spell();
         return;
     end
@@ -624,7 +759,7 @@ function get_weather_castingtime_gear(spell)
 
         if spell.element == world.weather_element or
            (stormBuff and buffactive[stormBuff]) then
-           return { feet = "Peda. Loafers +3" }
+           return { feet=relic.feet }
         end
     end
 
@@ -642,7 +777,7 @@ function job_precast(spell, action, spellMap, eventArgs)
         eventArgs.cancel = true;
     end
 
-    if downgrade_spell(player, spell, eventArgs) then
+    if spelltools.downgrade_spell(player, spell, eventArgs) then
         eventArgs.cancel = true;
     end
 
@@ -661,18 +796,15 @@ function job_post_precast(spell, action, spellMap, eventArgs)
             if not jobabilities_cancels_grimoire_fastcast() then
                 equip({
                     -- Grimoire cast time -12
-                    feet="Acad. Loafers +3",
+                    feet=AF.feet,
                     -- Grimoire cast time -12
-                    head="Peda. M.Board +3",
+                    head=relic.head,
                 })
             end
         end
 
         -- Equip element-based fastcast staff
-        equip(
-            miaw_staves.fastcast[spell.element],
-            get_weather_castingtime_gear(spell)
-        )
+        equip(get_weather_castingtime_gear(spell))
 
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
@@ -687,74 +819,52 @@ end
 function job_post_midcast(spell, action, spellMap, eventArgs)
     if '/magic' == spell.prefix then
         if "Healing Magic" == spell.skill then
-            equip(get_day_and_weather_gear(spell))
             if buffactive["Rapture"] then
-                equip({ head="Arbatel Bonnet +1" })
+                equip({ head=empy.head })
             end
         elseif "Elemental Magic" == spell.skill then
-            equip(
-                miaw_staves.nuking[spell.element],
-                get_day_and_weather_gear(spell)
-            )
             -- +20% extra damage from Ebullience
             if buffactive["Ebullience"] then
-                equip({head = "Arbatel Bonnet +1"});
+                equip({ head=empy.head });
             end
             -- Straight 10% damage buff if we have klimaform active during
             -- correct weather.
             if (buffactive["Klimaform"] and
                 weather_is_active(spell.element)) then
-                equip({ feet = "Arbatel Loafers +1" })
+                equip({ feet=empy.feet })
             end
         elseif "Enfeebling Magic" == spell.skill then
-            equip(
-                miaw_staves.accuracy[spell.element],
-                get_day_and_weather_gear(spell)
-            )
-
             -- This should give more acc, even on light arts, as it gives
             -- enf +18 and macc +26.
             if grimoire_is_active(spell) then
-                equip({ legs="Arbatel Pants +1" })
+                equip({ legs=empy.legs })
             end
 
             if "BlackMagic" == spell.type then
                 -- +22 enf. skill from Dark Arts
                 if grimoire_is_active(spell) then
-                   equip({ body = "Acad. Gown +3" });
+                   equip({ body=AF.body });
                 end
             else
                 -- +24 enf. skill from Light Arts
                 if grimoire_is_active(spell) then
-                   equip({ legs = "Acad. Pants +3" });
+                   equip({ legs=AF.legs });
                 end
-            end
-        elseif "Dark Magic" == spell.skill then
-            -- Use accuracy setup for stun and nuking power for everything else.
-            if "Stun" == spell.english then
-                equip(
-                    miaw_staves.accuracy[spell.element],
-                    get_day_and_weather_gear()
-                )
-            else
-                equip(
-                    miaw_staves.nuking[spell.element],
-                    get_day_and_weather_gear()
-                );
             end
         end
 
+        -- Equip relevant weather gear
+        equip(get_day_and_weather_gear(spell))
         -- Equip relevant weather-based recast gear
         equip(get_weather_castingtime_gear(spell))
 
         if (buffactive["Perpetuance"] or buffactive["Immanence"]) then
-            equip({ hands="Arbatel Bracers +1" });
+            equip({ hands=empy.hands });
         end
 
         if (buffactive["Penury"] or buffactive["Parsimony"]) then
-            equip({ legs="Arbatel Pants +1" });
+            equip({ legs=empy.legs });
         end
-
     end
 end
 
@@ -775,6 +885,14 @@ function job_buff_change(buff, gain)
     if buff == "Sublimation: Activated" then
         if setup_idle_set(spell) and player.status == 'Idle' then
             handle_equipping_gear(player.status)
+        end
+    elseif "Light Arts" == buff then
+        if gain and light_arts_lockstyleset then
+            send_command('input /lockstyleset ' .. light_arts_lockstyleset)
+        end
+    elseif "Dark Arts" == buff then
+        if gain and dark_arts_lockstyleset then
+            send_command('input /lockstyleset ' .. dark_arts_lockstyleset)
         end
     end
 end
