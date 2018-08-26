@@ -12,12 +12,12 @@ functionality provided by the Mote libraries:
 - Automatically switch to skillchain gear when Immanence is up.
 - Always cast spells in MagicBurst gear as long as the MB window is up after
   performing a skillchain.
-- Use relevant SCH Relic/AF/Empy gear when it is beneficial
+- Use relevant SCH Relic/AF/Empy gear when it is beneficial.
 
 Commands:
  //sc <skillchainname>
   - Creates a skillchain using Immanence
-  - Example: //sc scission, //sc fusion
+  - Examples: //sc scission, //sc fusion
  //sc <element>
   - Creates a skillchain you can burst <element> on
   - Examples: //sc stone, //sc light
@@ -26,7 +26,7 @@ Commands:
   - Examples: //sc fusion+, //sc stone+
  //sc <name>++
   - Creates a fusion skillchain and enables Ebulience and Alacrity
-  - Example: //sc fusion++, //sc stone++
+  - Examples: //sc fusion++, //sc stone++
 
 Note that the //sc alias can be changed, as it might conflict with a popular
 addon. Search for "command_alias" in job_setup below.
