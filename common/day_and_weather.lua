@@ -125,9 +125,14 @@ function use_hachirin_no_obi(spell)
 end
 
 _has_combined_obi = false;
+_has_twilight_cape = false
 
 function set_has_hachirin_no_obi(new_value)
     _has_combined_obi = new_value
+end
+
+function set_has_twilight_cape(new_value)
+    _has_twilight_cape = new_value
 end
 
 function get_obi(spell)
@@ -144,6 +149,10 @@ function get_obi(spell)
 end
 
 function get_twilight_cape(spell)
+    if not _has_twilight_cape then
+        return nil
+    end
+
     -- Helixes always get weather/day bonuses, so they do not need the
     -- obi.
     if spell.english:find("helix") then
@@ -159,18 +168,20 @@ end
 function get_day_and_weather_gear(spell)
     if _has_combined_obi then
         if use_hachirin_no_obi(spell) then
-            return {
-                waist = "Hachirin-no-Obi",
-                back = "Twilight Cape"
-            }
+            local result = { waist = "Hachirin-no-Obi" }
+            if _has_twilight_cape then
+                result.back = "Twilight Cape"
+            end
+            return result
         end
     else
         local obi = get_obi(spell)
         if obi then
-            return {
-                waist = obi,
-                back = "Twilight Cape"
-            };
+            local result = { waist = obi }
+            if _has_twilight_cape then
+                result.back = "Twilight Cape"
+            end
+            return result
         end
     end
 

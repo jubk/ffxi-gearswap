@@ -140,6 +140,8 @@ function job_setup()
 
     -- Tell day and weather we have the combined obi
     set_has_hachirin_no_obi(true);
+    set_has_twilight_cape(true);
+
     -- And tell it we will be using tier II storm buffs
     set_stormbuff_level(2)
 

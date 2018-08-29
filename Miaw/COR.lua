@@ -229,7 +229,7 @@ function init_gear_sets()
         }
     );
 
-    sets.precast.QuickDraw = set_combine(
+    sets.precast.JA.QuickDraw = set_combine(
         sets.base,
         {
             head=herc_matk.head,
@@ -255,12 +255,14 @@ function init_gear_sets()
             back="Gunslinger's Cape",
         }
     );
-    sets.precast.QuickDrawAcc = set_combine(sets.precast.QuickDraw, {})
+    sets.precast.JA.QuickDrawAcc = set_combine(sets.precast.QuickDraw, {})
 
     -- +18% runspeed
     sets.idle = set_combine(sets.base, { legs="Carmine Cuisses +1" });
 
     sets.resting = set_combine(sets.base, {});
+
+    sets.engaged = set_combine(sets.base, {});
 
     sets.midcast.RA = set_combine(
         sets.base,
@@ -449,6 +451,8 @@ function init_gear_sets()
     )
 
     set_has_hachirin_no_obi(true);
+    -- COR can't equip Twilight Cape
+    set_has_twilight_cape(false);
 end
 
 function stop_wasting_bullets(eventArgs)
@@ -483,6 +487,7 @@ function job_precast(spell, eventArgs)
                 return;
             end
         end
+        equip(get_day_and_weather_gear(spell))
     elseif '/range' == spell.prefix then
         if stop_wasting_bullets(eventArgs) then
             return;
@@ -512,12 +517,26 @@ function job_precast(spell, eventArgs)
                 'Lucky: ' .. CurrentLucky .. ', ' ..
                 'Unlucky: ' .. CurrentUnlucky
             );
+        elseif spell.english:endswith(' Shot') then
+            equip(get_day_and_weather_gear(spell))
+        end
+    end
+end
+
+function job_post_precast(spell, eventArgs)
+    if '/weaponskill' == spell.prefix then
+        equip(get_day_and_weather_gear(spell))
+    elseif '/jobability' == spell.prefix  then
+        if spell.english:endswith(' Shot') then
+            equip(get_day_and_weather_gear(spell))
         end
     end
 end
 
 function job_post_midcast(spell, eventArgs)
-    equip(get_day_and_weather_gear(spell))
+    if '/magic' == spell.prefix  then
+        equip(get_day_and_weather_gear(spell))
+    end
     if spell.action_type == 'Ranged Attack' and buffactive['Triple Shot'] then
         equip(sets.TripleShot)
     end
