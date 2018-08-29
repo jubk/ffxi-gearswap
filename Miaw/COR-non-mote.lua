@@ -5,6 +5,7 @@ include("elemental_obis");
 
 local herc_matk = require("shared/herc_matk_gear");
 
+
 --              AF/Relic/Empyrean gear status
 --
 --  AF       | Base | B +1 | Rf | Rf +1 | Rf +2 | Rf +3 |
@@ -19,7 +20,7 @@ local herc_matk = require("shared/herc_matk_gear");
 --   body    |      |         |         |    |   X   |       |       |
 --   hands   |      |         |         |    |   X   |       |       |
 --   legs    |      |         |         | X  |       |       |       |
---   feet    |      |         |         |    |       |       |   X   |
+--   feet    |      |         |         | X  |       |       |       |
 --
 --  Empyrean | Base | Base +1 | Base +2 | RF | Rf +1 |
 --   head    |      |         |         | X  |       |
@@ -29,43 +30,7 @@ local herc_matk = require("shared/herc_matk_gear");
 --   feet    |      |         |         | X  |       |
 --
 
-local AF = {
-    head="Lak. Hat +1",
-    body="Lak. Frac",
-    hands="Lak. Gants +1",
-    legs="Laksa. Trews +2",
-};
-
-local relic = {
-    head="Lanun Tricorne",
-    body="Lanun Frac +1",
-    hands="Lanun Gants +1",
-    legs="Lanun Trews",
-    feet="Lanun Bottes +3",
-};
-
-local empy = {
-    head="Chass. Tricorne",
-    body="Chasseur's Frac +1",
-    hands="Chasseur's Gants +1",
-    legs="Chas. Culottes",
-    feet="Chasseur's Bottes",
-};
-
-local ambu = {
-    head="Meghanada Visor +2",
-    body="Meg. Cuirie +2",
-    hands="Meg. Gloves +2",
-    legs="Meg. Chausses +2",
-    feet="Meg. Jam. +2",
-}
-
 function get_sets()
-    mote_include_version = 2
-    include('Mote-Include.lua');
-end
-
-function job_setup()
     -- Variables
 
     CurrentRoll = nil;
@@ -73,7 +38,6 @@ function job_setup()
     CurrentUnlucky = 0;
 
     CheapAmmoList = {
-        "Divine Bullet",
         "Devastating Bullet",
         "Orichalc. Bullet",
         "Steel Bullet",
@@ -100,6 +64,11 @@ function job_setup()
         "Devastating Bullet",
     };
 
+    -- SlugwinderAmmo defaults to HighDamAmmo, but uses these if available:
+    SlugWinderAmmoList = {
+        "Corsair Bullet",
+        "Devastating Bullet",
+    };
     -- QuickDrawAmmo defaults to HighDamAmmo, but uses these if available:
     QuickDrawAmmoList = {
         "Orichalc. Bullet",
@@ -107,17 +76,25 @@ function job_setup()
         "Animikii Bullet",
     };
 
-    DontWasteBullets = T{
+
+    DontWasteBullets = {
         "Oberon's Bullet",
         "Animikii Bullet",
     };
 
     -- Fallbacks for unconfigured ammo
-    CheapAmmo = "Devastating Bullet";
-    HighDamAmmo = "Devastating Bullet";
-    QuickDrawAmmo = "Animikii Bullet";
+    CheapAmmo = "Iron Bullet";
+    HighDamAmmo = "Steel Bullet";
+    SlugWinderAmmo = "Corsair Bullet";
+    QuickDrawAmmo = "Oberon's Bullet";
 
-    job_self_command("updateammo");
+    self_command("updateammo");
+
+    ShootingDelay = 7.7; -- (gun delay + ammo delay) / 110 plus a bit extra
+    PreShootingDelay = 0.2;
+
+    MidCastGear = {};
+    AfterCastGear = {};
 
     marksmanship_ws = T{
         'Hot Shot',
@@ -166,32 +143,13 @@ function job_setup()
         ["Wizard's Roll"]       = { lucky = 5, unlucky = 9 }
     }
 
-    -- Add missing spell mappings
-    extra_spell_mappings = {
-        ['Light Shot'] = 'QuickDrawAcc', ['Dark Shot'] = 'QuickDrawAcc',
-        ['Earth Shot'] = 'QuickDraw', ['Water Shot'] = 'QuickDraw',
-        ['Wind Shot'] = 'QuickDraw', ['Fire Shot'] = 'QuickDraw',
-        ['Ice Shot'] = 'QuickDraw', ['Thunder Shot'] = 'QuickDraw',
-    }
-    for k,v in pairs(extra_spell_mappings) do spell_maps[k] = v end
-
-    magic_ws = {
-        'Leaden Salute', 'Wildfire', 'Red Lotus Blade', 'Burning Blade',
-        'Hot Shot', 'Shining Blade', 'Aeolian Edge', 'Cyclone',
-        'Gust Slash', 'Energy Drain', 'Energy Steal'
-    }
-
-end
-
-function init_gear_sets()
-
     -- sets
     sets.base = {
-        head=ambu.head,
-        body=ambu.body,
-        hands=ambu.hands,
-        legs=ambu.legs,
-        feet=ambu.feet,
+        head="Meghanada Visor +2",
+        body="Meg. Cuirie +1",
+        hands="Meg. Gloves +2",
+        legs="Meg. Chausses +1",
+        feet="Meg. Jam. +2",
         neck="Sanctity Necklace",
         waist="Eschan Stone",
         left_ear="Digni. Earring",
@@ -201,7 +159,7 @@ function init_gear_sets()
         back="Gunslinger's Cape",
     };
 
-    sets.precast.RA = set_combine(
+    sets.snapshot = set_combine(
         sets.base,
         {
             -- COR gifts: 10 snapshot
@@ -210,13 +168,16 @@ function init_gear_sets()
             -- Snapshot +5
             head="Aurore Beret +1",
             -- Snapshot +9
-            hands = relic.hands,
+            hands = {
+                name="Lanun Gants +1",
+                augments={'Enhances "Fold" effect',}
+            },
             -- Snapshot 10
-            feet=ambu.feet,
+            feet="Meg. Jam. +2",
             -- Snapshot +12
             body="Oshosi Vest",
             -- Snapshot 8
-            legs=AF.legs,
+            legs="Lak. Trews +2",
             -- Snapshot 6.5
             back="Navarch's Mantle",
             -- Snapshot 3
@@ -229,7 +190,7 @@ function init_gear_sets()
         }
     );
 
-    sets.precast.QuickDraw = set_combine(
+    sets.quickdraw = set_combine(
         sets.base,
         {
             head=herc_matk.head,
@@ -238,7 +199,7 @@ function init_gear_sets()
             hands=herc_matk.hands,
             legs=herc_matk.legs,
             -- Quickdraw +22
-            feet=empy.feet,
+            feet="Chasseur's Bottes",
             -- matk 10, macc 10
             neck="Sanctity Necklace",
             -- matk 7, macc 7
@@ -255,52 +216,44 @@ function init_gear_sets()
             back="Gunslinger's Cape",
         }
     );
-    sets.precast.QuickDrawAcc = set_combine(sets.precast.QuickDraw, {})
 
     -- +18% runspeed
     sets.idle = set_combine(sets.base, { legs="Carmine Cuisses +1" });
 
     sets.resting = set_combine(sets.base, {});
 
-    sets.midcast.RA = set_combine(
+    sets.ranged_accuracy = set_combine(
         sets.base,
         {
-            -- racc +48, ratk +44
-            head=ambu.head,
-            -- racc +50, ratk +46
-            body=ambu.body,
-            -- racc +47, ratk +43
-            hands=ambu.hands,
-            -- racc +49, ratk +45
-            legs=ambu.legs,
-            -- racc +46, ratk +42
-            feet=ambu.feet,
+            -- racc +42
+            head="Meghanada Visor +2",
+            -- racc +44
+            body="Meg. Cuirie +1",
+            -- racc +47
+            hands="Meg. Gloves +2",
+            -- racc +43
+            legs="Meg. Chausses +1",
+            -- racc +46
+            feet="Meg. Jam. +2",
             -- racc +10, ratk 10
             neck="Sanctity Necklace",
             -- racc +15
             waist="Eschan Stone",
             -- racc +16
             left_ring="Cacoethic Ring +1",
-            -- racc +6, ratk +6
-            right_ring="Meghanada Ring",
-            -- racc +4, store tp +2
-            right_ear="Volley Earring",
+            -- racc +15
+            right_ring="Cacoethic Ring",
             -- racc +20
             back="Gunslinger's Cape",
             -- TODO: Envervating Earring, vagary body boss
         }
     );
 
+    sets.ranged_attack = set_combine(sets.ranged_accuracy,{
+    });
 
-    sets.precast.WS = set_combine(sets.base, {
-        -- WS boost
-        neck="Fotia Gorget",
-        -- WS boost
-        waist="Fotia Belt",
-    })
-
-    sets.precast.WS.Magic = set_combine(
-        sets.precast.WS,
+    sets.magic_ws = set_combine(
+        sets.base,
         {
             head=herc_matk.head,
             -- matk +29, macc +30
@@ -308,7 +261,12 @@ function init_gear_sets()
             hands=herc_matk.hands,
             legs=herc_matk.legs,
             -- matk +48, WSD+5
-            feet=relic.feet,
+            feet={
+                name="Lanun Bottes +2",
+                augments={
+                    'Enhances "Wild Card" effect',
+                }
+            },
             -- WS boost
             neck="Fotia Gorget",
             -- WS boost
@@ -327,8 +285,7 @@ function init_gear_sets()
         }
     )
 
-    sets.precast.WS.Marksmanship = set_combine(sets.midcast.RA, {
-        ammo=HighDamAmmo,
+    sets.ranged_ws = set_combine(sets.ranged_accuracy, {
         head={
             name="Herculean Helm",
             augments={
@@ -362,21 +319,23 @@ function init_gear_sets()
         waist="Fotia Belt",
     });
 
-    sets.precast.WS["Wildfire"] = set_combine(
-        sets.precast.WS.Magic,
-        { ammo=CheapAmmo, }
-    );
-    sets.precast.WS["Leaden Salute"] = set_combine(
-        sets.precast.WS["Wildfire"],
-        {
-            head="Pixie Hairpin +1",
-            left_ring="Apate Ring",
-            neck="Sanctity Necklace",
-            waist="Eschan Stone",
-        }
-    );
+    sets.ws = {}
+    sets.ws.base = set_combine(sets.base, {
+        -- WS boost
+        neck="Fotia Gorget",
+        -- WS boost
+        waist="Fotia Belt",
+    })
+    sets.ws["Wildfire"] = set_combine(sets.magic_ws, {
+        neck="Sanctity Necklace",
+        waist="Eschan Stone",
+    });
+    sets.ws["Leaden Salute"] = set_combine(sets.ws.Wildfire, {
+        head="Pixie Hairpin +1",
+        left_ring="Apate Ring",
+    });
 
-    sets.precast.FC = set_combine(
+    sets.fastcast = set_combine(
         sets.base,
         {
             -- fast cast +12
@@ -392,25 +351,15 @@ function init_gear_sets()
         }
     );
 
-    sets.TripleShot = set_combine(
-        sets.base,
-        {
-            -- Triple shot +4, Triple Shot Damage +10
-            head="Oshosi Mask",
-            -- Triple shot +12
-            body=empy.body,
-            -- racc +4, store tp +2
-            right_ear="Volley Earring",
-            -- Triple Shot +5
-            back="Camulus's Mantle",
-        }
-    )
+    set_has_hachirin_no_obi(true);
+end
 
-    sets.precast.CorsairRoll = {
+function get_roll_equipment(spellname)
+    local rollEquip = {
         -- duration +50
-        hands=empy.hands,
+        hands="Chasseur's Gants +1",
         -- phantom roll effects +50 (chance to proc job-present-boost)
-        head = relic.head,
+        head = "Lanun Tricorne",
         -- phantom roll +7
         neck="Regal Necklace",
         -- increased area of effect
@@ -419,39 +368,22 @@ function init_gear_sets()
         back="Camulus's Mantle",
     }
 
-    sets.precast.CorsairRoll["Blitzer's Roll"] = set_combine(
-        sets.precast.CorsairRoll, { head=empy.head }
-    )
-    sets.precast.CorsairRoll["Allies' Roll"] = set_combine(
-        sets.precast.CorsairRoll, { hands=empy.hands }
-    )
-    sets.precast.CorsairRoll["Tactician's Roll"] = set_combine(
-        sets.precast.CorsairRoll, {body=empy.body}
-    )
-    sets.precast.CorsairRoll["Caster's Roll"] = set_combine(
-        sets.precast.CorsairRoll, { legs=empy.legs }
-    )
-    sets.precast.CorsairRoll["Courser's Roll"] = set_combine(
-        sets.precast.CorsairRoll, { feet = empy.feet }
-    )
+    if "Blitzer's Roll" == spellname then
+        rollEquip.head = "Chass. Tricorne";
+    elseif "Allies' Roll" == spellname then
+        rollEquip.hands = "Chasseur's Gants +1";
+    elseif "Tactician's Roll" == spellname  then
+        rollEquip.body = "Chasseur's Frac"
+    elseif "Caster's Roll" == spellname  then
+        rollEquip.legs = "Chas. Culottes"
+    elseif "Courser's Roll" == spellname then
+        rollEquip.feet = "Chasseur's Bottes";
+    end
 
-    sets.precast.JA['Triple Shot'] = set_combine(
-        sets.base, { body=empy.body }
-    )
-    sets.precast.JA['Random Deal'] = set_combine(
-        sets.base, { body=relic.body }
-    )
-    sets.precast.JA['Wild Card'] = set_combine(
-        sets.base, { feet=relic.feet }
-    )
-    sets.precast.JA['Snake Eye'] = set_combine(
-        sets.base, { legs=relic.legs }
-    )
-
-    set_has_hachirin_no_obi(true);
+    return rollEquip;
 end
 
-function stop_wasting_bullets(eventArgs)
+function stop_wasting_bullets()
     local ammo = player.equipment.ammo
     if table.contains(DontWasteBullets, ammo) then
         add_to_chat(
@@ -459,35 +391,85 @@ function stop_wasting_bullets(eventArgs)
             'Cancelling ranged attack, ' .. ammo .. ' equipped'
         );
         equip({ ammo = CheapAmmo })
-        eventArgs.cancel = true
+        cancel_spell();
         return true;
     end
     return false
 end
 
-function job_pretarget(spell, eventArgs)
-    if table.contains(magic_ws, spell.english) then
-        classes.CustomClass = "Magic"
-    end
+function pretarget(spell)
+    MidCastGear = {}
+    AfterCastGear = {};
 end
 
-function job_precast(spell, eventArgs)
+function precast(spell)
     -- If we get interupted by removing silence, just return
     if remove_silence(spell) then
         return;
     end
 
     if '/weaponskill' == spell.prefix then
-        if table.contains(marksmanship_ws, spell.english) then
-            if stop_wasting_bullets(eventArgs) then
+        -- Handle all weaponskill stuff
+        if table.contains(marksmanship_ws, spell.name) then
+            if stop_wasting_bullets() then
                 return;
+            end
+
+            local chosenSet;
+            if sets.ws[spell.english] then
+                chosenSet = set_combine(sets.ws[spell.english], {});
+            else
+                chosenSet = set_combine(sets.ranged_ws, {});
+            end
+
+            -- We want to equip cheap ammo after shooting
+            AfterCastGear.ammo = CheapAmmo;
+
+            -- Default to using high damage ammo
+            chosenSet.ammo = HighDamAmmo;
+
+            if 'Wildfire' == spell.name then
+                if "Fire" == world.day_element then
+                    chosenSet.waist = 'Hachirin-no-Obi'
+                    chosenSet.left_ring = 'Zodiac Ring'
+                elseif "Fire" == world.weather_element then
+                    chosenSet.left_ring = 'Zodiac Ring'
+                end
+                -- Ammo damage has no effect on wildfire
+                chosenSet.ammo = CheapAmmo;
+            elseif 'Leaden Salute' == spell.name then
+                if "Darkness" == world.day_element then
+                    chosenSet.waist = 'Hachirin-no-Obi'
+                    chosenSet.left_ring = 'Zodiac Ring'
+                elseif "Darkness" == world.weather_element  then
+                    chosenSet.left_ring = 'Zodiac Ring'
+                end
+                -- Ammo damage has no effect on leaden salute
+                chosenSet.ammo = CheapAmmo;
+            end
+            equip(chosenSet)
+        else
+            if sets.ws[spell.english] then
+                equip(sets.ws[spell.english])
+            else
+                equip(sets.ws.base)
             end
         end
     elseif '/range' == spell.prefix then
-        if stop_wasting_bullets(eventArgs) then
+        if stop_wasting_bullets() then
             return;
         end
+
+        -- Fall back to cheap ammo after shooting
+        AfterCastGear.ammo = CheapAmmo
+
+        equip(set_combine(sets.snapshot, { ammo = SlugWinderAmmo }));
+        MidCastGear = set_combine(
+            sets.ranged_attack, { ammo = SlugWinderAmmo }
+        )
     elseif '/magic' == spell.prefix  then
+        equip(sets.fastcast)
+
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
     elseif '/jobability' == spell.prefix  then
@@ -503,6 +485,8 @@ function job_precast(spell, eventArgs)
                     'Lucky: ' .. CurrentLucky .. ', ' ..
                     'Unlucky: ' .. CurrentUnlucky
                 ));
+
+                equip(get_roll_equipment(spell.english));
             else
                 add_to_chat(128, 'Unknown roll ' .. spell.name);
             end
@@ -512,20 +496,61 @@ function job_precast(spell, eventArgs)
                 'Lucky: ' .. CurrentLucky .. ', ' ..
                 'Unlucky: ' .. CurrentUnlucky
             );
+            equip(get_roll_equipment(CurrentRoll));
+        elseif string.endswith(spell.name, ' Shot') then
+            local qdEquip = { ammo = QuickDrawAmmo };
+
+            -- Equip cheap ammo afterwards
+            AfterCastGear.ammo = CheapAmmo
+
+            -- TODO: test if this works!
+            -- Check for elemental obi
+            daw_gear = get_day_and_weather_gear(spell);
+            if daw_gear then
+                qdEquip = set_combine(qdEquip, daw_gear)
+            end
+
+            -- Use Zodiac ring on non dark/light days when matching day
+            if spell.element == world.day_element and
+                not 'Dark' == world.day_element and
+                not 'Light' == world.day_element then
+                qdEquip.ring1 = 'Zodiac Ring';
+            end
+
+            equip(set_combine(sets.quickdraw, qdEquip))
+        elseif 'Triple Shot' == spell.name then
+            equip({ body = "Chasseur's Frac" })
+        elseif 'Random Deal' == spell.english then
+            equip({ body = "Lanun Frac +1" })
+        elseif 'Wild Card' == spell.english then
+            equip({ feet = "Lanun Bottes" })
+        elseif 'Snake Eye' == spell.english then
+            equip({ legs = "Lanun Trews" })
         end
     end
 end
 
-function job_post_midcast(spell, eventArgs)
-    equip(get_day_and_weather_gear(spell))
-    if spell.action_type == 'Ranged Attack' and buffactive['Triple Shot'] then
-        equip(sets.TripleShot)
+function midcast(spell)
+    cancel_buffs(spell);
+    if table.length(MidCastGear) > 0 then
+        equip(MidCastGear)
     end
 end
 
+function aftercast(spell)
+    if "Idle" == player.status then
+        equip(set_combine(sets.idle, AfterCastGear));
+    else
+        equip(set_combine(sets.base, AfterCastGear));
+    end
+end
 
-function job_aftercast(spell, eventArgs)
-    equip({ ammo=CheapAmmo })
+function status_change(new,old)
+    if "Idle" == new then
+        equip(sets.idle);
+    elseif "Resting" == new then
+        equip(sets.resting);
+    end
 end
 
 function filtered_action(spell)
@@ -537,42 +562,44 @@ function filtered_action(spell)
     end
 end
 
-function job_self_command(command)
+function self_command(command)
     if "updateammo" == command then
-        local sacks = {
-            player.inventory,
-            player.wardrobe, player.wardrobe2,
-            player.wardrobe3, player.wardrobe4,
-        }
         for i, ammo in ipairs(CheapAmmoList) do
-            for i, sack in ipairs(sacks) do
-                if sack[ammo] then
-                    CheapAmmo = ammo;
-                    break
-                end
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
+                CheapAmmo = ammo;
             end
         end
         for i, ammo in ipairs(HighDamageAmmoList) do
-            for i, sack in ipairs(sacks) do
-                if sack[ammo] then
-                    HighDamAmmo = ammo;
-                    break
-                end
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
+                HighDamAmmo = ammo;
+            end
+        end
+        SlugWinderAmmo = HighDamAmmo;
+        for i, ammo in ipairs(SlugWinderAmmoList) do
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
+                SlugWinderAmmo = ammo;
             end
         end
         QuickDrawAmmo = HighDamAmmo;
         for i, ammo in ipairs(QuickDrawAmmoList) do
-            for i, sack in ipairs(sacks) do
-                if sack[ammo] then
-                    QuickDrawAmmo = ammo;
-                    break
-                end
+            if player.inventory[ammo] or player.wardrobe[ammo]
+               or player.wardrobe2[ammo] or player.wardrobe3[ammo]
+               or player.wardrobe4[ammo] then
+                QuickDrawAmmo = ammo;
             end
         end
 
         add_to_chat(128, "Ammo summary:");
         add_to_chat(128, "- High Damage Ammo: " .. HighDamAmmo);
+        add_to_chat(128, "- SlugWinder Ammo:  " .. SlugWinderAmmo);
         add_to_chat(128, "- Quick Draw Ammo:  " .. QuickDrawAmmo);
         add_to_chat(128, "- Cheap Ammo:       " .. CheapAmmo);
     end
 end
+

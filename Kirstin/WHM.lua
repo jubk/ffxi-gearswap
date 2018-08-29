@@ -130,16 +130,18 @@ function get_sets()
     });
 
     sets.enhancing_magic = set_combine(base, {
-        -- Enh. skill +11
-        main="Ababinili +1",
-        -- Need grip for staff
-        sub="Achaq Grip",
+        -- Need club for shield below
+        main="Queller Rod",
+        -- Enh. duration +10
+        sub="Ammurapi Shield",
         -- Conserver MP 3
         head="Selenian Cap",
-        -- Enh. skill 12
+        -- Enh. skill 12, regen duration +12, enh. duration +8
         body="Telchine Chas.",
-        -- Enh. skill +15, haste +3, spell interrupt -25
-        feet="Theo. Duckbills",
+        -- Enh. duration +8
+        hands="Telchine Gloves",
+        -- Enh. duration +8
+        feet="Telchine Pigaches",
         -- Buffs stoneskin
         waist="Siegel Sash",
         -- enmity -3, MND
