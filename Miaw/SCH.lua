@@ -145,6 +145,7 @@ function job_setup()
     -- And tell it we will be using tier II storm buffs
     set_stormbuff_level(2)
 
+    -- Lockstylesets. Set to nil or 0 to disable auto-changing
     light_arts_lockstyleset = 3
     dark_arts_lockstyleset = 18
 
@@ -175,9 +176,13 @@ function job_setup()
 
     -- Switch to default lockstyle
     if buffactive['Dark Arts'] and dark_arts_lockstyleset then
-        send_command('input /lockstyleset ' .. dark_arts_lockstyleset)
+        send_command(
+            'pause 3; input /lockstyleset ' .. dark_arts_lockstyleset
+        )
     elseif light_arts_lockstyleset then
-        send_command('input /lockstyleset ' .. light_arts_lockstyleset)
+        send_command(
+            'pause 3; input /lockstyleset ' .. light_arts_lockstyleset
+        )
     end
 
 end
@@ -235,6 +240,7 @@ function init_gear_sets()
     };
 
     sets.idle.Field = set_combine(sets.standard, {});
+    sets.idle.Town = set_combine(sets.standard, {});
     sets.idle.Field.Sublimation = set_combine(
         sets.idle.Field,
         {
@@ -254,6 +260,7 @@ function init_gear_sets()
             left_ear = "Savant's Earring",
         }
     );
+    sets.idle.Town.Sublimation = set_combine(sets.idle.Field.Sublimation, {});
 
     sets.resting = set_combine(
         sets.standard,
@@ -354,11 +361,20 @@ function init_gear_sets()
             left_ear = "Barkaro. Earring"
         }
     )
-    sets.precast.FC['Healing Magic'] = set_combine(
+    sets.precast.FC.Cure = set_combine(
         sets.precast.FC,
         {
+            -- Cure casting time -15
+            legs="Doyen Pants",
             -- Cure spellcasting time -8
             back = "Pahtli Cape"
+        }
+    )
+    sets.precast.FC.Stoneskin = set_combine(
+        sets.precast.FC,
+        {
+            -- Stoneskin casting time -10
+            legs="Doyen Pants",
         }
     )
 

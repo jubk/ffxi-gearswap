@@ -246,6 +246,24 @@ function get_sets()
         }
     );
 
+    sets.engaged = {
+        head="Jhakri Coronal +1",
+        body="Jhakri Robe +1",
+        hands="Jhakri Cuffs +1",
+        legs="Gyve Trousers",
+        feet="Jhakri Pigaches +2",
+        neck="Sanctity Necklace",
+        waist="Eschan Stone",
+        left_ear="Digni. Earring",
+        right_ear="Steelflash Earring",
+        left_ring="Cacoethic Ring",
+        right_ring="Cacoethic Ring +1",
+        back={
+            name="Mecisto. Mantle",
+            augments={'Cap. Point+50%','CHR+1','Rng.Acc.+1','DEF+12',}
+        },
+    }
+
     nuke_mode = modesets.make_set('Nukemode', {'magicburst', 'nuking'});
     send_command('bind ^f9 gs c mode Nukemode cycle')
 
@@ -380,7 +398,11 @@ function midcast(spell)
 end
 
 function aftercast(spell)
-    equip(set_combine(sets.idle, AfterCastGear));
+    if player.status == "Engaged" then
+        equip(set_combine(sets.engaged, AfterCastGear));
+    else
+        equip(set_combine(sets.idle, AfterCastGear));
+    end
     AfterCastGear = {};
 end
 
@@ -389,6 +411,7 @@ function status_change(new,old)
         setup_idle_set()
         equip(sets.idle);
     elseif "Engaged" == new then
+        equip(sets.engaged)
     elseif "Resting" == new then
         equip(sets.resting);
     end

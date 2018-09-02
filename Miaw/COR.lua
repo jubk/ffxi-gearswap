@@ -9,7 +9,7 @@ local herc_matk = require("shared/herc_matk_gear");
 --
 --  AF       | Base | B +1 | Rf | Rf +1 | Rf +2 | Rf +3 |
 --   head    |      |      |    |   X   |       |       |
---   body    |      |      | X  |       |       |       |
+--   body    |      |      |    |       |       |   X   |
 --   hands   |      |      |    |   X   |       |       |
 --   legs    |      |      |    |       |   X   |       |
 --   feet    |      |      |    |       |       |       |
@@ -31,7 +31,7 @@ local herc_matk = require("shared/herc_matk_gear");
 
 local AF = {
     head="Lak. Hat +1",
-    body="Lak. Frac",
+    body="Laksa. Frac +3",
     hands="Lak. Gants +1",
     legs="Laksa. Trews +2",
 };
@@ -58,6 +58,22 @@ local ambu = {
     hands="Meg. Gloves +2",
     legs="Meg. Chausses +2",
     feet="Meg. Jam. +2",
+}
+
+local capes = {
+    storetp = {
+        name="Camulus's Mantle",
+        augments={
+            'AGI+20','Rng.Acc.+20 Rng.Atk.+20','Rng.Acc.+10','"Store TP"+10',
+        }
+    },
+    matk = {
+        name="Camulus's Mantle",
+        augments={
+            'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10',
+            'Weapon skill damage +10%',
+        }
+    },
 }
 
 function get_sets()
@@ -213,8 +229,8 @@ function init_gear_sets()
             hands = relic.hands,
             -- Snapshot 10
             feet=ambu.feet,
-            -- Snapshot +12
-            body="Oshosi Vest",
+            -- Rapid shot +20
+            body=AF.body,
             -- Snapshot 8
             legs=AF.legs,
             -- Snapshot 6.5
@@ -269,32 +285,36 @@ function init_gear_sets()
         {
             -- racc +48, ratk +44
             head=ambu.head,
-            -- racc +50, ratk +46
-            body=ambu.body,
+            -- racc +46, store TP +6, crit +9
+            body="Mummu Jacket +2",
             -- racc +47, ratk +43
             hands=ambu.hands,
             -- racc +49, ratk +45
             legs=ambu.legs,
             -- racc +46, ratk +42
             feet=ambu.feet,
-            -- racc +10, ratk 10
-            neck="Sanctity Necklace",
-            -- racc +15
-            waist="Eschan Stone",
+            -- ratk 25, store tp +5
+            neck="Ocachi Gorget",
+            -- racc +10, ratk +10, store tp +4
+            waist="Yemaya Belt",
             -- racc +16
             left_ring="Cacoethic Ring +1",
             -- racc +6, ratk +6
             right_ring="Meghanada Ring",
             -- racc +4, store tp +2
             right_ear="Volley Earring",
-            -- racc +20
-            back="Gunslinger's Cape",
+            -- racc +30, ratk 20, AGI +20, store tp +10
+            back=capes.storetp,
             -- TODO: Envervating Earring, vagary body boss
         }
     );
 
 
     sets.precast.WS = set_combine(sets.base, {
+        -- wsd +10%
+        body=AF.body,
+        -- wsd +10,
+        feet=relic.feet,
         -- WS boost
         neck="Fotia Gorget",
         -- WS boost
@@ -325,7 +345,7 @@ function init_gear_sets()
             -- macc 3, matk 3, AGI 5
             right_ring="Arvina Ringlet +1",
             -- macc 20, mdam 20, wsdam 10, AGI 20
-            back="Camulus's Mantle",
+            back=capes.matk,
         }
     )
 
@@ -340,6 +360,8 @@ function init_gear_sets()
                 'Rng.Atk.+10',
             }
         },
+        -- racc 57, ratk 35, wsd +10%
+        body=AF.body,
         legs={
             name="Herculean Trousers",
             augments={
@@ -349,15 +371,8 @@ function init_gear_sets()
                 'Rng.Atk.+13',
             }
         },
-        feet={
-            name="Herculean Boots",
-            augments={
-                'Rng.Acc.+14 Rng.Atk.+14',
-                'Weapon skill damage +3%',
-                'Rng.Acc.+2',
-                'Rng.Atk.+12',
-            }
-        },
+        -- wsd +10,
+        feet=relic.feet,
         -- WS boost
         neck="Fotia Gorget",
         -- WS boost
@@ -395,7 +410,7 @@ function init_gear_sets()
     );
 
     sets.TripleShot = set_combine(
-        sets.base,
+        sets.midcast.RA,
         {
             -- Triple shot +4, Triple Shot Damage +10
             head="Oshosi Mask",
@@ -404,7 +419,7 @@ function init_gear_sets()
             -- racc +4, store tp +2
             right_ear="Volley Earring",
             -- Triple Shot +5
-            back="Camulus's Mantle",
+            back=capes.storetp,
         }
     )
 
@@ -418,7 +433,7 @@ function init_gear_sets()
         -- increased area of effect
         left_ring="Luzaf's Ring",
         -- duration +30
-        back="Camulus's Mantle",
+        back=capes.matk,
     }
 
     sets.precast.CorsairRoll["Blitzer's Roll"] = set_combine(
