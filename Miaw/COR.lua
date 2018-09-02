@@ -365,10 +365,7 @@ function init_gear_sets()
         legs={
             name="Herculean Trousers",
             augments={
-                'Rng.Acc.+15',
-                'Weapon skill damage +3%',
-                'STR+10',
-                'Rng.Atk.+13',
+                'Rng.Acc.+26','Weapon skill damage +4%','DEX+5','Rng.Atk.+15',
             }
         },
         -- wsd +10,
