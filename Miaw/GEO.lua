@@ -14,7 +14,7 @@ function get_sets()
         main={ name="Solstice", augments={'Mag. Acc.+20','Pet: Damage taken -4%','"Fast Cast"+5',}},
         sub="Genmei Shield",
         range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
-        back="Swith Cape +1",
+        back="Lifestream Cape",
 
         -- Geomancy +5
         head="Hike Khat",

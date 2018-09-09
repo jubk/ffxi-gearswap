@@ -16,7 +16,7 @@ local herc_matk = require("shared/herc_matk_gear");
 --
 --  Relic    | Base | Base +1 | Base +2 | RF | Rf +1 | Rf +2 | Rf +3 |
 --   head    |      |         |         | X  |       |       |       |
---   body    |      |         |         |    |   X   |       |       |
+--   body    |      |         |         |    |       |       |   X   |
 --   hands   |      |         |         |    |   X   |       |       |
 --   legs    |      |         |         | X  |       |       |       |
 --   feet    |      |         |         |    |       |       |   X   |
@@ -38,7 +38,7 @@ local AF = {
 
 local relic = {
     head="Lanun Tricorne",
-    body="Lanun Frac +1",
+    body="Lanun Frac +3",
     hands="Lanun Gants +1",
     legs="Lanun Trews",
     feet="Lanun Bottes +3",
@@ -378,7 +378,10 @@ function init_gear_sets()
 
     sets.precast.WS["Wildfire"] = set_combine(
         sets.precast.WS.Magic,
-        { ammo=CheapAmmo, }
+        {
+            ammo=CheapAmmo,
+            body=relic.body,
+        }
     );
     sets.precast.WS["Leaden Salute"] = set_combine(
         sets.precast.WS["Wildfire"],
@@ -482,7 +485,8 @@ function stop_wasting_bullets(eventArgs)
 end
 
 function job_pretarget(spell, eventArgs)
-    if table.contains(magic_ws, spell.english) then
+    if table.contains(magic_ws, spell.english)
+       and not sets.precast.WS[spell.english] then
         classes.CustomClass = "Magic"
     end
 end
