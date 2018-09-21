@@ -8,9 +8,9 @@ function get_sets()
     sets.base = {
         ammo="Seething Bomblet",
         head="Meghanada Visor +2",
-        body="Meg. Cuirie +1",
+        body="Meg. Cuirie +2",
         hands="Plun. Armlets +1",
-        legs="Meg. Chausses +1",
+        legs="Meg. Chausses +2",
         feet="Skulk. Poulaines",
         neck="Sanctity Necklace",
         waist="Kentarch Belt +1",

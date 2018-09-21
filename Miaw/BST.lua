@@ -6,10 +6,10 @@ function get_sets()
     sets.base = {
         ammo="Pet Food Theta",
         head="Meghanada Visor +2",
-        body="Meg. Cuirie +1",
+        body="Meg. Cuirie +2",
         hands="Meg. Gloves +2",
         legs="Valor. Hose",
-        feet="Meg. Jam. +1",
+        feet="Meg. Jam. +2",
         neck="Empath Necklace",
         waist="Olseni Belt",
         left_ear="Digni. Earring",

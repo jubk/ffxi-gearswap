@@ -301,6 +301,8 @@ function init_gear_sets()
             left_ring="Cacoethic Ring +1",
             -- racc +6, ratk +6
             right_ring="Meghanada Ring",
+            -- ratk +4, store tp +4, agi +2
+            left_ear="Neritic Earring",
             -- racc +4, store tp +2
             right_ear="Volley Earring",
             -- racc +30, ratk 20, AGI +20, store tp +10
@@ -389,6 +391,7 @@ function init_gear_sets()
             head="Pixie Hairpin +1",
             left_ring="Apate Ring",
             neck="Sanctity Necklace",
+            left_ring="Archon Ring",
             waist="Eschan Stone",
         }
     );
