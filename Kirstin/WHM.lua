@@ -6,6 +6,30 @@ include("shared/staves");
 -- orison locket [neck]
 --
 
+AF = {
+    head="Healer's Cap",
+    body="Healer's Briault",
+    hands="Theophany Mitts",
+    legs="Healer's Pantaln.",
+    feet="Theo. Duckbills",
+}
+
+relic = {
+    head="Piety Cap +1",
+    body="Piety Briault +1",
+    hands="Cleric's Mitts",
+    legs="Cleric's Pantaln.",
+    feet="Cleric's Duckbills",
+}
+
+empy = {
+    head="Orison Cap +2",
+    body="Orison Bliaud +1",
+    hands="Orison Mitts +1",
+    legs="Ebers Pant. +1",
+    feet="Orsn. Duckbills +1",
+}
+
 function time_specific_gear()
     if world.time >= 8*60 and world.time < 18*60 then
         return { feet="Serpentes Sabots" };
@@ -16,9 +40,14 @@ end
 
 function get_sets()
     local base = set_combine({
+            -- cure pot II +2, cure pot 10, cure spellcasting time -7
+            main="Queller Rod",
+            -- cure pot +3, cure spellcasting time -3
+            sub="Sors Shield",
+
             ammo="Incantor Stone",
-            head="Piety Cap +1",
-            body="Piety Briault +1", -- "Orison Bliaud +1",
+            head=relic.head,
+            body=relic.body, -- "Orison Bliaud +1",
             hands="Theophany Mitts",
             legs="Assiduity pants",
             feet="Regal Pumps",
@@ -30,7 +59,6 @@ function get_sets()
             right_ring="Janniston Ring",
             back="Mending Cape",
         },
-        kirstin_staves.healing
     )
 
     sets.idle = set_combine(base, {
@@ -60,12 +88,16 @@ function get_sets()
     sets.cure_fastcast = set_combine(
         sets.fastcast,
         {
+            -- cure pot II +2, cure pot 10, cure spellcasting time -7
+            main="Queller Rod",
+            -- cure pot +3, cure spellcasting time -3
+            sub="Sors Shield",
             -- Cure magic time -13%
-            head="Piety Cap +1",
+            head=relic.head,
             -- Cure magic time -7%
             body="Vanya Robe",
             -- Healing magic time -8%
-            legs="Orsn. Pantaln. +1",
+            legs=empy.legs,
             -- Cure magic time -3%
             left_ear="Nourish. Earring",
             -- Cure magic time -5%
@@ -74,13 +106,11 @@ function get_sets()
             back="Pahtli Cape",
             -- Cure casting time -15%
             feet="Vanya Clogs",
-        },
-        -- Cure casting time -11%
-        kirstin_staves.healing
+        }
     );
     sets.healing_fastcast = set_combine(sets.fastcast, {
         -- Healing magic time -8%
-        legs="Orsn. Pantaln. +1",
+        legs=empy.legs,
         -- Healing magic time -5%
         back="Disperser's Cape",
     });
@@ -92,16 +122,20 @@ function get_sets()
     sets.curepotency = set_combine(
         base,
         {
+            -- cure pot II +2, cure pot 10, cure spellcasting time -7
+            main="Queller Rod",
+            -- cure pot +3, cure spellcasting time -3
+            sub="Sors Shield",
             -- cure pot 10
-            head="Orison Cap +2",
+            head=empy.head
             -- Cure pot +5
             neck="Nodens Gorget",
             -- cure pot 13
             body="Vrikodara Jupon",
             -- healing magic +17
             hands="Theophany Mitts",
-            -- cure pot 10
-            legs="Gyve Trousers",
+            -- +x% mp return
+            legs=empy.legs,
             -- cure pot 5
             feet="Vanya Clogs",
             -- cure pot 5-6
@@ -115,7 +149,6 @@ function get_sets()
             -- cure pot 4
             back="Tempered Cape",
         },
-        kirstin_staves.healing
     );
 
     sets.resting = set_combine(base, {
@@ -123,7 +156,7 @@ function get_sets()
         body="Errant Hpl.",
         neck="Eidolon Pendant",
         hands="Oracle's Gloves",
-        legs="Orsn. Pantaln. +1",
+        legs=empy.legs,
         feet="Oracle's Pigaches",
         waist="Shinjutsu-no-Obi +1",
         left_ear="Antivenom Earring",
@@ -157,25 +190,25 @@ function get_sets()
     });
     sets.regen = set_combine(sets.enhancing_magic, {
         -- regen pot 36
-        body="Piety Briault +1",
+        body=relic.body,
         -- inc regen duration
-        hands="Orison Mitts +1",
+        hands=empy.hands,
     });
     sets.barspells = set_combine(sets.enhancing_magic, {
         -- resist spells +20
-        legs="Cleric's Pantaln.",
+        legs=relig.legs,
     });
     sets.healing_magic = set_combine(base, {
-        -- Healing magic skill +11
-        main="Ababinili +1",
-        -- need sub for staff
-        sub="Achaq Grip",
+        -- cure pot II +2, cure pot 10, cure spellcasting time -7
+        main="Queller Rod",
+        -- cure pot +3, cure spellcasting time -3
+        sub="Sors Shield",
         -- Healing magic skill +15
-        body="Orison Bliaud +1",
+        body=empy.body,
         -- Healing magic skill +17
         hands="Theophany Mitts",
         -- Healing magic skill +15
-        legs="Cleric's Pantaln.",
+        legs=relic.legs,
         -- Healing magic skill +20
         feet="Vanya Clogs",
         -- Healing magic skill +10
