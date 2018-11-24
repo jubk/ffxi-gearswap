@@ -13,6 +13,40 @@ function time_specific_gear()
 end
 
 function get_sets()
+
+    AF = {
+        head="Geo. Galero +2",
+        body="Geomancy Tunic +2",
+        hands="Geo. Mitaines +2",
+        legs="Geomancy Pants +2",
+        feet="Geo. Sandals +3",
+    }
+    relic = {
+        head = "Bagua Galero",
+        body = "Bagua Tunic +1",
+        hands = "Bagua Mitaines",
+        legs = "Bagua Pants +1",
+        feet = "Bagua Sandals +1",
+    }
+    empy = {
+        head = "Azimuth Hood +1",
+        body = "Azimuth Coat",
+        hands = "Azimuth Gloves",
+        legs = "Azimuth Tights",
+        feet = "Azimuth Gaiters +1",
+    }
+    capes = {}
+    capes.geomancy_skill = {
+        name="Lifestream Cape",
+        augments={
+            'Geomancy Skill +10',
+            'Indi. eff. dur. +11',
+            'Pet: Damage taken -5%',
+        }
+    }
+    capes.pet_dt = capes.geomancy_skill
+    capes.fastcast = capes.geomancy_skill
+
     idle_mode = modesets.make_set(
         'Idlemode',
         {'refresh', 'defensive', 'luopan'}
@@ -22,26 +56,28 @@ function get_sets()
         {'luopan', 'defensive', 'refresh'}
     );
     send_command('bind ^f9 gs c mode Idlemode cycle');
+    add_to_chat(128, "Idlemode set to refresh, press ctrl-F9 to change");
     send_command('bind ^f10 gs c mode Engagedmode cycle');
+    add_to_chat(128, "Engagedmode set to luopan, press ctrl-F9 to change");
 
 
     local base = set_combine({
             range="Dunna",
-            head="Azimuth Hood +1",
+            head=empy.head,
 
             -- macc 46, matk 46, refresh +4
             body="Jhakri Robe +2",
 
             hands="Merlinic Dastanas",
             legs="Assiduity Pants",
-            feet="Geo. Sandals +3",
+            feet=AF.feet,
             neck="Sanctity Necklace",
             waist="Refoccilation Stone",
             left_ear="Mendi. Earring",
             right_ear="Moonshade Earring",
             left_ring="Fortified Ring",
             right_ring="Janniston Ring",
-            back="Lifestream Cape",
+            back=capes.pet_dt,
         }
     )
     sets.base = base
@@ -52,7 +88,7 @@ function get_sets()
         -- Fast cast +8
         body="Shango Robe",
         -- Fast cast +13
-        legs="Geomancy Pants +2",
+        legs=AF.legs,
         -- Fast cast +4-6
         feet="Regal Pumps",
         -- Fast cast +2
@@ -64,14 +100,7 @@ function get_sets()
         -- Fast cast +4
         right_ring="Kishar Ring",
         -- Fast cast +7
-        back={
-            name="Lifestream Cape",
-            augments={
-                'Geomancy Skill +10',
-                'Indi. eff. dur. +11',
-                'Pet: Damage taken -5%',
-            }
-        },
+        back=capes.fastcast,
     });
     sets.cure_fastcast = set_combine(
         sets.fastcast,
@@ -92,7 +121,7 @@ function get_sets()
     });
     sets.elemental_fastcast = set_combine(sets.fastcast, {
         -- Elem. magic casting time -11%
-        hands="Bagua Mitaines",
+        hands=relic.hands,
         -- Elem magic casting time -3%
         left_ear="Barkaro. Earring",
     });
@@ -237,26 +266,19 @@ function get_sets()
         sets.base,
         {
             -- Geomancy +15
-            head="Azimuth Hood +1",
+            head=empy.head,
             -- Set bonus
-            body="Azimuth Coat",
+            body=empy.body,
             -- Set bonus
-            hands="Azimuth Gloves",
+            hands=empy.hands,
             -- Indi duration +12
-            legs="Bagua Pants +1",
+            legs=relic.legs,
             -- Indi duration +20, set bonus
-            feet="Azimuth Gaiters +1",
+            feet=empy.feet,
             -- Geomancy +10
             neck="Deceiver's Torque",
             -- Geomancy +15
-            back={
-                name="Lifestream Cape",
-                augments={
-                    'Geomancy Skill +10',
-                    'Indi. eff. dur. +11',
-                    'Pet: Damage taken -5%',
-                }
-            },
+            back=capes.geomancy_skill,
         }
     );
 
@@ -265,15 +287,15 @@ function get_sets()
         sets.base,
         {
             -- def 107, mdef 5
-            head="Geo. Galero +2",
+            head=AF.head,
             -- pdt -3
             body="Vrikodara Jupon",
             -- pdt -2
-            hands="Geo. Mitaines +2",
+            hands=AF.hands,
             -- mdt -2
             legs="Gyve Trousers",
             -- pdt -4
-            feet="Azimuth Gaiters +1",
+            feet=empy.feet,
             -- dt -6
             neck="Loricate Torque +1",
             -- mdt -2
@@ -292,20 +314,15 @@ function get_sets()
         sets.engaged['defensive'],
         {
             -- Luopan regen +3
-            head="Azimuth Hood +1",
+            head=empy.head,
             -- Luopan dt -12%
-            hands="Geo. Mitaines +2",
+            hands=AF.hands,
             -- Luopan regen +3
-            feet="Bagua Sandals +1",
+            feet=relic.feet,
+            -- pet dt -3, pet regen +1, pet eva +10
+            waist="Isa Belt",
             -- Luopan dt -5%
-            back={
-                name="Lifestream Cape",
-                augments={
-                    'Geomancy Skill +10',
-                    'Indi. eff. dur. +11',
-                    'Pet: Damage taken -5%',
-                }
-            },
+            back=capes.pet_dt,
         }
     );
     sets.engaged['refresh'] = set_combine(
@@ -316,7 +333,7 @@ function get_sets()
             -- refresh +4
             body="Jhakri Robe +2",
             -- refresh +1
-            hands="Bagua Mitaines",
+            hands=relic.hands,
             -- refresh +1
             legs="Assiduity Pants",
         }
@@ -325,7 +342,7 @@ function get_sets()
     sets.idle = {}
     sets.idle['base'] = {
         -- Runspeed +12
-        feet="Geo. Sandals +3",
+        feet=AF.feet,
     }
     sets.idle['refresh'] = set_combine(
         sets.engaged['refresh'],
@@ -347,12 +364,12 @@ function get_sets()
     );
 
     sets.JA = {};
-    sets.JA["Bolster"] = { body="Bagua Tunic" }
-    sets.JA["Mending Halation"] = { legs="Bagua Pants +1" }
-    sets.JA["Radial Arcana"] = { feet="Bagua Sandals +1" }
+    sets.JA["Bolster"] = { body=relic.body }
+    sets.JA["Mending Halation"] = { legs=relic.legs }
+    sets.JA["Radial Arcana"] = { feet=relic.feet }
     sets.JA["Full Circle"] = {
-        head="Azimuth Hood +1",
-        body="Geomancy Tunic +2"
+        head=empy.head,
+        body=AF.body
     }
 
     

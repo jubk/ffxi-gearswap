@@ -23,9 +23,9 @@ relic = {
 }
 
 empy = {
-    head="Orison Cap +2",
-    body="Orison Bliaud +1",
-    hands="Orison Mitts +1",
+    head="Ebers Cap +1",
+    body="Ebers Bliaud +1",
+    hands="Ebers Mitts",
     legs="Ebers Pant. +1",
     feet="Orsn. Duckbills +1",
 }
@@ -39,30 +39,44 @@ function time_specific_gear()
 end
 
 function get_sets()
-    local base = set_combine({
-            -- cure pot II +2, cure pot 10, cure spellcasting time -7
-            main="Queller Rod",
-            -- cure pot +3, cure spellcasting time -3
-            sub="Sors Shield",
+    local base = {
+        -- cure pot II +2, cure pot 10, cure spellcasting time -7
+        main="Queller Rod",
+        -- cure pot +3, cure spellcasting time -3
+        sub="Sors Shield",
 
-            ammo="Incantor Stone",
-            head=relic.head,
-            body=relic.body, -- "Orison Bliaud +1",
-            hands="Theophany Mitts",
-            legs="Assiduity pants",
-            feet="Regal Pumps",
-            neck="Malison Medallion",
-            waist="Shinjutsu-no-Obi +1",
-            left_ear="Nourish. Earring",
-            right_ear="Orison Earring",
-            left_ring="Tamas Ring",
-            right_ring="Janniston Ring",
-            back="Mending Cape",
-        },
-    )
+        ammo="Incantor Stone",
+        head=relic.head,
+        body=relic.body,
+        hands=AF.hands,
+        legs="Assiduity pants",
+        feet="Regal Pumps",
+        neck="Malison Medallion",
+        waist="Shinjutsu-no-Obi +1",
+        left_ear="Nourish. Earring",
+        right_ear="Orison Earring",
+        left_ring="Tamas Ring",
+        right_ring="Janniston Ring",
+        back="Mending Cape",
+    };
 
     sets.idle = set_combine(base, {
+        -- dt -2
+        ammo="Staunch Tathlum",
+        -- refresh +1
+        head="Befouled Crown",
+        -- refresh +2
+        body=relic.body,
+        -- refresh +1
+        legs="Assiduity Pants",
+        -- dt -6%
+        neck="Loricate Torque +1",
+        -- refresh +1
         right_ear="Moonshade Earring",
+        -- pdt -5%
+        left_ring="Patricius Ring",
+        -- dt -5%
+        right_ring="Defending Ring",
     });
     sets.engaged = set_combine(base, {});
 
@@ -74,7 +88,7 @@ function get_sets()
         -- Fast cast +5%
         body="Vrikodara Jupon",
         -- Haste +3%
-        hands="Theophany Mitts",
+        hands=AF.hands,
         -- fastcast 5
         legs="Artsieq Hose",
         -- Fast cast +4-6%
@@ -126,14 +140,16 @@ function get_sets()
             main="Queller Rod",
             -- cure pot +3, cure spellcasting time -3
             sub="Sors Shield",
-            -- cure pot 10
-            head=empy.head
+            -- ConMP +4
+            ammo="Pemphredo Tathlum",
+            -- cure pot 16
+            head=empy.head,
             -- Cure pot +5
             neck="Nodens Gorget",
-            -- cure pot 13
-            body="Vrikodara Jupon",
+            -- cureskin+
+            body=empy.body,
             -- healing magic +17
-            hands="Theophany Mitts",
+            hands=AF.hands,
             -- +x% mp return
             legs=empy.legs,
             -- cure pot 5
@@ -148,7 +164,18 @@ function get_sets()
             right_ring="Janniston Ring",
             -- cure pot 4
             back="Tempered Cape",
-        },
+
+            -- TODO:
+            -- - Ambuscade cape, +10 cure pot, +10 cureskin
+            -- Kaykaus +1 set bonus for cure pot II
+        }
+    );
+    sets.curagapotency = set_combine(
+        sets.curepotency,
+        {
+            -- healing magic skill +20
+            body="Vanya Robe",
+        }
     );
 
     sets.resting = set_combine(base, {
@@ -163,8 +190,8 @@ function get_sets()
     });
 
     sets.enhancing_magic = set_combine(base, {
-        -- Need club for shield below
-        main="Queller Rod",
+        -- enhancing duration +5
+        main="Gada",
         -- Enh. duration +10
         sub="Ammurapi Shield",
         -- Conserver MP 3
@@ -196,7 +223,7 @@ function get_sets()
     });
     sets.barspells = set_combine(sets.enhancing_magic, {
         -- resist spells +20
-        legs=relig.legs,
+        legs=relic.legs,
     });
     sets.healing_magic = set_combine(base, {
         -- cure pot II +2, cure pot 10, cure spellcasting time -7
@@ -206,7 +233,7 @@ function get_sets()
         -- Healing magic skill +15
         body=empy.body,
         -- Healing magic skill +17
-        hands="Theophany Mitts",
+        hands=AF.hands,
         -- Healing magic skill +15
         legs=relic.legs,
         -- Healing magic skill +20
@@ -228,11 +255,11 @@ function get_sets()
         -- macc +21
         body="Vanya Robe",
         -- enf. skill +15
-        hands="Cleric's Mitts",
+        hands=relic.hands,
         -- statvomit
         legs="Gyve Trousers",
         -- enf. skill +15
-        feet="Theo. Duckbills",
+        feet=AF.feet,
     });
     sets.divine_magic = set_combine(sets.base, {
         -- Macc +7, statvomit
@@ -240,7 +267,7 @@ function get_sets()
         -- macc +21, statvomit
         body="Vanya Robe",
         -- mnd +26
-        hands="Theophany Mitts",
+        hands=AF.hands,
         -- matk +40, statvomit
         legs="Gyve Trousers",
         -- matk +18
@@ -277,9 +304,9 @@ function precast(spell)
         end
     elseif '/jobability' == spell.prefix then
         if "Devotion" == spell.name then
-            equip({ head = "Piety Cap +1" });
+            equip({ head = relic.head });
         elseif "Benediction" == spell.name then
-            equip({ body = "Piety Briault +1" });
+            equip({ body = relic.body });
         end
     end
 end
@@ -287,11 +314,10 @@ end
 function midcast(spell)
     cancel_buffs(spell);
     if spell.prefix == '/magic' then
-        if string.startswith(spell.english, "Cur") then
+        if string.startswith(spell.english, "Curaga") then
+            equip(sets.curagapotency);
+        elseif string.startswith(spell.english, "Cur") then
             equip(sets.curepotency);
-            if buffactive['Afflatus Solace'] then
-                equip({ body = "Orison Bliaud +1" })
-            end
         elseif 'Divine Magic' == spell.skill or
                'Elemental Magic' == spell.skill or
                'Dark Magic' == spell.skill or
@@ -313,7 +339,7 @@ function midcast(spell)
             elseif string.startswith(spell.english, "Bar") then
                 equip(sets.barspells);
                 if buffactive['Afflatus Solace'] then
-                    equip({ body = "Orison Bliaud +1" })
+                    equip({ body=empy.body })
                 end
             elseif "Stoneskin" == spell.english then
                 equip(sets.stoneskin);

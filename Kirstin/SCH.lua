@@ -11,6 +11,7 @@ function get_sets()
 
     sets.standard = {
         main="Earth staff",
+        sub="Umbra Strap",
         ammo="Incantor Stone",
         head={
             name="Helios Band",
@@ -199,7 +200,16 @@ function get_sets()
     sets.enhancing = set_combine(
         sets.standard,
         {
+            -- enhancing duration +5
+            main="Gada",
+            -- enhancing duration +10
+            sub="Ammurapi Shield",
+            -- Enh. skill 12, regen duration +12, enh. duration +8
             body="Telchine Chas.",
+            -- Enh. duration +8
+            hands="Telchine Gloves",
+            -- Enh. duration +8
+            feet="Telchine Pigaches",
             waist = "Penitent's Rope",
             back = "Swith Cape",
             feet = "Regal Pumps",

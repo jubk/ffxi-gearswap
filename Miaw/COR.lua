@@ -37,7 +37,7 @@ local AF = {
 };
 
 local relic = {
-    head="Lanun Tricorne",
+    head="Lanun Tricorne +2",
     body="Lanun Frac +3",
     hands="Lanun Gants +1",
     legs="Lanun Trews",
@@ -72,6 +72,19 @@ local capes = {
         augments={
             'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','AGI+10',
             'Weapon skill damage +10%',
+        }
+    },
+    ranged_ws={
+        name="Camulus's Mantle",
+        augments={
+            'AGI+20','Rng.Acc.+20 Rng.Atk.+20',
+            'AGI+10','Weapon skill damage +10%',
+        }
+    },
+    melee_tp={
+        name="Camulus's Mantle",
+        augments={
+            'DEX+20','Accuracy+20 Attack+20','Accuracy+5','"Store TP"+10',
         }
     },
 }
@@ -225,23 +238,25 @@ function init_gear_sets()
 
             -- Snapshot +5
             head="Aurore Beret +1",
-            -- Snapshot +9
-            hands = relic.hands,
-            -- Snapshot 10
-            feet=ambu.feet,
             -- Rapid shot +20
             body=AF.body,
-            -- Snapshot 8
-            legs=AF.legs,
-            -- Snapshot 6.5
-            back="Navarch's Mantle",
+            -- Snapshot +9
+            hands = relic.hands,
+            -- Snapshot 9
+            legs="Nahtirah Trousers",
+            -- Snapshot 10
+            feet=ambu.feet,
+            -- snapshot +2, racc +15
+            neck="Commodore Charm",
             -- Snapshot 3
             waist="Impulse Belt",
+            -- Snapshot 6.5
+            back="Navarch's Mantle",
 
-            -- Total: 53.5
-            -- Cap with no buffs: 60
-            -- Cap with flurry: 45
-            -- Cap with flurry II: 30
+            -- Total: 56.5
+            -- Cap with no buffs: 70
+            -- Cap with flurry: 55
+            -- Cap with flurry II: 40
         }
     );
 
@@ -267,18 +282,38 @@ function init_gear_sets()
             left_ring="Etana Ring",
             -- macc 3, matk 3
             right_ring="Arvina Ringlet +1",
-            -- matk 14, macc 10
-            back="Gunslinger's Cape",
+            -- Store TP +10
+            capes.storetp
         }
     );
-    sets.precast.JA.QuickDrawAcc = set_combine(sets.precast.QuickDraw, {})
+    sets.precast.JA.QuickDrawAcc = set_combine(sets.precast.QuickDraw, {
+        -- macc +15
+        neck="Commodore Charm",
+    })
 
     -- +18% runspeed
     sets.idle = set_combine(sets.base, { legs="Carmine Cuisses +1" });
 
     sets.resting = set_combine(sets.base, {});
 
-    sets.engaged = set_combine(sets.base, {});
+    sets.engaged = set_combine(sets.base, {
+        -- Store TP +6
+        body="Mummu Jacket +2",
+        -- Store TP +7, DA +3, TA +3
+        legs={
+            name="Samnuha Tights",
+            augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}
+        },
+        -- Stopre TP +8
+        neck="Iskur Gorget",
+        -- Store TP +3, acc +6, DA +3
+        right_ear="Cessance Earring",
+        -- Store TP +1-5, DA +3
+        waist="Kentarch Belt +1",
+
+        -- store tp +10
+        back=capes.melee_tp,
+    });
 
     sets.midcast.RA = set_combine(
         sets.base,
@@ -293,12 +328,12 @@ function init_gear_sets()
             legs=ambu.legs,
             -- racc +46, ratk +42
             feet=ambu.feet,
-            -- ratk 25, store tp +5
-            neck="Ocachi Gorget",
+            -- racc +30, ratk 30, store tp +8
+            neck="Iskur Gorget",
             -- racc +10, ratk +10, store tp +4
             waist="Yemaya Belt",
-            -- racc +16
-            left_ring="Cacoethic Ring +1",
+            -- ratk +25, AGI+10, matk +10, recycle +10
+            left_ring="Dingir Ring",
             -- racc +6, ratk +6
             right_ring="Meghanada Ring",
             -- ratk +4, store tp +4, agi +2
@@ -319,6 +354,8 @@ function init_gear_sets()
         feet=relic.feet,
         -- WS boost
         neck="Fotia Gorget",
+        -- ratk +25, matk +10, agi +10, recycle +10
+        left_ring="Dingir Ring",
         -- WS boost
         waist="Fotia Belt",
     })
@@ -341,9 +378,8 @@ function init_gear_sets()
             left_ear="Friomisi Earring",
             -- matk 8
             right_ear="Hecate's Earring",
-            -- macc 7
-            left_ring="Etana Ring",
-            -- TODO: Acumen ring, matk 4%
+            -- ratk +25, matk +10, agi +10, recycle +10
+            left_ring="Dingir Ring",
             -- macc 3, matk 3, AGI 5
             right_ring="Arvina Ringlet +1",
             -- macc 20, mdam 20, wsdam 10, AGI 20
@@ -353,15 +389,8 @@ function init_gear_sets()
 
     sets.precast.WS.Marksmanship = set_combine(sets.midcast.RA, {
         ammo=HighDamAmmo,
-        head={
-            name="Herculean Helm",
-            augments={
-                'Weapon skill damage +4%',
-                'DEX+9',
-                'Rng.Acc.+6',
-                'Rng.Atk.+10',
-            }
-        },
+        -- racc 27, ratk 72
+        head=relic.head,
         -- racc 57, ratk 35, wsd +10%
         body=AF.body,
         legs={
@@ -376,6 +405,10 @@ function init_gear_sets()
         neck="Fotia Gorget",
         -- WS boost
         waist="Fotia Belt",
+        -- wsd +2
+        right_ear="Ishvara Earring",
+        -- racc 20, ratk 20, wsd +10%
+        back=capes.ranged_ws,
     });
 
     sets.precast.WS["Wildfire"] = set_combine(
@@ -389,12 +422,47 @@ function init_gear_sets()
         sets.precast.WS["Wildfire"],
         {
             head="Pixie Hairpin +1",
-            left_ring="Apate Ring",
             neck="Sanctity Necklace",
-            left_ring="Archon Ring",
+            right_ear={
+                name="Moonshade Earring",
+                augments={'Rng.Atk.+4','TP Bonus +250',}
+            },
+            right_ring="Archon Ring",
             waist="Eschan Stone",
         }
     );
+    sets.precast.WS["Last Stand"] = set_combine(
+        sets.precast.WS.Marksmanship,
+        {
+            left_ear={
+                name="Moonshade Earring",
+                augments={'Rng.Atk.+4','TP Bonus +250',}
+            },
+            -- AGI +6
+            right_ring="Apate Ring",
+        }
+    )
+
+    sets.precast.WS["Savage Blade"] = set_combine(
+        sets.precast.WS,
+        {
+            head="Meghanada Visor +2",
+            body=AF.body,
+            hands="Meg. Gloves +2",
+            legs="Meg. Chausses +2",
+            feet=relic.feet,
+            neck="Commodore Charm",
+            waist="Eschan Stone",
+            left_ear={
+                name="Moonshade Earring",
+                augments={'Rng.Atk.+4','TP Bonus +250',}
+            },
+            right_ear="Ishvara Earring",
+            left_ring="Cacoethic Ring +1",
+            right_ring="Apate Ring",
+            back=capes.ranged_ws
+        }
+    )
 
     sets.precast.FC = set_combine(
         sets.base,

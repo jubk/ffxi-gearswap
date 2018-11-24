@@ -4,7 +4,7 @@ include("cancel_buffs");
 function get_sets()
     -- set_has_hachirin_no_obi(true);
     sets.base = {
-        ammo="Seething Bomblet",
+        ammo="Knobkierrie",
         head="Sulevia's Mask +2",
         body="Sulevia's Plate. +2",
         hands="Sulev. Gauntlets +2",

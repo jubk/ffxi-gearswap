@@ -44,10 +44,8 @@ function get_sets()
         waist="Refoccilation Stone",
         -- matk 10
         left_ear="Friomisi Earring",
-        -- Refresh +1, matk +4
-        right_ear={ name="Moonshade Earring", augments={
-            '"Mag.Atk.Bns."+4','Latent effect: "Refresh"+1',}
-        },
+        -- mdt -3, Fast cast +1
+        right_ear="Etiolation Earring",
         -- macc +3, matk 3
         left_ring="Arvina Ringlet +1",
         -- macc 2, matk 4

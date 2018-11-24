@@ -5,11 +5,11 @@ function get_sets()
     -- set_has_hachirin_no_obi(true);
     sets.base = {
         ammo="Pet Food Theta",
-        head="Meghanada Visor +2",
-        body="Meg. Cuirie +2",
-        hands="Meg. Gloves +2",
+        head="Tali'ah Turban +2",
+        body="Tali'ah Manteel +2",
+        hands="Tali'ah Gages +1",
         legs="Valor. Hose",
-        feet="Meg. Jam. +2",
+        feet="Tali'ah Crackows +2",
         neck="Empath Necklace",
         waist="Olseni Belt",
         left_ear="Digni. Earring",
@@ -32,7 +32,9 @@ function get_sets()
     sets.ready = set_combine(
         sets.base,
         {
-            head="Valorous Mask",
+            head="Tali'ah Turban +1",
+            body="Tali'ah Manteel +2",
+            hands="Tali'ah Gages +1",
             legs="Desultor Tassets",
             feet="Despair Greaves",
         }

@@ -15,11 +15,8 @@ function get_sets()
         neck="Empath Necklace",
         -- perp. cost -2
         waist="Lucidity Sash",
-        -- Refresh +1
-        left_ear={
-            name="Moonshade Earring",
-            augments={'"Mag.Atk.Bns."+4','Latent effect: "Refresh"+1',}
-        },
+        -- mdt -3, Fast cast +1
+        left_ear="Etiolation Earring",
         -- perp. cost -2, blood pact delay -2
         right_ear="Evans Earring",
         left_ring="Tali'ah Ring",

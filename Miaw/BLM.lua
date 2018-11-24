@@ -43,10 +43,8 @@ function get_sets()
         waist="Refoccilation Stone",
         -- matk 10
         left_ear="Friomisi Earring",
-        -- Refresh +1, matk +4
-        right_ear={ name="Moonshade Earring", augments={
-            '"Mag.Atk.Bns."+4','Latent effect: "Refresh"+1',}
-        },
+        -- mdt -3, Fast cast +1
+        right_ear="Etiolation Earring",
         -- macc +3, matk 3
         left_ring="Arvina Ringlet +1",
         -- macc 2, matk 4
@@ -72,9 +70,6 @@ function get_sets()
         {
             -- rmp +10
             main = "Chatoyant Staff",
-
-            -- rmp +2
-            ammo = "Clarus Stone",
 
             -- rmp +4
             waist = "Austerity Belt",
@@ -178,15 +173,20 @@ function get_sets()
         -- Fast cast +7
         hands="Gende. Gages +1",
         -- Fast cast +3
-        back = "Swith Cape",
-        -- Fast cast +5
-        legs="Artsieq Hose",
-        -- Fast cast +5
-        feet="Merlinic Crackows",
+        back = "Swith Cape +1",
+        -- Fast cast +4
+        legs="Gyve Trousers",
+        -- Fast cast +10
+        feet={
+            name="Merlinic Crackows",
+            augments={'"Fast Cast"+5','"Mag.Atk.Bns."+4',}
+        },
         -- Fast cast +2
         right_ear="Loquac. Earring",
         -- Fast cast +2
         left_ring="Prolix Ring",
+        -- Fast cast +4
+        right_ring="Kishar Ring",
     }
 
     sets.darkmagic = set_combine(sets.nuking, {
@@ -214,8 +214,8 @@ function get_sets()
             -- macc +7
             right_ring = "Etana Ring",
 
-            -- macc +7
-            feet="Helios Boots"
+            -- macc +42
+            feet="Jhakri Pigaches +2",
         }
     );
 
@@ -245,8 +245,8 @@ function get_sets()
             -- macc +7
             right_ring = "Etana Ring",
 
-            -- matk +7, macc +7
-            feet="Helios Boots"
+            -- macc +42
+            feet="Jhakri Pigaches +2",
         }
     );
 
@@ -268,8 +268,8 @@ function get_sets()
             -- MND +5
             left_ring="Solemn Ring",
 
-            -- MND +3
-            right_ring={ name="Diamond Ring", augments={'MND+3',}},
+            -- healing magic +10, mnd +3
+            right_ring="Sirona's Ring",
         }
     );
 
@@ -279,14 +279,8 @@ function get_sets()
             -- Enh.magic +12, regen dur +12, haste +3
             body = "Telchine Chas.",
 
-            -- MND +5, INT +5
-            waist = "Penitent's Rope",
-
             -- MND +8
             back="Pahtli Cape",
-
-            -- Enh.magic +10
-            feet = "Regal Pumps",
 
             -- MND +5
             left_ring="Solemn Ring",
@@ -308,10 +302,16 @@ function get_sets()
         sub="Niobid Strap",
         -- Mp +30
         ammo="Ghastly Tathlum",
-        -- Mp +56
-        head={ name="Merlinic Hood", augments={'Mag. Acc.+22 "Mag.Atk.Bns."+22','Damage taken-2%','CHR+1','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
-        -- Mp +59
-        body="Shango Robe",
+        -- Mp +120
+        head="Pixie Hairpin +1",
+        -- Mp +67
+        body={
+            name="Merlinic Jubbah",
+            augments={
+                '"Mag.Atk.Bns."+27','Magic burst dmg.+10%',
+                'INT+13','Mag. Acc.+3',
+            }
+        },
         -- Mp +26
         hands={ name="Amalric Gages", augments={'INT+10','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
         -- Mp +44
@@ -324,8 +324,8 @@ function get_sets()
         waist="Eschan Stone",
         -- Mp +25
         left_ear="Barkaro. Earring",
-        -- Mp +30
-        right_ear="Thureous Earring",
+        -- Mp +50
+        right_ear="Etiolation Earring",
         -- Mp +110
         left_ring="Mephitas's Ring +1",
         -- Mp +80

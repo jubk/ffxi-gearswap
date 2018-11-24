@@ -8,11 +8,11 @@ function get_sets()
     sets.tanking = {
         -- Damaga taken -2, +10 resist to all debuffs
         ammo="Staunch Tathlum",
-        head="Sulevia's Mask +1",
+        head="Sulevia's Mask +2",
         body="Cab. Surcoat +1",
         hands="Sulev. Gauntlets +1",
-        legs="Sulevi. Cuisses +1",
-        feet="Sulev. Leggings +1",
+        legs="Sulevi. Cuisses +2",
+        feet="Sulev. Leggings +2",
         -- Refresh +1
         neck="Coatl Gorget +1",
         waist="Nierenschutz",
@@ -81,7 +81,7 @@ function get_sets()
             -- atk 10, matk 10, acc 10, macc 10
             neck="Sanctity Necklace",
             -- acc 40, atk 44, SC bonus
-            body="Sulevia's Plate. +1",
+            body="Sulevia's Plate. +2",
             -- atk 15, matk 7, acc 15, macc 7
             waist="Eschan Stone",
             -- acc 10, macc 10

@@ -215,19 +215,19 @@ function init_gear_sets()
         -- Casting time -12%, haste +3%, Enmity -7, int 27, mnd 24
         feet=AF.feet,
 
-        -- dt -5
-        neck="Twilight Torque",
+        -- dt -6
+        neck="Loricate Torque +1",
 
         -- macc +4, matk +10
         waist="Refoccilation Stone",
 
-        -- Refresh +1, matk +4
-        left_ear={ name="Moonshade Earring", augments={
-            '"Mag.Atk.Bns."+4','Latent effect: "Refresh"+1',}
-        },
-
         -- mdt -3, Fast cast +1
         left_ear="Etiolation Earring",
+
+        -- Refresh +1, matk +4
+        right_ear={ name="Moonshade Earring", augments={
+            '"Mag.Atk.Bns."+4','Latent effect: "Refresh"+1',}
+        },
 
         -- dam.taken -10
         left_ring="Defending Ring",
@@ -616,8 +616,8 @@ function init_gear_sets()
     sets.midcast['Enhancing Magic'] = set_combine(
         sets.standard,
         {
-            -- Regen +10
-            main="Bolelabunga",
+            -- enh. duration +5
+            main="Gada",
             -- enh. duration +10
             sub="Ammurapi Shield",
 
