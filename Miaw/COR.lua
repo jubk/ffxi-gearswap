@@ -356,6 +356,8 @@ function init_gear_sets()
         neck="Fotia Gorget",
         -- ratk +25, matk +10, agi +10, recycle +10
         left_ring="Dingir Ring",
+        -- Atk +20, ratk +20, AGI+10
+        right_ring="Regal Ring",
         -- WS boost
         waist="Fotia Belt",
     })
@@ -407,6 +409,8 @@ function init_gear_sets()
         waist="Fotia Belt",
         -- wsd +2
         right_ear="Ishvara Earring",
+        -- Ratk +20, AGI+10
+        right_ring="Regal Ring",
         -- racc 20, ratk 20, wsd +10%
         back=capes.ranged_ws,
     });
@@ -438,8 +442,6 @@ function init_gear_sets()
                 name="Moonshade Earring",
                 augments={'Rng.Atk.+4','TP Bonus +250',}
             },
-            -- AGI +6
-            right_ring="Apate Ring",
         }
     )
 
@@ -471,7 +473,7 @@ function init_gear_sets()
             head="Carmine Mask",
             -- fast cast +4
             neck = "Voltsurge Torque",
-            -- fast cast +2
+            -- fast cast +3
             body="Samnuha Coat",
             -- Fast cast +2
             right_ear="Loquac. Earring",

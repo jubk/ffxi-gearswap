@@ -660,7 +660,7 @@ local spelltools = function()
         if not tier_table then
             return false
         end
-        local tier = s['tier'];
+        local tier = s['tier'] or 1;
         local cost = tier_table[tier];
         if cost == nil then
             return false

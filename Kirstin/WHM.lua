@@ -6,6 +6,9 @@ include("shared/staves");
 -- orison locket [neck]
 --
 
+-- Gear with augments
+local aug_gear = require('shared/aug_gear');
+
 AF = {
     head="Healer's Cap",
     body="Healer's Briault",
@@ -194,14 +197,16 @@ function get_sets()
         main="Gada",
         -- Enh. duration +10
         sub="Ammurapi Shield",
-        -- Conserver MP 3
-        head="Selenian Cap",
-        -- Enh. skill 12, regen duration +12, enh. duration +8
-        body="Telchine Chas.",
+        -- enhancing duration +10
+        head=aug_gear.enh_duration.head,
         -- Enh. duration +8
-        hands="Telchine Gloves",
-        -- Enh. duration +8
-        feet="Telchine Pigaches",
+        body=aug_gear.enh_duration.body,
+        -- Enh. duration +9
+        hands=aug_gear.enh_duration.hands,
+        -- enhancing duration +10
+        head=aug_gear.enh_duration.legs,
+        -- Enh. duration +9
+        feet=aug_gear.enh_duration.feet,
         -- Buffs stoneskin
         waist="Siegel Sash",
         -- enmity -3, MND

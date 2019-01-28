@@ -195,6 +195,7 @@ function init_gear_sets()
         right_ear="Cessance Earring",
         -- Store TP +5
         left_ring="Ilabrat Ring",
+        back=capes.store_tp,
     });
 
     sets.midcast.RA = set_combine(

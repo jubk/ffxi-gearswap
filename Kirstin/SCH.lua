@@ -1,413 +1,822 @@
-include("remove_silence");
-include("cancel_buffs");
-include("elemental_obis");
-include("spelltools");
-include("shared/staves");
+-- Import functions that helps with calculating the need for weather gear.
+-- If you do not have all the Obis change the elemental_obi_table at the top
+-- of the file.
+-- Latest version can be downloaded from
+-- https://github.com/jubk/ffxi-gearswap/blob/master/common/day_and_weather.lua
+include("day_and_weather");
 
+-- Import AutoImmanence script that allows doing automatic skillchains.
+-- Latest version can be downloaded from
+-- https://github.com/jubk/ffxi-gearswap/blob/master/common/AutoImmanence.lua
 local AutoImmanence = require("AutoImmanence");
 
+-- Import mg_spelltools which will help with automatically switching to
+-- light/dark arts and their addendi and downgrade spell tiers when low on MP.
+-- Latest version can be downloaded from
+-- https://github.com/jubk/ffxi-gearswap/blob/master/common/mg_spelltools.lua
+local spelltools = require("mg_spelltools");
+
+-- Gear with augments
+local aug_gear = require('shared/aug_gear');
+
+local AF = {
+    head="Acad. Mortar. +1",
+    body="Acad. Gown +1",
+    hands="Acad. Bracers +1",
+    legs="Acad. Pants +1",
+    feet="Acad. Loafers +1",
+}
+
+local relic = {
+    head="Peda. M.board +1",
+    body="Pedagogy Gown",
+    hands="Peda. Bracers",
+    legs="Peda. Pants +1",
+    feet="Peda. Loafers +1"
+}
+
+local empy = {
+    head="Arbatel Bonnet +1",
+    body="Arbatel Gown",
+    hands="Arbatel Bracers",
+    legs="Arbatel Pants +1",
+    feet="Arbatel Loafers +1",
+}
+
 function get_sets()
-    setup_spellcost_map(player);
+    mote_include_version = 2
+    include('Mote-Include.lua');
+end
+
+function job_setup()
+    -- Switch to SCH macro book and page
+    set_macro_page(1, 5)
+
+    -- Initialise map of spells MP cost
+    spelltools.setup_spellcost_map(player);
+
+    -- Setup AutoImmanence.
+    auto_sc = AutoImmanence({
+        -- The command alias to use, default is 'sc', so you can use
+        -- //sc fusion to start a fusion skillchain
+        command_alias='sc'
+    })
+    -- Make it possible to abort skilchains with alt-q and ctrl-q
+    send_command('bind ^q gs c sc abort')
+    send_command('bind !q gs c sc abort')
+
+    -- Tell day and weather we have the combined obi
+    set_has_hachirin_no_obi(true);
+    set_has_twilight_cape(true);
+
+    -- And tell it we will be using tier II storm buffs
+    set_stormbuff_level(2)
+
+    -- Lockstylesets. Set to nil or 0 to disable auto-changing
+    light_arts_lockstyleset = 3
+    dark_arts_lockstyleset = 3
+
+    -- Add missing spell mappings
+    extra_spell_mappings = {
+        ['Pyrohelix II'] = 'Helix', ['Cryohelix II'] = 'Helix',
+        ['Anemohelix II'] = 'Helix', ['Geohelix II'] = 'Helix',
+        ['Ionohelix II'] = 'Helix', ['Hydrohelix II'] = 'Helix',
+        ['Luminohelix II'] = 'Helix', ['Noctohelix II'] = 'Helix',
+
+        ['Firestorm II'] = 'Storm', ['Hailstorm II'] = 'Storm',
+        ['Windstorm II'] = 'Storm', ['Sandstorm II'] = 'Storm',
+        ['Thunderstorm II'] = 'Storm', ['Rainstorm II']='Storm',
+        ['Aurorastorm II'] = 'Storm', ['Voidstorm II']='Storm',
+    }
+    for k,v in pairs(extra_spell_mappings) do spell_maps[k] = v end
+
+    state.CastingMode:options('Nuking', 'MagicBurst', 'Skillchain')
+
+    state.IdleMode:options('Normal', 'Sublimation')
+    if buffactive["Sublimation: Activated"] then
+        state.IdleMode:set("Sublimation")
+    end
+
+    -- Variable for storing the original casting mode when temporarily
+    -- changing it.
+    OriginalCastingMode = nil
+
+    -- Switch to default lockstyle
+    if buffactive['Dark Arts'] and dark_arts_lockstyleset then
+        send_command(
+            'pause 3; input /lockstyleset ' .. dark_arts_lockstyleset
+        )
+    elseif light_arts_lockstyleset then
+        send_command(
+            'pause 3; input /lockstyleset ' .. light_arts_lockstyleset
+        )
+    end
+
+end
+
+function init_gear_sets()
 
     sets.standard = {
+        -- pdt -20%
         main="Earth staff",
+
+        -- dt -1
         sub="Umbra Strap",
-        ammo="Incantor Stone",
-        head={
-            name="Helios Band",
-            augments={
-                '"Mag.Atk.Bns."+1',
-                '"Drain" and "Aspir" potency +2',
-            }
+
+        -- dt -2, resistance to status debuffs 10, SIR -10
+        ammo="Staunch Tathlum",
+
+        -- Sublimation +4, fastcast +8%, matk +20, macc +52, int 37, mnd 37
+        head=AF.head,
+
+        -- macc 40, 22 dark arts skills, refresh +3
+        body=AF.body,
+
+        -- Haste +3%, Fast Cast +7%, int 24, mnd 38
+        hands=AF.hands,
+
+        -- haste +5%, int 44, mnd 39
+        -- Light Arts +24
+        legs=AF.legs,
+
+        -- Casting time -12%, haste +3%, Enmity -7, int 27, mnd 24
+        feet=AF.feet,
+
+        -- dt -6
+        neck="Loricate Torque +1",
+
+        -- macc +4, matk +10
+        waist="Refoccilation Stone",
+
+        -- TODO: Replace with -dt?
+        left_ear="Barkaro. Earring",
+
+        -- Refresh +1, matk +4
+        right_ear={ name="Moonshade Earring", augments={
+            '"Mag.Atk.Bns."+4','Latent effect: "Refresh"+1',}
         },
 
-        -- macc 46, matk 46, refresh +4
-        body="Jhakri Robe +2",
+        -- dam.taken -10
+        left_ring="Defending Ring",
 
-        hands="Psycloth Manillas",
-        legs="Assiduity Pants",
-        feet="Manabyss Pigaches",
-        neck="Eidolon Pendant",
-        waist="Austerity Belt",
-        left_ear="Antivenom Earring",
-        right_ear="Loquac. Earring",
-        left_ring="Tamas Ring",
-        right_ring="Janniston Ring",
-        back="Bookworm's Cape",
+        -- pdt -7
+        right_ring="Patricius Ring",
+
+        -- dam.taken -4
+        back="Solemnity Cape",
     };
 
-    sets.standard_idle = set_combine(sets.standard, {});
-    sets.sublimation_idle = set_combine(
-        sets.idle,
+    sets.idle.Field = set_combine(sets.standard, {});
+    sets.idle.Town = set_combine(sets.standard, {});
+    sets.idle.Field.Sublimation = set_combine(
+        sets.idle.Field,
         {
+            -- Sublimation +1
+            main = "Siriti",
+
+            -- defense / shield blocks
+            sub="Ammurapi Shield",
+
+            -- Sublimation +4
+            head=AF.head,
+
+            -- Sublimation +5
+            body=relic.body,
+
+            -- TODO: Sublimation +1
+            -- left_ear = "Savant's Earring",
         }
     );
-    sets.idle = sets.standard_idle
+    sets.idle.Town.Sublimation = set_combine(sets.idle.Field.Sublimation, {});
 
     sets.resting = set_combine(
         sets.standard,
         {
-            neck = "Eidolon Pendant",
-            waist = "Austerity Belt",
-            back = "Felicitas Cape",
+            -- rmp +10
+            main = "Dark Staff",
+
+            -- TODO: rmp +2
+            -- ammo = "Clarus Stone",
         }
     );
 
-    sets.nuking = set_combine(
+    sets.precast.FC = {
+        -- Possible upgrades:
+        --  * Hvergelmir i119 III staff, +50, (+47)
+        --  * Augmented merlinic hood, 15 fast cast (+1)
+        --  * Augmented merlinic feet, 12 fc (+2)
+        --  * Grioavolr staff, up to +11 fastcast (+2), Bashmu reisen NM
+        --  * Pinga Pants, fc 11 (+7), 8 mill
+        --  * Enchntr. Earring +1, fc 2 (+1), 5 mill
+
+        -- Fastcast +3
+        main=aug_gear.fastcast.main,
+
+        -- Fastcast +2
+        sub="Clerisy Strap",
+
+        -- Fast cast +10
+        -- Note: Replaced with Peda. M.Board under grimoire
+        head=aug_gear.fastcast.head,
+
+        -- Fast cast +8
+        body="Shango Robe",
+
+        -- TODO: Fast cast +4
+        -- neck = "Voltsurge Torque",
+        -- Fast cast +2
+        waist="Channeler's Stone",
+
+        -- Fast Cast +5%
+        hands=AF.hands,
+
+        -- Fast cast +2
+        ammo = "Incantor Stone",
+
+        -- Fast cast +3
+        -- TODO: +1
+        back = "Swith Cape",
+
+        -- Fast cast +5
+        legs="Artsieq Hose",
+
+        -- Fast cast +4-6
+        -- Note: Replaced with Acad. Loafers +3 under grimoire
+        -- TODO: Replace with augmented merlinic
+        feet="Regal Pumps",
+
+        -- TODO: Fast cast +1
+        -- left_ear="Etiolation Earring",
+
+        -- Fast cast +2
+        right_ear="Loquac. Earring",
+
+        -- Fast cast +4
+        left_ring="Kishar Ring",
+
+        -- Fast cast +2
+        right_ring="Prolix Ring",
+
+
+        -- Total: 52%
+        -- Total under grimoire: (total - 24) = 28%
+
+        -- cap with non-fast-cast sub: 80
+        -- cap with RDM sub: 65
+    }
+    sets.precast.FC['Elemental Magic'] = set_combine(
+        sets.precast.FC,
+        {
+            -- Elemental magic casting time -3
+            left_ear = "Barkaro. Earring"
+        }
+    )
+    sets.precast.FC.Cure = set_combine(
+        sets.precast.FC,
+        {
+            -- Cure casting time -15
+            legs="Doyen Pants",
+            -- Cure spellcasting time -8
+            back = "Pahtli Cape"
+        }
+    )
+    sets.precast.FC.Stoneskin = set_combine(
+        sets.precast.FC,
+        {
+            -- Stoneskin casting time -10
+            legs="Doyen Pants",
+        }
+    )
+
+    sets.precast.JA["Enlightenment"] = { body=relic.body }
+    sets.precast.JA["Tabula Rasa"] = { legs=relic.legs }
+
+
+    sets.midcast['Elemental Magic'] = set_combine(
         sets.standard,
         {
-            ammo="Incantor Stone",
-            -- matk +50 (aug), macc +40 (aug)
-            head={
-                name="Merlinic Hood",
-                augments={
-                    'Mag. Acc.+25 "Mag.Atk.Bns."+25',
-                    'Magic Damage +2',
-                    'AGI+9',
-                    '"Mag.Atk.Bns."+15',
-                }
-            },
-            -- macc 46, matk 46, refresh +4
-            body="Jhakri Robe +2",
-            -- macc 48 (aug), matk 50 (aug)
-            hands="Chironic Gloves",
-            -- macc 36 (aug), matk 42 (aug), mdam 13
-            legs={
-                name="Merlinic Shalwar",
-                augments={
-                    '"Mag.Atk.Bns."+11',
-                    'INT+8',
-                    'Mag. Acc.+16 "Mag.Atk.Bns."+16',
-                },
-            },
-            -- macc 42, matk 39
-            feet="Jhakri Pigaches +2",
-            -- macc 10, matk 10
-            neck="Sanctity Necklace",
-            -- macc 4, matk 10
-            waist="Refoccilation Stone",
-            -- matk 8, macc 8
+            main = "Akademos",
+            sub = "Niobid Strap",
+
+            -- matk +47, macc +52 (aug)
+            head=aug_gear.nuke.head,
+
+            -- matk 4, macc 8, int 4
+            ammo="Pemphredo Tathlum",
+
+            -- TODO: macc 50, 24 dark arts skill, set acc bonus, refresh +3
+            -- TODO: body=AF.body,
+            body=aug_gear.nuke.body,
+
+            -- macc +44, matk+52
+            hands = "Chironic Gloves",
+
+            -- matk +8, macc 8
             left_ear="Barkaro. Earring",
-            -- matk 10
-            right_ear="Friomisi Earring",
+
+            -- matk +6, mcrit +3
+            right_ear="Hecate's Earring",
+
+            -- int +43, macc 52, matk +53, haste +5%
+            legs=aug_gear.nuke.legs,
+
             -- macc 6, matk 3, mb bonus 2
             left_ring="Jhakri Ring",
-            -- matk 4
+
+            -- INT +2, matk +4
             right_ring="Acumen Ring",
-            -- matk 10, mdam 10, elem skill +8
+
+            -- mb +7, macc 42, matk 39
+            feet="Jhakri Pigaches +2",
+
+            -- matk 10, macc 10
+            neck="Sanctity Necklace",
+
+            -- matk 10
+            -- TODO: Ambuscade nuker cape
+            back="Bookworm's Cape",
+        }
+    );
+    sets.midcast['Elemental Magic'].Nuking = set_combine(
+        sets.midcast['Elemental Magic'], {}
+    )
+
+    sets.midcast['Elemental Magic'].Skillchain = set_combine(
+        sets.midcast['Elemental Magic'].Nuking,
+        {
+            -- Immanence: +11% damage
+            hands=empy.hands,
+
+            -- TODO: skillchain bonus +8
+            -- legs="Amalric Slops",
+
+            -- skillchain bonus +5
+            right_ring="Mujin Band",
+
+            -- skillchain bonus +10
+            -- TODO: back="Lugh's Cape",
+        }
+    );
+
+    sets.midcast['Elemental Magic'].MagicBurst = set_combine(
+        sets.midcast['Elemental Magic'].Nuking,
+        {
+            -- SCH staff is mbdam 10
+
+            -- MB II+4, macc 37, matk 49, mb acc +15, elem magic skill +19
+            head=relic.head,
+
+            -- MB+10, matk 8
+            neck="Mizu. Kubikazari",
+
+            -- mb +10, macc 50, 24 dark arts skill, set acc bonus, refresh +3
+            body=AF.body,
+
+            -- MB II+5, macc 15, matk 38, elem. magic skill +13
+            hands=aug_gear.burst.hands,
+
+            -- int +43, macc 52, matk +53, haste +5%
+            legs=aug_gear.nuke.legs,
+
+            -- mb +7, macc 42, matk 39
+            feet="Jhakri Pigaches +2",
+
+            -- mb +5, macc 6, matk 3
+            left_ring="Locus Ring",
+
+            -- skillchain bonus, mb II 5%
+            right_ring="Mujin Band",
+
+            -- Cap is 40 for MB I, unknown for MB II
+            -- 42% MB I, 14 MB II
+        }
+    );
+
+    -- This set is meant to be combined with either nuking or magicburst
+    sets.midcast.Helix = set_combine(
+        sets.midcast['Elemental Magic'].Nuking,
+        {
+            -- mdam +10
+            -- TODO: ammo="Ghastly Tathlum",
+            -- mdam +58
+            -- TODO: body="Mallquis Saio",
+            -- mdam +4
+            -- TODO: +5
+            left_ring="Mephitas's Ring",
+        }
+    )
+    sets.midcast.Helix.Nuking = set_combine(sets.midcast.Helix, {})
+
+    sets.midcast.Helix.MagicBurst = set_combine(
+        sets.midcast['Elemental Magic'].MagicBurst,
+        {
+            -- mdam +10
+            -- TODO: ammo="Ghastly Tathlum",
+        }
+    )
+
+
+    sets.midcast['Dark Magic'] = set_combine(
+        sets.midcast['Elemental Magic'].Nuking,
+        {
+            -- TODO:
+            -- head="Pixie Hairpin +1",
+        }
+    );
+
+    sets.midcast['Dark Magic'].Drain = set_combine(
+        sets.midcast['Dark Magic'],
+        {
+            -- TODO:
+            -- head="Pixie Hairpin +1",
+            -- Macc 17, dark magic skill 10, drain/aspir +5
+            neck="Erra Pendant",
+            -- drain/aspir +10
+            right_ring="Evanescence Ring",
+            -- drain/aspir +8
+            waist = "Fucho-no-Obi",
+            -- drain/aspir +15, dark magic skill +19
+            legs = relic.legs,
+            -- drain/aspir +7
+            -- TODO: feet="Merlinic Crackows",
+        }
+    );
+    sets.midcast['Dark Magic'].Aspir = sets.midcast['Dark Magic'].Drain;
+
+    sets.midcast['Enfeebling Magic'] = set_combine(
+        -- Set bonus from Academic gear: 60 macc from 5 pieces
+        sets.midcast['Elemental Magic'].Nuking,
+        {
+            -- Akademos: macc 25, macc skill 228
+            main = "Akademos",
+
+            -- Enki Strap: macc 10, int+10, mnd+10
+            sub = "Enki Strap",
+
+            -- macc 8
+            ammo="Pemphredo Tathlum",
+            -- macc 52, set bonus
+            head=AF.head,
+            -- macc 50, set bonus
+            body=AF.body,
+            -- macc 38, set bonus
+            hands=AF.hands,
+            -- macc 57
+            legs=aug_gear.acc.legs,
+            -- macc 46, set bonus
+            feet = AF.feet;
+            -- macc 10
+            neck="Sanctity Necklace",
+            -- macc 7
+            waist="Eschan Stone",
+            -- macc 7
+            left_ear="Hermetic Earring",
+            -- macc 10
+            right_ear="Digni. Earring",
+            -- Fast cast +4, enf. duration +10
+            left_ring="Kishar Ring",
+            -- macc 6
+            right_ring="Jhakri Ring",
+            -- macc 20
+            -- TODO: back="Lugh's Cape",
+        }
+    )
+
+    sets.midcast['Healing Magic'] = set_combine(
+        sets.standard,
+        {
+            main = "Serenity",
+            sub = "Enki Strap",
+
+            -- Cure pot +5
+            neck="Nodens Gorget",
+
+            -- MND +39, healing.skill +19
+            body=relic.body,
+
+            -- Healing magic skill +19, cure pot II +3
+            hands=relic.hands,
+
+            -- Cure.pot +15
+            legs=AF.legs,
+
+            -- Cure potency +10%, healing magic +20
+            feet = "Vanya Clogs",
+
+            -- Cure potency +7%
+            back="Solemnity Cape",
+
+            -- Cure potency +5%
+            right_ear="Mendi. Earring",
+
+            -- Cure pot II +5%
+            left_ring="Janniston Ring",
+
+            -- Healing magic +10
+            right_ring="Sirona's Ring",
+        }
+    );
+
+    sets.midcast['Enhancing Magic'] = set_combine(
+        sets.standard,
+        {
+            -- enh. duration +5
+            main="Gada",
+            -- enh. duration +10
+            sub="Ammurapi Shield",
+
+            -- enhancing duration +10
+            head=aug_gear.enh_duration.head,
+
+            -- TODO: enhancing duration +12
+            -- TODO: body=relic.body,
+            -- Enh. duration +8
+            body=aug_gear.enh_duration.body,
+
+            -- Enh. duration +9
+            hands=aug_gear.enh_duration.hands,
+
+            -- enhancing duration +10
+            legs=aug_gear.enh_duration.legs,
+
+            -- Enh. duration +9
+            feet=aug_gear.enh_duration.feet,
+
+            -- MND +8
+            back="Pahtli Cape",
+
+            -- TODO: Enh.magic +7
+            -- TODO: left_ear="Andoaa Earring",
+        }
+    );
+
+    sets.midcast['Enhancing Magic'].Regen = set_combine(
+        sets.midcast['Enhancing Magic'],
+        {
+            -- TODO: Regen +10
+            -- TODO: main="Bolelabunga",
+            -- Defence
+            sub="Ammurapi Shield",
+            -- Enh.magic +14, regen +15
+            head=empy.head,
+            -- matk +10, mdam +10, elem.skill +8, dark.skill +8, int +1, mnd +2,
+            -- helix.duration +19
             back="Bookworm's Cape",
         }
     );
 
-    sets.skillchain = set_combine(
-        sets.nuking,
+    sets.midcast['Enhancing Magic'].Stoneskin = set_combine(
+        sets.midcast['Enhancing Magic'],
         {
-            -- Immanence: +10% damage
-            hands="Arbatel Bracers",
-
-            -- skillchain bonus
-            right_ring="Mujin Band",
+            -- Stonesking +30
+            neck="Nodens Gorget",
         }
     );
-
-    sets.magicburst = set_combine(
-        sets.nuking,
-        {
-            -- matk 8, mb bonus 10
-            neck="Mizu. Kubikazari",
-
-            head={
-                name="Merlinic Hood",
-                augments={
-                    '"Mag.Atk.Bns."+19',
-                    'Magic burst mdg.+11%',
-                    'Mag. Acc.+14',
-                }
-            },
-            hands={
-                name="Merlinic Dastanas",
-                augments={
-                    '"Mag.Atk.Bns."+19',
-                    'Magic burst mdg.+10%',
-                    'MND+10',
-                }
-            },
-            legs={
-                name="Merlinic Shalwar",
-                augments={
-                    'Mag. Acc.+20',
-                    'Magic burst mdg.+10%',
-                    '"Mag.Atk.Bns."+13',
-                }
-            },
-            -- skillchain bonus
-            right_ring="Mujin Band",
-        }
-    );
-
-    sets.fastcast = {
-        -- Fast cast +8
-        head = "Merlinic Hood",
-        -- fastcast +2
-        ammo="Incantor Stone",
-        -- fastcast +5
-        body="Vrikodara Jupon",
-        -- fastcast 5
-        legs="Artsieq Hose",
-        -- fastcast 4-6
-        feet="Regal Pumps",
-        -- fastcast +2
-        waist="Channeler's Stone",
-        -- fastcast +2
-        right_ear="Loquac. Earring",
-        -- fastcast +2
-        left_ring="Prolix Ring",
-        -- Fast cast +4
-        right_ring="Kishar Ring",
-        -- fastcast +3
-        back="Swith Cape",
-    }
-
-    sets.darkmagic = set_combine(sets.nuking, {});
-
-    sets.enfeeble_dark = set_combine(
-        sets.standard,
-        {
-            waist = "Cognition Belt",
-        }
-    );
-
-    sets.enfeeble_light = set_combine(
-        sets.standard,
-        {
-            hands = "Otomi Gloves",
-            waist = "Penitent's Rope",
-            left_ring = "Solemn Ring",
-        }
-    );
-
-    -- TODO: non-WHM healing staff
-    sets.healing = set_combine(
-        sets.standard,
-        {
-            hands = "Otomi Gloves",
-            waist = "Penitent's Rope",
-            back = "Swith Cape",
-            left_ring="Solemn Ring",
-        }
-    );
-
-    sets.enhancing = set_combine(
-        sets.standard,
-        {
-            -- enhancing duration +5
-            main="Gada",
-            -- enhancing duration +10
-            sub="Ammurapi Shield",
-            -- Enh. skill 12, regen duration +12, enh. duration +8
-            body="Telchine Chas.",
-            -- Enh. duration +8
-            hands="Telchine Gloves",
-            -- Enh. duration +8
-            feet="Telchine Pigaches",
-            waist = "Penitent's Rope",
-            back = "Swith Cape",
-            feet = "Regal Pumps",
-            left_ring="Solemn Ring",
-        }
-    );
-
-    sets.stoneskin = set_combine(
-        sets.enhancing,
-        {}
-    );
-
-    MidcastGear = {}
-    AfterCastGear = {};
-
-    auto_sc = AutoImmanence()
 end
 
-function self_command(command)
-    auto_sc.self_command(command)
+
+function job_self_command(command, eventArgs)
+    if auto_sc.self_command(command, eventArgs) then
+        eventArgs.handled = true;
+        return
+    end
+end
+
+function remove_silence(spell)
+    -- Do nothing if "spell" is not magic
+    if not table.contains({'/magic','/ninjutsu','/song'}, spell.prefix) then
+        return false
+    end
+
+    if buffactive['silence'] then
+        if "DNC" == player.sub_job or "DNC" == player.main_job then
+            send_command('input /ja "Healing Waltz" <me>');
+        else
+            send_command('input /item "Echo Drops" <me>');
+        end
+        return true;
+    end
+
+    return false;
+end
+
+
+function jobabilities_cancels_grimoire_fastcast()
+    if buffactive["Alacrity"] then return true end;
+    if buffactive["Manifestation"] then return true end;
+    if buffactive["Celerity"] then return true end;
+    if buffactive["Accession"] then return true end;
+    return false;
+end
+
+function grimoire_is_active(spell)
+    if spell.type == "BlackMagic" then
+        if buffactive["Dark Arts"] or buffactive["Addendum: Black"] then
+            return true;
+        end
+    elseif spell.type == "WhiteMagic" then
+        if buffactive["Light Arts"] or buffactive["Addendum: White"] then
+            return true;
+        end
+    end
+
+    return false;
 end
 
 function filtered_action(spell)
     -- Check whether we should activate arts/addendum instead of casting
     -- the spell.
-    if check_addendum(spell) then
+    if spelltools.check_addendum(spell) then
+        cancel_spell();
         return;
     end
+    auto_sc.filtered_action(spell)
 end
 
-function pretarget(spell)
+-- Ensures that idle set is Sublimation whenever sublimation is charging.
+function setup_idle_set(spell)
+    local wanted_mode = "Normal"
+    local spellname = (spell and spell.english) or "none"
+
     if buffactive["Sublimation: Activated"] then
-        sets.idle = sets.sublimation_idle;
-    else
-        sets.idle = sets.standard_idle;
+        wanted_mode = "Sublimation"
     end
 
-    MidcastGear = {}
-    AfterCastGear = {};
+    if wanted_mode == state.IdleMode.current then
+        -- If we're in the wanted mode, but accessing sublimation, swith to
+        -- the other mode except for when Sublimation: Complete is up.
+        if ("Sublimation" == spellname
+            and not buffactive["Sublimation: Complete"]) then
+            state.IdleMode:cycle()
+            return true
+        end
+    else
+        -- Switch mode, except when the spell is sublimation which will change
+        -- the mode for us
+        if "Sublimation" ~= spellname then
+            state.IdleMode:cycle()
+            return true
+        end
+    end
+
+    return false
 end
 
-function precast(spell)
+-- Overrides castingmode to Skillchain when Immanence is up and to
+-- MagicBurst when auto_sc tells us we're in MB window from a skillchain.
+function setup_temp_casting_mode(spell)
+    OriginalCastingMode = nil
+    if '/magic' == spell.prefix then
+        if buffactive["Immanence"] then
+            OriginalCastingMode = state.CastingMode.value
+            state.CastingMode:set("Skillchain")
+        elseif auto_sc.in_mb_window(spell) then
+            OriginalCastingMode = state.CastingMode.value
+            state.CastingMode:set("MagicBurst")
+        end
+    end
+end
+
+function get_weather_castingtime_gear(spell)
+    if (buffactive["Celerity"] or buffactive["Alacrity"]) then
+        local stormBuff = element_to_storm_buff[spell.element] or "";
+
+        if spell.element == world.weather_element or
+           (stormBuff and buffactive[stormBuff]) then
+           return { feet=relic.feet }
+        end
+    end
+
+    return {}
+end
+
+function job_pretarget(spell)
+    setup_temp_casting_mode(spell)
+end
+
+function job_precast(spell, action, spellMap, eventArgs)
+
     -- If we get interupted by removing silence, just return
     if remove_silence(spell) then
+        eventArgs.cancel = true;
+    end
+
+    if spelltools.downgrade_spell(player, spell, eventArgs) then
+        eventArgs.cancel = true;
+    end
+
+    auto_sc.precast(spell, eventArgs)
+
+    if eventArgs.cancel then
         return;
     end
 
-    if downgrade_spell(player, spell) then
-        return;
-    end
+end
 
-    auto_sc.precast(spell)
-
-    if '/jobability' == spell.prefix then
-        -- Change idle set dependant on sublimation status
-        if "Sublimation" == spell.english then
-            if buffactive["Sublimation: Activated"] or
-               buffactive["Sublimation: Complete"] then
-               sets.idle = sets.standard_idle;
-            else
-                sets.idle = sets.sublimation_idle;
+function job_post_precast(spell, action, spellMap, eventArgs)
+    if '/magic' == spell.prefix then
+        if grimoire_is_active(spell) then
+            -- Certain job abilites does not stack with grimoire fastcast gear
+            if not jobabilities_cancels_grimoire_fastcast() then
+                equip({
+                    -- Grimoire cast time -12
+                    feet=AF.feet,
+                    -- Grimoire cast time -12
+                    head=relic.head,
+                })
             end
         end
-    elseif '/magic' == spell.prefix then
-        local precast_extra = {}
 
-        if "Healing Magic" == spell.skill then
-            local extraGear = {}
-            local obi = get_obi(spell);
-            if obi ~= nil then
-                extraGear['waist'] = obi
-            end
-
-            MidcastGear = set_combine(
-                sets.healing,
-                kirstin_staves.nuking[spell.element],
-                extraGear
-            );
-
-            -- Use Arbatel Bonnet during rapture
-            if buffactive["Rapture"] then
-                precast_extra.head = "Arbatel Bonnet";
-            end
-
-        elseif "Enhancing Magic" == spell.skill then
-            if "Stoneskin" == spell.name then
-                MidcastGear = set_combine(sets.stoneskin, {});
-            else
-                MidcastGear = set_combine(sets.enhancing, {});
-            end
-        elseif "Elemental Magic" == spell.skill then
-            local baseGear = sets.nuking
-            local extraGear = get_day_and_weather_gear(spell) or {}
-
-            -- Elem. magic casting time -3
-            precast_extra.left_ear = "Barkaro. Earring"
-
-            if buffactive["Immanence"] then
-                baseGear = sets.skillchain
-            elseif auto_sc.in_mb_window(spell) then
-                baseGear = sets.magicburst
-            end
-
-            -- +20% extra damage from Ebullience
-            if buffactive["Ebullience"] then
-                extraGear.head = "Arbatel Bonnet";
-            end
-            -- Straight 10% damage buff if we have klimaform active
-            if buffactive["Klimaform"] then
-                extraGear.feet = "Arbatel Loafers"
-            end
-
-            MidcastGear = set_combine(
-                sets.nuking,
-                extraGear,
-                kirstin_staves.nuking[spell.element]
-            );
-        elseif "Enfeebling Magic" == spell.skill then
-            local extraGear = get_day_and_weather_gear(spell) or {}
-
-            -- Replace dia 2 with bio 2 when subbing BLM (for pulling)
-            if "Dia II" == spell.english and "BLM" == player.sub_job then
-                send_command('input /ma "Bio II" <t>');
-                cancel_spell();
-                return;
-            end
-            if buffactive["Ebullience"] then
-                extraGear.head = "Arbatel Bonnet";
-            end
-            if "BlackMagic" == spell.type then
-                MidcastGear = set_combine(
-                    sets.enfeeble_dark,
-                    extraGear,
-                    kirstin_staves.accuracy[spell.element]
-                );
-            else
-                MidcastGear = set_combine(
-                    sets.enfeeble_light,
-                    extraGear,
-                    kirstin_staves.accuracy[spell.element]
-                );
-            end
-        elseif "Dark Magic" == spell.skill then
-            local extraGear = {}
-            local obi = get_obi(spell);
-            if obi ~= nil then
-                extraGear['waist'] = obi
-            end
-            MidcastGear = set_combine(
-                sets.darkmagic,
-                extraGear,
-                kirstin_staves.nuking[spell.element]
-            );
-            if "Stun" == spell.english then
-                MidcastGear = set_combine(
-                    sets.fastcast,
-                    kirstin_staves.accuracy[spell.element]
-                );
-            end
-        end
-        if (buffactive["Celerity"] or buffactive["Alacrity"]) and
-            spell.element == world.weather_element then
-            precast_extra.feet = "Argute Loafers";
-        end
-
-        if (buffactive["Perpetuance"] or buffactive["Immanence"]) then
-            MidcastGear.hands = "Arbatel Bracers";
-        end
-
-        equip(set_combine(
-            sets.fastcast,
-            precast_extra,
-            kirstin_staves.fastcast[spell.element]
-        ));
+        -- Equip element-based fastcast staff
+        equip(get_weather_castingtime_gear(spell))
 
         -- Show recast for any spell
         send_command('input /recast "' .. spell.name .. '"');
     end
 end
 
-function midcast(spell)
-    cancel_buffs(spell);
-
+function job_midcast(spell, action, spellMap, eventArgs)
     auto_sc.midcast(spell)
-
-    equip(MidcastGear);
 end
 
-function aftercast(spell)
+
+function job_post_midcast(spell, action, spellMap, eventArgs)
+    if '/magic' == spell.prefix then
+        if "Healing Magic" == spell.skill then
+            if buffactive["Rapture"] then
+                equip({ head=empy.head })
+            end
+        elseif "Elemental Magic" == spell.skill then
+            -- +20% extra damage from Ebullience
+            if buffactive["Ebullience"] then
+                equip({ head=empy.head });
+            end
+            -- Straight 10% damage buff if we have klimaform active during
+            -- correct weather.
+            if (buffactive["Klimaform"] and
+                weather_is_active(spell.element)) then
+                equip({ feet=empy.feet })
+            end
+        elseif "Enfeebling Magic" == spell.skill then
+            -- This should give more acc, even on light arts, as it gives
+            -- enf +18 and macc +26.
+            if grimoire_is_active(spell) then
+                equip({ legs=empy.legs })
+            end
+
+            if "BlackMagic" == spell.type then
+                -- +22 enf. skill from Dark Arts
+                if grimoire_is_active(spell) then
+                   equip({ body=AF.body });
+                end
+            else
+                -- +24 enf. skill from Light Arts
+                if grimoire_is_active(spell) then
+                   equip({ legs=AF.legs });
+                end
+            end
+        end
+
+        -- Equip relevant weather gear
+        equip(get_day_and_weather_gear(spell))
+        -- Equip relevant weather-based recast gear
+        equip(get_weather_castingtime_gear(spell))
+
+        if (buffactive["Perpetuance"] or buffactive["Immanence"]) then
+            equip({ hands=empy.hands });
+        end
+
+        if (buffactive["Penury"] or buffactive["Parsimony"]) then
+            equip({ legs=empy.legs });
+        end
+    end
+end
+
+
+function job_aftercast(spell, action, spellMap, eventArgs)
     auto_sc.aftercast(spell)
-    equip(set_combine(sets.idle, AfterCastGear));
+
+    -- Reset CastingMode back to previous value if it was overwritten
+    if OriginalCastingMode ~= nil then
+        state.CastingMode:set(OriginalCastingMode)
+        OriginalCastingMode = nil
+    end
+
+    setup_idle_set(spell)
 end
 
-function status_change(new,old)
-    if "Idle" == new then
-        equip(sets.idle);
-    elseif "Engaged" == new then
-    elseif "Resting" == new then
-        equip(sets.resting);
+function job_buff_change(buff, gain)
+    if buff == "Sublimation: Activated" then
+        if setup_idle_set(spell) and player.status == 'Idle' then
+            handle_equipping_gear(player.status)
+        end
+    elseif "Light Arts" == buff then
+        if gain and light_arts_lockstyleset then
+            send_command('input /lockstyleset ' .. light_arts_lockstyleset)
+        end
+    elseif "Dark Arts" == buff then
+        if gain and dark_arts_lockstyleset then
+            send_command('input /lockstyleset ' .. dark_arts_lockstyleset)
+        end
     end
 end

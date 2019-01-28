@@ -109,7 +109,7 @@ local relic = {
 
 local empy = {
     head="Arbatel Bonnet +1",
-    body="Arbatel Gown", -- Boo!
+    body="Arbatel Gown +1",
     hands="Arbatel Bracers +1",
     legs="Arbatel Pants +1",
     feet="Arbatel Loafers +1",
@@ -239,7 +239,10 @@ function init_gear_sets()
         back="Lugh's Cape",
     };
 
-    sets.idle.Field = set_combine(sets.standard, {});
+    sets.idle.Field = set_combine(sets.standard, {
+        -- Refresh +1
+        feet="Volte Gaiters"
+    });
     sets.idle.Town = set_combine(sets.standard, {});
     sets.idle.Field.Sublimation = set_combine(
         sets.idle.Field,
@@ -318,7 +321,7 @@ function init_gear_sets()
         neck = "Voltsurge Torque",
         -- Fast cast +2
         waist="Channeler's Stone",
-        -- Fast Cast +7%
+        -- Fast Cast +9%
         hands=AF.hands,
         -- Fast cast +2
         ammo = "Incantor Stone",
