@@ -13,13 +13,7 @@ function get_sets()
     sets.standard = {
         main={
             name="Grioavolr",
-            augments={
-                'Enh. Mag. eff. dur. +6',
-                'INT+14',
-                'Mag. Acc.+18',
-                '"Mag.Atk.Bns."+15',
-                'Magic Damage +1',
-            }
+            augments={'Enh. Mag. eff. dur. +8','INT+8','"Mag.Atk.Bns."+21',}
         },
 
         -- macc 5, matk 5

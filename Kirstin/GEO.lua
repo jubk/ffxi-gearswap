@@ -4,6 +4,9 @@ include("shared/staves");
 
 local modesets = require("modesets");
 
+-- Gear with augments
+local aug_gear = require('shared/aug_gear');
+
 function time_specific_gear()
     if world.time >= 8*60 and world.time < 18*60 then
         return { feet="Serpentes Sabots" };
@@ -196,14 +199,30 @@ function get_sets()
         feet="Vanya Clogs",
     });
     sets.enfeebling_magic = set_combine(sets.base, {
-        -- macc +7
-        head="Helios Band",
-        -- macc +21
-        body="Vanya Robe",
-        -- statvomit
-        legs="Gyve Trousers",
-        -- macc 4, matk 10
-        waist="Refoccilation Stone",
+        -- macc 40
+        head=aug_gear.nuke.head,
+        -- macc 46
+        body="Jhakri Robe +2",
+        -- macc 43
+        hands="Jhakri Cuffs +2",
+        -- macc 45
+        legs="Jhakri Slops +2",
+        -- macc 46
+        feet="Geo. Sandals +3",
+        -- macc 10
+        neck="Sanctity Necklace",
+        -- macc 7
+        waist="Eschan Stone",
+        -- macc 8
+        left_ear="Barkaro. Earring",
+        -- macc 10
+        right_ear="Digni. Earring",
+        -- macc 6
+        left_ring="Jhakri Ring",
+        -- macc 5
+        right_ring="Vertigo Ring",
+        -- macc 5
+        back="Izdubar Mantle",
     });
     sets.divine_magic = set_combine(sets.base, {
         -- Macc +7, statvomit

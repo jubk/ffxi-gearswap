@@ -134,6 +134,7 @@ function job_setup()
         "Orichalc. Bullet",
         "Eminent Bullet",
         "Animikii Bullet",
+        "Living Bullet",
     };
 
     DontWasteBullets = T{
@@ -365,6 +366,8 @@ function init_gear_sets()
     sets.precast.WS.Magic = set_combine(
         sets.precast.WS,
         {
+            -- macc +25, matk +35
+            ammo="Living Bullet",
             head=herc_matk.head,
             -- matk +29, macc +30
             body="Samnuha Coat",

@@ -193,8 +193,8 @@ function init_gear_sets()
         -- pdt -20%
         main="Terra's staff",
 
-        -- dt -2
-        sub="Alber Strap",
+        -- dt -5
+        sub="Kaja Grip",
 
         -- dt -2, resistance to status debuffs 10, SIR -10
         ammo="Staunch Tathlum",
@@ -546,8 +546,8 @@ function init_gear_sets()
         {
             -- Akademos: macc 25, macc skill 228
             main = "Akademos",
-            -- Enki Strap: macc 10, int+10, mnd+10
-            sub = "Enki Strap",
+            -- Kaja Grip: macc 25, dt -5, enmity -4
+            sub = "Kaja Grip",
 
             -- macc 8
             ammo="Pemphredo Tathlum",

@@ -43,6 +43,37 @@ local empy = {
     feet="Arbatel Loafers +1",
 }
 
+--[[
+TODO list
+
+Sublimation:
+  Savant's Earring
+
+Fastcast:
+        --  * Grioavolr staff, up to +11 fastcast (+8), Bashmu reisen NM
+        --  * Pinga Pants, fc 11 (+7), 8 mill
+        --  * Augmented merlinic feet, 12 fc (+6)
+        --  * Ping Tunic, fc 13, (+5), 5 mill
+        --  * Augmented merlinic hood, 15 fast cast (+5)
+        --  * "Voltsurge Torque", fc 4, (+2),
+        --  * Enchntr. Earring +1, fc 2 (+1), 5 mill
+
+Nuking:
+  Ambuscade cape
+
+Regen:
+  Bolelabunga
+
+Helix:
+  Ghastly Tathlum / +1
+  Mallquis Saio (ambu token: body)
+  Mephitas's Ring +1 (ambu gear upgrade)
+
+Dark Magic:
+  Pixie Hairpin +1
+--]]
+
+
 function get_sets()
     mote_include_version = 2
     include('Mote-Include.lua');
@@ -120,8 +151,8 @@ function init_gear_sets()
         -- pdt -20%
         main="Earth staff",
 
-        -- dt -1
-        sub="Umbra Strap",
+        -- dt -5
+        sub="Kaja Grip",
 
         -- dt -2, resistance to status debuffs 10, SIR -10
         ammo="Staunch Tathlum",
@@ -200,14 +231,33 @@ function init_gear_sets()
         }
     );
 
+    sets.engaged = set_combine(sets.standard, {
+        -- Store TP +9
+        legs="Jhakri Slops +2",
+        -- Acc +10
+        neck="Sanctity Necklace",
+        -- Acc 20, store TP +3
+        waist="Olseni Belt",
+        -- Acc 10, Store TP +3
+        left_ear="Digni. Earring",
+        -- Store TP +4
+        right_ear="Neritic Earring",
+        -- Acc 10
+        left_ring="Cacoethic Ring",
+        -- Store TP +3
+        right_ring="Apate Ring",
+    });
+
     sets.precast.FC = {
         -- Possible upgrades:
         --  * Hvergelmir i119 III staff, +50, (+47)
-        --  * Augmented merlinic hood, 15 fast cast (+1)
-        --  * Augmented merlinic feet, 12 fc (+2)
-        --  * Grioavolr staff, up to +11 fastcast (+2), Bashmu reisen NM
+        --  * Grioavolr staff, up to +11 fastcast (+8), Bashmu reisen NM
         --  * Pinga Pants, fc 11 (+7), 8 mill
-        --  * Enchntr. Earring +1, fc 2 (+1), 5 mill
+        --  * Augmented merlinic feet, 12 fc (+6)
+        --  * Ping Tunic, fc 13, (+5), 5 mill
+        --  * Augmented merlinic hood, 15 fast cast (+5)
+        --  * "Voltsurge Torque", fc 4, (+2),
+        --  * Estoqueur's earring (+2)
 
         -- Fastcast +3
         main=aug_gear.fastcast.main,
@@ -233,9 +283,8 @@ function init_gear_sets()
         -- Fast cast +2
         ammo = "Incantor Stone",
 
-        -- Fast cast +3
-        -- TODO: +1
-        back = "Swith Cape",
+        -- Fast cast +4
+        back = "Swith Cape +1",
 
         -- Fast cast +5
         legs="Artsieq Hose",
@@ -258,8 +307,8 @@ function init_gear_sets()
         right_ring="Prolix Ring",
 
 
-        -- Total: 52%
-        -- Total under grimoire: (total - 24) = 28%
+        -- Total: 53%
+        -- Total under grimoire: (total - 24) = 29%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
@@ -396,6 +445,8 @@ function init_gear_sets()
     sets.midcast.Helix = set_combine(
         sets.midcast['Elemental Magic'].Nuking,
         {
+            -- mdam +248
+            main="Tupsimati",
             -- mdam +10
             -- TODO: ammo="Ghastly Tathlum",
             -- mdam +58
@@ -410,6 +461,8 @@ function init_gear_sets()
     sets.midcast.Helix.MagicBurst = set_combine(
         sets.midcast['Elemental Magic'].MagicBurst,
         {
+            -- mdam +248
+            main="Tupsimati",
             -- mdam +10
             -- TODO: ammo="Ghastly Tathlum",
         }
@@ -447,11 +500,11 @@ function init_gear_sets()
         -- Set bonus from Academic gear: 60 macc from 5 pieces
         sets.midcast['Elemental Magic'].Nuking,
         {
-            -- Akademos: macc 25, macc skill 228
-            main = "Akademos",
+            -- Tupsimati: macc 30, macc skill 255
+            main = "Tupsimati",
 
-            -- Enki Strap: macc 10, int+10, mnd+10
-            sub = "Enki Strap",
+            -- Kaja Grip: macc 25, dt -5, enmity -4
+            sub = "Kaja Grip",
 
             -- macc 8
             ammo="Pemphredo Tathlum",
@@ -544,9 +597,6 @@ function init_gear_sets()
 
             -- MND +8
             back="Pahtli Cape",
-
-            -- TODO: Enh.magic +7
-            -- TODO: left_ear="Andoaa Earring",
         }
     );
 
@@ -572,6 +622,14 @@ function init_gear_sets()
             neck="Nodens Gorget",
         }
     );
+
+    sets.precast.WS = set_combine(sets.standard, {})
+    sets.precast.WS["Omniscience"] = set_combine(
+        sets.midcast['Elemental Magic'].Nuking,
+        {}
+    );
+
+
 end
 
 

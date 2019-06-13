@@ -253,6 +253,19 @@ function get_sets()
         }
     );
 
+    -- Make sure react is loaded
+    send_command('luad load react')
+    -- Set up cursna reaction
+    send_command(
+        'react add ' .. player.name .. ' "Cursna" ready ' ..
+        '"gs equip sets.cursna"'
+    )
+    sets.cursna = {
+        legs="Shabti Cuisses",
+        left_ring="Purity Ring",
+        right_ring="Eshmun's Ring",
+    }
+
     EnmityJobabilities = {
         "Provoke",
         "Sentinel",

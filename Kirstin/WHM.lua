@@ -13,7 +13,7 @@ AF = {
     head="Healer's Cap",
     body="Healer's Briault",
     hands="Theophany Mitts",
-    legs="Healer's Pantaln.",
+    legs="Th. Pantaloons +2",
     feet="Theo. Duckbills",
 }
 
@@ -31,6 +31,10 @@ empy = {
     hands="Ebers Mitts",
     legs="Ebers Pant. +1",
     feet="Orsn. Duckbills +1",
+}
+
+capes = {
+    cure={ name="Alaunus's Cape", augments={'"Cure" potency +10%',}},
 }
 
 function time_specific_gear()
@@ -165,11 +169,10 @@ function get_sets()
             left_ring="Sirona's Ring",
             -- cure pot II 5
             right_ring="Janniston Ring",
-            -- cure pot 4
-            back="Tempered Cape",
+            -- cure pot 10
+            back=capes.cure,
 
             -- TODO:
-            -- - Ambuscade cape, +10 cure pot, +10 cureskin
             -- Kaykaus +1 set bonus for cure pot II
         }
     );
@@ -249,10 +252,14 @@ function get_sets()
         back="Tempered Cape",
     });
     sets.cursna = set_combine(sets.healing_magic, {
+        -- cursna +15
+        hands="Fanatic Gloves",
+        -- cursna +??
+        legs=AF.legs,
         -- Cursna +5
         feet="Vanya Clogs",
-        -- Enchances cursna
-        back="Mending Cape",
+        -- Cursna +25
+        back=capes.cure,
     });
     sets.enfeebling_magic = set_combine(sets.base, {
         -- macc +7
@@ -321,7 +328,10 @@ function midcast(spell)
     if spell.prefix == '/magic' then
         if string.startswith(spell.english, "Curaga") then
             equip(sets.curagapotency);
-        elseif string.startswith(spell.english, "Cur") then
+        elseif (
+            string.startswith(spell.english, "Cure") or
+            string.startswith(spell.english, "Cura")
+        ) then
             equip(sets.curepotency);
         elseif 'Divine Magic' == spell.skill or
                'Elemental Magic' == spell.skill or
