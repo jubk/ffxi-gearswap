@@ -8,8 +8,8 @@ function get_sets()
     sets.tanking = {
         -- Damaga taken -2, +10 resist to all debuffs
         ammo="Staunch Tathlum",
-        head="Sulevia's Mask +2",
-        body="Cab. Surcoat +1",
+        head="Hjarrandi Helm",
+        body="Hjarrandi Breast.",
         hands="Sulev. Gauntlets +1",
         legs="Sulevi. Cuisses +2",
         feet="Sulev. Leggings +2",

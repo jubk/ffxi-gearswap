@@ -48,13 +48,26 @@ local aug_gear = {
         feet="Jhakri Pigaches +2",
     },
     fastcast = {
-        -- fastcast +3
-        -- TODO: Replace with Griovalr
-        main="Marin Staff +1",
-        -- fastcast +10
-        -- TODO: Replace with augmented merlinic head
-        head="Nahtirah Hat",
-        
+        -- fastcast +11
+        main={
+            name="Grioavolr",
+            augments={'"Fast Cast"+7','MP+94','Magic Damage +2',}
+        },
+        -- fastcast +13
+        head={
+            name="Merlinic Hood",
+            augments={
+                '"Mag.Atk.Bns."+24',
+                '"Fast Cast"+5',
+                'INT+8',
+                'Mag. Acc.+10',
+            }
+        },
+        -- fastcast +11
+        feet={
+            name="Merlinic Crackows",
+            augments={'"Fast Cast"+6','CHR+9','Mag. Acc.+1',}
+        },
     },
     enh_duration = {
         head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},

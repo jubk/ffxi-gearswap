@@ -20,25 +20,25 @@ local spelltools = require("mg_spelltools");
 local aug_gear = require('shared/aug_gear');
 
 local AF = {
-    head="Acad. Mortar. +1",
-    body="Acad. Gown +1",
-    hands="Acad. Bracers +1",
-    legs="Acad. Pants +1",
-    feet="Acad. Loafers +1",
+    head="Acad. Mortar. +2",
+    body="Acad. Gown +3",
+    hands="Acad. Bracers +2",
+    legs="Acad. Pants +2",
+    feet="Acad. Loafers +2",
 }
 
 local relic = {
-    head="Peda. M.board +1",
-    body="Pedagogy Gown",
-    hands="Peda. Bracers",
+    head="Peda. M.board +2",
+    body="Pedagogy Gown +1",
+    hands="Peda. Bracers +1",
     legs="Peda. Pants +1",
     feet="Peda. Loafers +1"
 }
 
 local empy = {
     head="Arbatel Bonnet +1",
-    body="Arbatel Gown",
-    hands="Arbatel Bracers",
+    body="Arbatel Gown +1",
+    hands="Arbatel Bracers +1",
     legs="Arbatel Pants +1",
     feet="Arbatel Loafers +1",
 }
@@ -46,26 +46,23 @@ local empy = {
 --[[
 TODO list
 
+Elemental Obis
+
 Sublimation:
   Savant's Earring
 
 Fastcast:
         --  * Grioavolr staff, up to +11 fastcast (+8), Bashmu reisen NM
         --  * Pinga Pants, fc 11 (+7), 8 mill
-        --  * Augmented merlinic feet, 12 fc (+6)
         --  * Ping Tunic, fc 13, (+5), 5 mill
-        --  * Augmented merlinic hood, 15 fast cast (+5)
         --  * "Voltsurge Torque", fc 4, (+2),
         --  * Enchntr. Earring +1, fc 2 (+1), 5 mill
 
 Nuking:
   Ambuscade cape
-
-Regen:
-  Bolelabunga
+  Pemphredo tathlum (Sarsoak in Reisenjima)
 
 Helix:
-  Ghastly Tathlum / +1
   Mallquis Saio (ambu token: body)
   Mephitas's Ring +1 (ambu gear upgrade)
 
@@ -251,29 +248,28 @@ function init_gear_sets()
     sets.precast.FC = {
         -- Possible upgrades:
         --  * Hvergelmir i119 III staff, +50, (+47)
-        --  * Grioavolr staff, up to +11 fastcast (+8), Bashmu reisen NM
         --  * Pinga Pants, fc 11 (+7), 8 mill
-        --  * Augmented merlinic feet, 12 fc (+6)
         --  * Ping Tunic, fc 13, (+5), 5 mill
-        --  * Augmented merlinic hood, 15 fast cast (+5)
+        --  * Augmented merlinic hood, 15 fast cast (+2)
         --  * "Voltsurge Torque", fc 4, (+2),
-        --  * Estoqueur's earring (+2)
+        --  * Augmented merlinic feet, 12 fc (+1)
 
-        -- Fastcast +3
+        -- Fastcast +11
         main=aug_gear.fastcast.main,
 
         -- Fastcast +2
         sub="Clerisy Strap",
 
-        -- Fast cast +10
+        -- Fast cast +13
         -- Note: Replaced with Peda. M.Board under grimoire
         head=aug_gear.fastcast.head,
 
         -- Fast cast +8
         body="Shango Robe",
 
-        -- TODO: Fast cast +4
-        -- neck = "Voltsurge Torque",
+        -- Fast cast +4
+        neck = "Voltsurge Torque",
+
         -- Fast cast +2
         waist="Channeler's Stone",
 
@@ -289,10 +285,9 @@ function init_gear_sets()
         -- Fast cast +5
         legs="Artsieq Hose",
 
-        -- Fast cast +4-6
         -- Note: Replaced with Acad. Loafers +3 under grimoire
-        -- TODO: Replace with augmented merlinic
-        feet="Regal Pumps",
+        -- fastcast +11
+        feet=aug_gear.fastcast.feet,
 
         -- TODO: Fast cast +1
         -- left_ear="Etiolation Earring",
@@ -307,8 +302,8 @@ function init_gear_sets()
         right_ring="Prolix Ring",
 
 
-        -- Total: 53%
-        -- Total under grimoire: (total - 24) = 29%
+        -- Total: 75%
+        -- Total under grimoire: (total - 24) = 51%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
@@ -353,9 +348,9 @@ function init_gear_sets()
             -- matk 4, macc 8, int 4
             ammo="Pemphredo Tathlum",
 
-            -- TODO: macc 50, 24 dark arts skill, set acc bonus, refresh +3
-            -- TODO: body=AF.body,
-            body=aug_gear.nuke.body,
+            -- TODO: Switch to relic body, when it is +3
+            -- macc 50, 24 dark arts skill, set acc bonus, refresh +3
+            body=AF.body,
 
             -- macc +44, matk+52
             hands = "Chironic Gloves",
@@ -411,6 +406,8 @@ function init_gear_sets()
         sets.midcast['Elemental Magic'].Nuking,
         {
             -- SCH staff is mbdam 10
+            main = "Akademos",
+            sub = "Niobid Strap",
 
             -- MB II+4, macc 37, matk 49, mb acc +15, elem magic skill +19
             head=relic.head,
@@ -445,10 +442,10 @@ function init_gear_sets()
     sets.midcast.Helix = set_combine(
         sets.midcast['Elemental Magic'].Nuking,
         {
-            -- mdam +248
+            -- mdam +279
             main="Tupsimati",
             -- mdam +10
-            -- TODO: ammo="Ghastly Tathlum",
+            ammo="Ghastly Tathlum",
             -- mdam +58
             -- TODO: body="Mallquis Saio",
             -- mdam +4
@@ -461,10 +458,10 @@ function init_gear_sets()
     sets.midcast.Helix.MagicBurst = set_combine(
         sets.midcast['Elemental Magic'].MagicBurst,
         {
-            -- mdam +248
+            -- mdam +279
             main="Tupsimati",
             -- mdam +10
-            -- TODO: ammo="Ghastly Tathlum",
+            ammo="Ghastly Tathlum",
         }
     )
 
@@ -500,7 +497,7 @@ function init_gear_sets()
         -- Set bonus from Academic gear: 60 macc from 5 pieces
         sets.midcast['Elemental Magic'].Nuking,
         {
-            -- Tupsimati: macc 30, macc skill 255
+            -- Tupsimati: macc 40, macc skill 269
             main = "Tupsimati",
 
             -- Kaja Grip: macc 25, dt -5, enmity -4
@@ -603,8 +600,8 @@ function init_gear_sets()
     sets.midcast['Enhancing Magic'].Regen = set_combine(
         sets.midcast['Enhancing Magic'],
         {
-            -- TODO: Regen +10
-            -- TODO: main="Bolelabunga",
+            -- Regen +10
+            main="Bolelabunga",
             -- Defence
             sub="Ammurapi Shield",
             -- Enh.magic +14, regen +15

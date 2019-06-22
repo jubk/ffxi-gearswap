@@ -31,6 +31,16 @@ local aug_gear = {
                 'INT+5',
             }
         },
+        -- macc 23, matk 47, mb 10, int 40
+        body={
+            name="Merlinic Jubbah",
+            augments={
+                '"Mag.Atk.Bns."+27',
+                'Magic burst dmg.+10%',
+                'INT+13',
+                'Mag. Acc.+3',
+            }
+        },
         -- MB II+5, macc 15, matk 38, elem. magic skill +13
         hands = {
             name="Amalric Gages",
@@ -61,6 +71,7 @@ local aug_gear = {
     },
     acc = {},
 }
+aug_gear.nuke.body = aug_gear.burst.body;
 aug_gear.acc.head = aug_gear.nuke.head;
 aug_gear.acc.legs = aug_gear.nuke.legs;
 

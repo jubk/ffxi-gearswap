@@ -439,7 +439,29 @@ local AutoImmanence = function(options)
         transfixion=MAKE_SC(
             "Transfixion", "Noctohelix", "Luminohelix", "Light"
         ),
+        -- Version two of the skillchains all use helix as second spell
+        -- which allows for longer MB window
+        scission_helix=MAKE_SC("Scission", "Aero", "Geohelix", "Stone"),
+        detonation_helix=MAKE_SC("Detonation", "Stone", "Anemohelix", "Aero"),
+        reverberation_helix=MAKE_SC("Reverberation", "Stone", "Hydrohelix", "Water"),
+        induration_helix=MAKE_SC("Induration", "Water", "Cryohelix", "Blizzard"),
+        impaction_helix=MAKE_SC("Impaction", "Water", "Ionohelix", "Thunder"),
+        liquefaction_helix=MAKE_SC("Liquefaction", "Stone", "Pyrohelix", "Fire"),
+        fusion_helix=MAKE_SC('Fusion', 'Fire', 'Ionohelix', "Fire", "Light"),
+        fragmentation_helix=MAKE_SC(
+            'Fragmentation', 'Blizzard', 'Hydrohelix', "Aero", "Thunder"
+        ),
+        distortion_helix=MAKE_SC(
+            'Distortion', 'Luminohelix', 'Geohelix', "Water", "Blizzard"
+        ),
+
     }
+    -- Skillchains that already end with helix
+    SKILLCHAINS["gravitation_helix"]=SKILLCHAINS["gravitation"]
+    SKILLCHAINS["compression_helix"]=SKILLCHAINS["compression"]
+    SKILLCHAINS["transfixion_helix"]=SKILLCHAINS["transfixion"]
+
+    -- Easier-to-remember aliases
     SKILLCHAINS["stone"]=SKILLCHAINS["scission"]
     SKILLCHAINS["aero"]=SKILLCHAINS["detonation"]
     SKILLCHAINS["wind"]=SKILLCHAINS["detonation"]
@@ -450,6 +472,17 @@ local AutoImmanence = function(options)
     SKILLCHAINS["ice"]=SKILLCHAINS["induration"]
     SKILLCHAINS["thunder"]=SKILLCHAINS["impaction"]
     SKILLCHAINS["fire"]=SKILLCHAINS["liquefaction"]
+
+    SKILLCHAINS["stone_helix"]=SKILLCHAINS["scission_helix"]
+    SKILLCHAINS["aero_helix"]=SKILLCHAINS["detonation_helix"]
+    SKILLCHAINS["wind_helix"]=SKILLCHAINS["detonation_helix"]
+    SKILLCHAINS["darkness_helix"]=SKILLCHAINS["compression_helix"]
+    SKILLCHAINS["light_helix"]=SKILLCHAINS["transfixion_helix"]
+    SKILLCHAINS["water_helix"]=SKILLCHAINS["reverberation_helix"]
+    SKILLCHAINS["blizzard_helix"]=SKILLCHAINS["induration_helix"]
+    SKILLCHAINS["ice_helix"]=SKILLCHAINS["induration_helix"]
+    SKILLCHAINS["thunder_helix"]=SKILLCHAINS["impaction_helix"]
+    SKILLCHAINS["fire_helix"]=SKILLCHAINS["liquefaction_helix"]
 
     local gearswap_handler = function(spell)
         if public.active_skillchain then
@@ -536,7 +569,7 @@ local AutoImmanence = function(options)
                 end
                 return
             end
-            local element, rest = args_str:match('(%a+)%s*(.*)')
+            local element, two, rest = args_str:match('(%a+)%s*(2?)%s*(.*)')
             local opts = {}
             if rest:find('[+]') then
                 opts['ebullience'] = true
@@ -545,6 +578,10 @@ local AutoImmanence = function(options)
                 opts['alacrity'] = true
             end
             opts['nuke'] = rest:match('%s*([%d%a%s]+)')
+
+            if two then
+                element = element .. "_helix"
+            end
 
             auto_sc.start_skillchain_by_name(element, opts)
         end

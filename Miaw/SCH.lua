@@ -397,8 +397,8 @@ function init_gear_sets()
             -- matk 4, macc 8, int 4
             ammo="Pemphredo Tathlum",
 
-            -- macc 50, 24 dark arts skill, set acc bonus, refresh +3
-            body=AF.body,
+            -- macc 40, matk +52
+            body=relic.body,
 
             -- macc +44, matk+52
             hands = "Chironic Gloves",
@@ -415,8 +415,8 @@ function init_gear_sets()
             -- macc 6, matk 3, mb bonus 2
             left_ring="Jhakri Ring",
 
-            -- macc +2, matk +4
-            right_ring="Shiva ring +1",
+            -- INT +10, matk +8
+            right_ring="Freke Ring",
 
             -- mb +7, macc 42, matk 39
             feet="Jhakri Pigaches +2",
