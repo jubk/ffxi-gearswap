@@ -15,18 +15,18 @@ local herc_matk = require("shared/herc_matk_gear");
 --   feet    |      |      |    |       |       |       |
 --
 --  Relic    | Base | Base +1 | Base +2 | RF | Rf +1 | Rf +2 | Rf +3 |
---   head    |      |         |         | X  |       |       |       |
+--   head    |      |         |         |    |       |   X   |       |
 --   body    |      |         |         |    |       |       |   X   |
 --   hands   |      |         |         |    |   X   |       |       |
---   legs    |      |         |         | X  |       |       |       |
+--   legs    |      |         |         |    |   X   |       |       |
 --   feet    |      |         |         |    |       |       |   X   |
 --
 --  Empyrean | Base | Base +1 | Base +2 | RF | Rf +1 |
---   head    |      |         |         | X  |       |
---   body    |      |         |         | X  |       |
+--   head    |      |         |         |    |   X   |
+--   body    |      |         |         |    |   X   |
 --   hands   |      |         |         |    |   X   |
---   legs    |      |         |    X    |    |       |
---   feet    |      |         |         | X  |       |
+--   legs    |      |         |         |    |   X   |
+--   feet    |      |         |         |    |   X   |
 --
 
 local AF = {
@@ -40,7 +40,7 @@ local relic = {
     head="Lanun Tricorne +2",
     body="Lanun Frac +3",
     hands="Lanun Gants +1",
-    legs="Lanun Trews",
+    legs="Lanun Trews +1",
     feet="Lanun Bottes +3",
 };
 
@@ -48,8 +48,8 @@ local empy = {
     head="Chass. Tricorne",
     body="Chasseur's Frac +1",
     hands="Chasseur's Gants +1",
-    legs="Chas. Culottes",
-    feet="Chasseur's Bottes",
+    legs="Chas. Culottes +1",
+    feet="Chass. Bottes +1",
 };
 
 local ambu = {
@@ -243,8 +243,8 @@ function init_gear_sets()
             body=AF.body,
             -- Snapshot +9
             hands = relic.hands,
-            -- Snapshot 9
-            legs="Nahtirah Trousers",
+            -- Snapshot +10, Triple shot +5
+            legs="Oshosi Trousers",
             -- Snapshot 10
             feet=ambu.feet,
             -- snapshot +2, racc +15
@@ -254,7 +254,7 @@ function init_gear_sets()
             -- Snapshot 6.5
             back="Navarch's Mantle",
 
-            -- Total: 56.5
+            -- Total: 57.5
             -- Cap with no buffs: 70
             -- Cap with flurry: 55
             -- Cap with flurry II: 40
@@ -264,12 +264,14 @@ function init_gear_sets()
     sets.precast.JA.QuickDraw = set_combine(
         sets.base,
         {
+            -- macc +25, matk +35
+            ammo="Living Bullet",
             head=herc_matk.head,
             -- matk +29, macc +30
             body="Samnuha Coat",
             hands=herc_matk.hands,
             legs=herc_matk.legs,
-            -- Quickdraw +22
+            -- Quickdraw +25
             feet=empy.feet,
             -- matk 10, macc 10
             neck="Sanctity Necklace",
@@ -315,6 +317,8 @@ function init_gear_sets()
         -- store tp +10
         back=capes.melee_tp,
     });
+    -- Comment in for hybrid
+    -- sets.engaged = set_combine(sets.engaged, {neck="Loricate Torque +1",right_ring="Defending Ring",});
 
     sets.midcast.RA = set_combine(
         sets.base,
@@ -421,13 +425,16 @@ function init_gear_sets()
     sets.precast.WS["Wildfire"] = set_combine(
         sets.precast.WS.Magic,
         {
-            ammo=CheapAmmo,
+            -- macc +25, matk +35
+            ammo="Living Bullet",
             body=relic.body,
         }
     );
     sets.precast.WS["Leaden Salute"] = set_combine(
         sets.precast.WS["Wildfire"],
         {
+            -- macc +25, matk +35
+            ammo="Living Bullet",
             head="Pixie Hairpin +1",
             neck="Sanctity Necklace",
             right_ear={
@@ -492,6 +499,8 @@ function init_gear_sets()
             head="Oshosi Mask",
             -- Triple shot +12
             body=empy.body,
+            -- Snapshot +10, Triple shot +5
+            legs="Oshosi Trousers",
             -- racc +4, store tp +2
             right_ear="Volley Earring",
             -- Triple Shot +5

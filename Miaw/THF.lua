@@ -48,10 +48,7 @@ function get_sets()
     sets.ws['Aeolian Edge'] = set_combine(sets.base, {
         ammo="Seething Bomblet",
         head=herc_matk.head,
-        body={
-            name="Rawhide Vest",
-            augments={'HP+50','Accuracy+15','Evasion+20',}
-        },
+        hands=herc_matk.body,
         hands=herc_matk.hands,
         legs=herc_matk.legs,
         feet=herc_matk.feet,

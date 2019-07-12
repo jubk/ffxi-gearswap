@@ -265,7 +265,7 @@ function get_sets()
         -- Fast Cast +7%
         hands="Acad. Bracers +3",
         -- Fast cast +2
-        ammo = "Incantor Stone",
+        ammo = "Sapience Orb",
         -- Fast cast +4
         back = "Swith Cape +1",
         -- Fast cast +4

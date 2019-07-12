@@ -4,6 +4,16 @@ include("elemental_obis");
 include("cyclable_sets");
 
 function get_sets()
+    sird_spells = T{
+        'Flash',
+        'Blind',
+        "Jettatura",
+        "Sheep Song",
+        "Soporific",
+        "Blank Gaze",
+        "Geist Wall",
+    }
+
     -- sets
     sets.tanking = {
         -- Damaga taken -2, +10 resist to all debuffs
@@ -43,8 +53,8 @@ function get_sets()
             head = "Loess Barbuta",
             -- enmity +2
             ammo = "Sapience Orb",
-            -- enmity +5
-            neck = "Invidia Torque",
+            -- enmity +10
+            neck="Moonbeam Necklace",
             -- HP +254, dt -11, mdef +5, meva 68, enmity +10, fastcast +10
             body="Rev. Surcoat +3",
             -- HP+239, acc +32, atk +32, mdt -5, phalanx +5, enmity +9
@@ -78,7 +88,7 @@ function get_sets()
         sets.tanking,
         {
             -- cast time -2, recast -1
-            ammo = "Incantor Stone",
+            ammo = "Sapience Orb",
             -- fast cast +12
             head="Carmine Mask",
             -- HP +254, dt -11, mdef +5, meva 68, enmity +10, fastcast +10
@@ -117,6 +127,25 @@ function get_sets()
         }
     );
 
+    sets.sird = set_combine(
+        sets.enmity,
+        {
+            -- sird 10
+            ammo="Staunch Tathlum",
+            -- sird 20
+            head="Souv. Schaller +1",
+            -- sird 10
+            neck="Moonbeam Necklace",
+            -- sird 5
+            left_ring="Evanescence Ring",
+            -- sird 30
+            legs="Founder's hose",
+            -- sird 8
+            waist="Silver Obi +1",
+            -- sird 20
+            feet="Odyssean Greaves",
+        }
+    )
     sets.ws = {};
     sets.ws.base = set_combine(
         sets.tanking, {
@@ -330,9 +359,9 @@ function precast(spell)
             toEquip = set_combine(SituationalGear, sets.fastcast_cure);
             -- Equip healing gear midcast for healing spells
             MidCastGear = set_combine(MidCastGear, sets.cure)
-        elseif "Flash" == spell.english or "Blind" == spell.english then
-            -- Equip enmity gear for flash and blind spells
-            toEquip = set_combine(toEquip, sets.enmity)
+        elseif table.contains(sird_spells, spell.english) then
+            -- Equip sird/enmity
+            MidCastGear = set_combine(toEquip, sets.sird)
         end
 
         equip(toEquip)

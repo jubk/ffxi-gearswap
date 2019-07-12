@@ -150,8 +150,8 @@ function init_gear_sets()
             body="Oshosi Vest",
             -- Snapshot +8, rapid shot +11
             hands="Carmine Fin. Ga. +1",
-            -- Snapshot 9
-            legs="Nahtirah Trousers",
+            -- Snapshot +10
+            legs="Oshosi Trousers",
             -- Snapshot 10
             feet=ambu.feet,
             -- Snapshot 3
@@ -159,7 +159,7 @@ function init_gear_sets()
             -- Snapshot +10
             back=capes.snapshot
 
-            -- Total: 57
+            -- Total: 58
             -- Cap with no buffs: 70
             -- Cap with flurry: 55
             -- Cap with flurry II: 40

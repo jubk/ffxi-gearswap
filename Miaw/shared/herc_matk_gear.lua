@@ -7,6 +7,14 @@ local herculean_matk = {
             'INT+7','Mag. Acc.+7',
         }
     },
+    body={
+        name="Herculean Vest",
+        augments={
+            'Mag. Acc.+18 "Mag.Atk.Bns."+18',
+            'INT+10',
+            '"Mag.Atk.Bns."+11',
+        }
+    },
     hands={
         name="Herculean Gloves",
         augments={

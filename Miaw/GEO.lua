@@ -252,8 +252,8 @@ function get_sets()
         feet="Jhakri Pigaches +2",
         neck="Sanctity Necklace",
         waist="Eschan Stone",
-        left_ear="Digni. Earring",
-        right_ear="Steelflash Earring",
+        left_ear="Steelflash Earring",
+        right_ear="Digni. Earring",
         left_ring="Cacoethic Ring",
         right_ring="Cacoethic Ring +1",
         back={

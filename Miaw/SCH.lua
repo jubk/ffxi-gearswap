@@ -324,11 +324,11 @@ function init_gear_sets()
         -- Fast Cast +9%
         hands=AF.hands,
         -- Fast cast +2
-        ammo = "Incantor Stone",
+        ammo = "Sapience Orb",
         -- Fast cast +4
         back = "Swith Cape +1",
-        -- Fast cast +4
-        legs="Gyve Trousers",
+        -- Fast cast +11
+        legs="Pinga Pants",
         -- Fast cast +10
         -- Note: Replaced with Acad. Loafers +3 under grimoire
         feet={
@@ -351,8 +351,8 @@ function init_gear_sets()
         -- left_ear="Barkaro. Earring",
 
 
-        -- Total: 80%
-        -- Total under grimoire: (total - 24) = 56%
+        -- Total: 89%
+        -- Total under grimoire: (total - 24) = 65%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
@@ -424,7 +424,7 @@ function init_gear_sets()
             -- matk 10, macc 10
             neck="Sanctity Necklace",
 
-            -- macc 20, matk 10, mdam 20, int+26
+            -- macc 20, matk 10, mdam 20, int+30
             back="Lugh's Cape",
         }
     );
@@ -490,7 +490,7 @@ function init_gear_sets()
             -- mdam +10
             ammo="Ghastly Tathlum",
             -- mdam +58
-            body="Mallquis Saio",
+            body="Mallquis Saio +2",
             -- mdam +5
             left_ring="Mephitas's Ring +1",
         }
@@ -657,8 +657,8 @@ function init_gear_sets()
         {
             -- Regen +10
             main="Bolelabunga",
-            -- Defence
-            sub="Genmei Shield",
+            -- enh. duration +10
+            sub="Ammurapi Shield",
             -- Enh.magic +14, regen +15
             head=empy.head,
             -- matk +10, mdam +10, elem.skill +8, dark.skill +8, int +1, mnd +2,

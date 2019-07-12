@@ -20,19 +20,19 @@ local spelltools = require("mg_spelltools");
 local aug_gear = require('shared/aug_gear');
 
 local AF = {
-    head="Acad. Mortar. +2",
+    head="Acad. Mortar. +3",
     body="Acad. Gown +3",
     hands="Acad. Bracers +2",
     legs="Acad. Pants +2",
-    feet="Acad. Loafers +2",
+    feet="Acad. Loafers +3",
 }
 
 local relic = {
-    head="Peda. M.board +2",
-    body="Pedagogy Gown +1",
-    hands="Peda. Bracers +1",
-    legs="Peda. Pants +1",
-    feet="Peda. Loafers +1"
+    head="Peda. M.board +3",
+    body="Pedagogy Gown +3",
+    hands="Peda. Bracers +3",
+    legs="Peda. Pants +2",
+    feet="Peda. Loafers +3"
 }
 
 local empy = {
@@ -42,33 +42,6 @@ local empy = {
     legs="Arbatel Pants +1",
     feet="Arbatel Loafers +1",
 }
-
---[[
-TODO list
-
-Elemental Obis
-
-Sublimation:
-  Savant's Earring
-
-Fastcast:
-        --  * Grioavolr staff, up to +11 fastcast (+8), Bashmu reisen NM
-        --  * Pinga Pants, fc 11 (+7), 8 mill
-        --  * Ping Tunic, fc 13, (+5), 5 mill
-        --  * "Voltsurge Torque", fc 4, (+2),
-        --  * Enchntr. Earring +1, fc 2 (+1), 5 mill
-
-Nuking:
-  Ambuscade cape
-  Pemphredo tathlum (Sarsoak in Reisenjima)
-
-Helix:
-  Mallquis Saio (ambu token: body)
-  Mephitas's Ring +1 (ambu gear upgrade)
-
-Dark Magic:
-  Pixie Hairpin +1
---]]
 
 
 function get_sets()
@@ -190,8 +163,8 @@ function init_gear_sets()
         -- pdt -7
         right_ring="Patricius Ring",
 
-        -- dam.taken -4
-        back="Solemnity Cape",
+        -- dam.taken -5
+        back="Lugh's Cape",
     };
 
     sets.idle.Field = set_combine(sets.standard, {});
@@ -211,8 +184,8 @@ function init_gear_sets()
             -- Sublimation +5
             body=relic.body,
 
-            -- TODO: Sublimation +1
-            -- left_ear = "Savant's Earring",
+            -- Sublimation +1
+            left_ear = "Savant's Earring",
         }
     );
     sets.idle.Town.Sublimation = set_combine(sets.idle.Field.Sublimation, {});
@@ -248,10 +221,7 @@ function init_gear_sets()
     sets.precast.FC = {
         -- Possible upgrades:
         --  * Hvergelmir i119 III staff, +50, (+47)
-        --  * Pinga Pants, fc 11 (+7), 8 mill
-        --  * Ping Tunic, fc 13, (+5), 5 mill
         --  * Augmented merlinic hood, 15 fast cast (+2)
-        --  * "Voltsurge Torque", fc 4, (+2),
         --  * Augmented merlinic feet, 12 fc (+1)
 
         -- Fastcast +11
@@ -264,8 +234,8 @@ function init_gear_sets()
         -- Note: Replaced with Peda. M.Board under grimoire
         head=aug_gear.fastcast.head,
 
-        -- Fast cast +8
-        body="Shango Robe",
+        -- Fast cast +13
+        body="Pinga Tunic",
 
         -- Fast cast +4
         neck = "Voltsurge Torque",
@@ -273,7 +243,7 @@ function init_gear_sets()
         -- Fast cast +2
         waist="Channeler's Stone",
 
-        -- Fast Cast +5%
+        -- Fast Cast +7%
         hands=AF.hands,
 
         -- Fast cast +2
@@ -282,15 +252,15 @@ function init_gear_sets()
         -- Fast cast +4
         back = "Swith Cape +1",
 
-        -- Fast cast +5
-        legs="Artsieq Hose",
+        -- Fast cast +11
+        legs="Pinga Pants",
 
         -- Note: Replaced with Acad. Loafers +3 under grimoire
         -- fastcast +11
         feet=aug_gear.fastcast.feet,
 
-        -- TODO: Fast cast +1
-        -- left_ear="Etiolation Earring",
+        -- Fast cast +2
+        left_ear="Enchntr. Earring +1",
 
         -- Fast cast +2
         right_ear="Loquac. Earring",
@@ -302,8 +272,8 @@ function init_gear_sets()
         right_ring="Prolix Ring",
 
 
-        -- Total: 75%
-        -- Total under grimoire: (total - 24) = 51%
+        -- Total: 88%
+        -- Total under grimoire: (total - 24) = 64%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
@@ -367,8 +337,8 @@ function init_gear_sets()
             -- macc 6, matk 3, mb bonus 2
             left_ring="Jhakri Ring",
 
-            -- INT +2, matk +4
-            right_ring="Acumen Ring",
+            -- INT +10, matk +8
+            right_ring="Freke Ring",
 
             -- mb +7, macc 42, matk 39
             feet="Jhakri Pigaches +2",
@@ -376,9 +346,8 @@ function init_gear_sets()
             -- matk 10, macc 10
             neck="Sanctity Necklace",
 
-            -- matk 10
-            -- TODO: Ambuscade nuker cape
-            back="Bookworm's Cape",
+            -- macc 20, matk 10, mdam 20, int+30
+            back="Lugh's Cape",
         }
     );
     sets.midcast['Elemental Magic'].Nuking = set_combine(
@@ -447,10 +416,9 @@ function init_gear_sets()
             -- mdam +10
             ammo="Ghastly Tathlum",
             -- mdam +58
-            -- TODO: body="Mallquis Saio",
-            -- mdam +4
-            -- TODO: +5
-            left_ring="Mephitas's Ring",
+            body="Mallquis Saio +2",
+            -- mdam +5
+            left_ring="Mephitas's Ring +1",
         }
     )
     sets.midcast.Helix.Nuking = set_combine(sets.midcast.Helix, {})
@@ -469,8 +437,8 @@ function init_gear_sets()
     sets.midcast['Dark Magic'] = set_combine(
         sets.midcast['Elemental Magic'].Nuking,
         {
-            -- TODO:
-            -- head="Pixie Hairpin +1",
+            -- Dark matk +28
+            head="Pixie Hairpin +1",
         }
     );
 
@@ -578,10 +546,8 @@ function init_gear_sets()
             -- enhancing duration +10
             head=aug_gear.enh_duration.head,
 
-            -- TODO: enhancing duration +12
-            -- TODO: body=relic.body,
-            -- Enh. duration +8
-            body=aug_gear.enh_duration.body,
+            -- enhancing duration +12
+            body=relic.body,
 
             -- Enh. duration +9
             hands=aug_gear.enh_duration.hands,

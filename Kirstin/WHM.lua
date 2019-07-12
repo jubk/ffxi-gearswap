@@ -236,8 +236,8 @@ function get_sets()
     sets.healing_magic = set_combine(base, {
         -- cure pot II +2, cure pot 10, cure spellcasting time -7
         main="Queller Rod",
-        -- cure pot +3, cure spellcasting time -3
-        sub="Sors Shield",
+        -- TODO: cure pot +3, cure spellcasting time -3
+        -- sub="Sors Shield",
         -- Healing magic skill +15
         body=empy.body,
         -- Healing magic skill +17
