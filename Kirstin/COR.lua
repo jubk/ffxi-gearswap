@@ -167,16 +167,7 @@ function get_sets()
         }
     );
 
-    sets.idle = set_combine(
-        sets.base, {
-            -- refresh +1
-            head="Rawhide Mask",
-            -- refresh +2
-            body="Mekosu. Harness",
-            -- latent (not engaged): refresh +1
-            left_ear="Moonshade Earring",
-        }
-    );
+    sets.idle = set_combine(sets.base, {});
 
     sets.resting = set_combine(sets.idle, {});
 

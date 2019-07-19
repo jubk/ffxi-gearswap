@@ -37,14 +37,6 @@ capes = {
     cure={ name="Alaunus's Cape", augments={'"Cure" potency +10%',}},
 }
 
-function time_specific_gear()
-    if world.time >= 8*60 and world.time < 18*60 then
-        return { feet="Serpentes Sabots" };
-    else
-        return { hands="Serpentes Cuffs" };
-    end
-end
-
 function get_sets()
     local base = {
         -- cure pot II +2, cure pot 10, cure spellcasting time -7
@@ -262,8 +254,6 @@ function get_sets()
         back=capes.cure,
     });
     sets.enfeebling_magic = set_combine(sets.base, {
-        -- macc +7
-        head="Helios Band",
         -- macc +21
         body="Vanya Robe",
         -- enf. skill +15
@@ -274,16 +264,12 @@ function get_sets()
         feet=AF.feet,
     });
     sets.divine_magic = set_combine(sets.base, {
-        -- Macc +7, statvomit
-        head="Helios Band",
         -- macc +21, statvomit
         body="Vanya Robe",
         -- mnd +26
         hands=AF.hands,
         -- matk +40, statvomit
         legs="Gyve Trousers",
-        -- matk +18
-        feet="Manabyss Pigaches",
         -- matk +6
         left_ear="Hecate's Earring",
         -- mnd +3
@@ -371,15 +357,14 @@ function aftercast(spell)
     else
         equip(sets.idle)
     end
-    equip(time_specific_gear());
 end
 
 function status_change(new,old)
     if "Idle" == new then
-        equip(set_combine(sets.idle, time_specific_gear()))
+        equip(sets.idle)
     elseif "Resting" == new then
-        equip(set_combine(sets.resting, time_specific_gear()))
+        equip(sets.resting)
     elseif "Engaged" == new then
-        equip(set_combine(sets.engaged, time_specific_gear()))
+        equip(sets.engaged)
     end
 end

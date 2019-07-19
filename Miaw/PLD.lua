@@ -24,8 +24,8 @@ function get_sets()
         body="Rev. Surcoat +3",
         -- mdef +4, regen +1, refresh +1
         neck = "Coatl Gorget +1",
-        -- acc +9, bird killer 4, bdt -1
-        left_ear="Zwazo Earring",
+        -- acc +6, double attack +3, store tp +3
+        left_ear="Cessance Earring",
         -- acc +10, subtle blow 5, store tp 3
         right_ear="Digni. Earring",
         -- HP+239, acc +32, atk +32, mdt -5, phalanx +5, enmity +9
@@ -267,12 +267,8 @@ function get_sets()
     sets.resting = set_combine(
         sets.tanking,
         {
-            -- Refresh +2
-            body = "Twilight Mail",
             -- rmp +4
             waist = "Austerity Belt",
-            -- rmp +3
-            feet = "Lord's sabatons",
         }
     );
 

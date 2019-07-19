@@ -221,9 +221,8 @@ function init_gear_sets()
             right_ring="Regal Ring",
             -- ratk +4, store tp +4, agi +2
             left_ear="Neritic Earring",
-            -- racc +4, store tp +2
-            right_ear="Volley Earring",
-            -- TODO: Envervating Earring, vagary body boss
+            -- racc +7, , ratk 7, store tp +4
+            right_ear="Enervating Earring",
             back=capes.store_tp,
         }
     );

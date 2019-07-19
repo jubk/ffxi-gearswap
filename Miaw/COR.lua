@@ -45,7 +45,7 @@ local relic = {
 };
 
 local empy = {
-    head="Chass. Tricorne",
+    head="Chass. Tricorne +1",
     body="Chasseur's Frac +1",
     hands="Chasseur's Gants +1",
     legs="Chas. Culottes +1",
@@ -318,7 +318,7 @@ function init_gear_sets()
         back=capes.melee_tp,
     });
     -- Comment in for hybrid
-    -- sets.engaged = set_combine(sets.engaged, {neck="Loricate Torque +1",right_ring="Defending Ring",});
+    sets.engaged = set_combine(sets.engaged, {neck="Loricate Torque +1",right_ring="Defending Ring",});
 
     sets.midcast.RA = set_combine(
         sets.base,
@@ -463,7 +463,6 @@ function init_gear_sets()
             hands="Meg. Gloves +2",
             legs="Meg. Chausses +2",
             feet=relic.feet,
-            neck="Commodore Charm",
             waist="Eschan Stone",
             left_ear={
                 name="Moonshade Earring",

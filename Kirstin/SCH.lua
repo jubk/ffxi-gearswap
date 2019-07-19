@@ -22,7 +22,7 @@ local aug_gear = require('shared/aug_gear');
 local AF = {
     head="Acad. Mortar. +3",
     body="Acad. Gown +3",
-    hands="Acad. Bracers +2",
+    hands="Acad. Bracers +3",
     legs="Acad. Pants +2",
     feet="Acad. Loafers +3",
 }

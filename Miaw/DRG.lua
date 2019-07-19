@@ -12,7 +12,8 @@ function get_sets()
         feet="Sulev. Leggings +2",
         neck="Sanctity Necklace",
         waist="Kentarch Belt +1",
-        left_ear="Zwazo Earring",
+        -- acc +6, double attack +3, store tp +3
+        left_ear="Cessance Earring",
         right_ear="Digni. Earring",
         left_ring="Cacoethic Ring",
         right_ring="Cacoethic Ring +1",

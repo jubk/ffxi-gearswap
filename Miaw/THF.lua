@@ -3,7 +3,23 @@ include("cancel_buffs");
 
 local herc_matk = require("shared/herc_matk_gear");
 
+local capes = {
+    aeolian_edge = {
+        name="Toutatis's Cape",
+        augments={
+            'INT+20',
+            'Mag. Acc+20 /Mag. Dmg.+20',
+            'INT+10',
+            'Weapon skill damage +10%',
+        }
+    },
+}
+
+local MG = require("mg-lib")
+
 function get_sets()
+    MG.hub.initialize({})
+
     -- set_has_hachirin_no_obi(true);
     sets.base = {
         ammo="Seething Bomblet",
@@ -29,6 +45,21 @@ function get_sets()
     })
     sets.resting = set_combine(sets.base, {})
     sets.engaged = {
+        StoreTP = set_combine(sets.base, {
+            body="Mummu Jacket +2",
+            hands="Meg. Gloves +2",
+            legs={
+                name="Samnuha Tights",
+                augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}
+            },
+            feet="Meg. Jam. +2",
+            neck="Iskur Gorget",
+            waist="Kentarch Belt +1",
+            left_ear="Cessance Earring",
+            right_ear="Digni. Earring",
+            left_ring="Ilabrat Ring",
+            right_ring="Moonbeam Ring",
+        }),
         Damage = set_combine(sets.base, {
             hands="Meg. Gloves +2",
             feet="Meg. Jam. +2",
@@ -48,14 +79,16 @@ function get_sets()
     sets.ws['Aeolian Edge'] = set_combine(sets.base, {
         ammo="Seething Bomblet",
         head=herc_matk.head,
-        hands=herc_matk.body,
+        body=herc_matk.body,
         hands=herc_matk.hands,
         legs=herc_matk.legs,
         feet=herc_matk.feet,
+        waist="Eschan Stone",
         left_ear="Friomisi Earring",
         right_ear="Hecate's Earring",
-        left_ring="Arvina Ringlet +1",
+        left_ring="Dingir Ring",
         right_ring="Shiva Ring +1",
+        back=capes.aeolian_edge,
     })
 
     sets.ja = {}
@@ -64,15 +97,15 @@ function get_sets()
     MidCastGear = nil
     AfterCastGear = {}
 
-    engaged_mode = 'Damage'
-    engaged_modes = {'Damage', 'TH'}
+    engaged_mode = 'StoreTP'
+    engaged_modes = {'StoreTP', 'Damage', 'TH'}
     engaged_idx = 1
 
 end
 
 function cycle_engaged()
     engaged_idx = engaged_idx + 1
-    if engaged_idx > 2 then
+    if engaged_idx > 3 then
         engaged_idx = 1
     end
     engaged_mode = engaged_modes[engaged_idx]
