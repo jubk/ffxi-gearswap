@@ -5,6 +5,9 @@ include("elemental_obis");
 
 local herc_matk = require("shared/herc_matk_gear");
 
+-- MG inventory system
+local mg_inv = require("mg-inventory");
+
 --              AF/Relic/Empyrean gear status
 --
 --  AF       | Base | B +1 | Rf | Rf +1 | Rf +2 | Rf +3 |
@@ -318,7 +321,7 @@ function init_gear_sets()
         back=capes.melee_tp,
     });
     -- Comment in for hybrid
-    sets.engaged = set_combine(sets.engaged, {neck="Loricate Torque +1",right_ring="Defending Ring",});
+    --sets.engaged = set_combine(sets.engaged, {neck="Loricate Torque +1",right_ring="Defending Ring",});
 
     sets.midcast.RA = set_combine(
         sets.base,
@@ -329,8 +332,8 @@ function init_gear_sets()
             body="Mummu Jacket +2",
             -- racc +47, ratk +43
             hands=ambu.hands,
-            -- racc +49, ratk +45
-            legs=ambu.legs,
+            -- racc +54, Store TP +8
+            legs="Adhemar Kecks +1",
             -- racc +46, ratk +42
             feet=ambu.feet,
             -- racc +30, ratk 30, store tp +8
@@ -488,6 +491,8 @@ function init_gear_sets()
             right_ear="Loquac. Earring",
             -- fast cast 2
             left_ring="Prolix Ring",
+            -- fast cast 4
+            right_ring="Kishar Ring",
         }
     );
 
@@ -656,7 +661,10 @@ function filtered_action(spell)
     end
 end
 
-function job_self_command(command)
+function job_self_command(command, eventArgs)
+    if mg_inv.job_self_command(command, eventArgs) then
+        return
+    end
     if "updateammo" == command then
         local sacks = {
             player.inventory,

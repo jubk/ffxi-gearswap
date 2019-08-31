@@ -6,13 +6,31 @@ include("elemental_obis");
 local herc_matk = require("shared/herc_matk_gear");
 local herc_ratk_gear = require("shared/herc_ratk_gear");
 
+-- MG inventory system
+local mg_inv = require("mg-inventory");
+
 local AF = {
+    head = "Orion Beret +2",
+    body = "Hunter's Jerkin",
+    hands = "Hunter's Bracers",
+    legs = "Hunter's Braccae",
+    feet = "Hunter's Socks",
 };
 
 local relic = {
+    head = "Scout's Beret",
+    body = "Scout's Jerkin",
+    -- hands = "Scout's Bracers",
+    legs = "Scout's Braccae",
+    feet = "Scout's Socks",
 };
 
 local empy = {
+    -- head = "Sylvan Gapette",
+    -- body = "Sylvan Caban",
+    -- hands = "Sylvan Glovelettes",
+    -- legs = "Sylvan Bragues",
+    feet = "Sylvan Bottillons",
 };
 
 local ambu = {
@@ -207,8 +225,8 @@ function init_gear_sets()
             body="Mummu Jacket +2",
             -- racc +47, ratk +43
             hands=ambu.hands,
-            -- racc +49, ratk +45
-            legs=ambu.legs,
+            -- racc +54, Store TP +8
+            legs="Adhemar Kecks +1",
             -- racc +46, ratk +42
             feet=ambu.feet,
             -- racc +30, ratk 30, store tp +8
@@ -404,7 +422,10 @@ function filtered_action(spell)
     end
 end
 
-function job_self_command(command)
+function job_self_command(command, eventArgs)
+    if mg_inv.job_self_command(command, eventArgs) then
+        return
+    end
     if "updateammo" == command then
         local sacks = {
             player.inventory,

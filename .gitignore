@@ -1,8 +1,11 @@
 /Instructions.txt
 /export
+/inventory-export
 skillup.lua
 /*.komodoproject
 /common/Mote-*
 /common/Modes.lua
 /common/rev1
 /common/README.md
+/.idea
+/*.iml

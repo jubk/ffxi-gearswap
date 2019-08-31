@@ -3,6 +3,9 @@ include("cancel_buffs");
 include("elemental_obis");
 include("cyclable_sets");
 
+-- MG inventory system
+local mg_inv = require("mg-inventory");
+
 function get_sets()
     sird_spells = T{
         'Flash',
@@ -439,4 +442,10 @@ function aftercast(spell)
 end
 
 function filtered_action(spell)
+end
+
+function self_command(command)
+    if mg_inv.self_command(command) then
+        return
+    end
 end

@@ -23,7 +23,7 @@ local AF = {
     head="Acad. Mortar. +3",
     body="Acad. Gown +3",
     hands="Acad. Bracers +3",
-    legs="Acad. Pants +2",
+    legs="Acad. Pants +3",
     feet="Acad. Loafers +3",
 }
 
@@ -31,7 +31,7 @@ local relic = {
     head="Peda. M.board +3",
     body="Pedagogy Gown +3",
     hands="Peda. Bracers +3",
-    legs="Peda. Pants +2",
+    legs="Peda. Pants +3",
     feet="Peda. Loafers +3"
 }
 

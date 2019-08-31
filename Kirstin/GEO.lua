@@ -112,18 +112,18 @@ set_macros(1,5) -- Sheet, Book
 function get_sets()
 
     AF = {
-        head="Geo. Galero +2",
+        head="Geo. Galero +3",
         body="Geomancy Tunic +2",
-        hands="Geo. Mitaines +2",
+        hands="Geo. Mitaines +3",
         legs="Geomancy Pants +2",
         feet="Geo. Sandals +3",
     }
     relic = {
-        head = "Bagua Galero +2",
+        head = "Bagua Galero +3",
         body = "Bagua Tunic +3",
-        hands = "Bagua Mitaines +2",
-        legs = "Bagua Pants +2",
-        feet = "Bagua Sandals +2",
+        hands = "Bagua Mitaines +3",
+        legs = "Bagua Pants +3",
+        feet = "Bagua Sandals +3",
     }
     empy = {
         head = "Azimuth Hood +1",

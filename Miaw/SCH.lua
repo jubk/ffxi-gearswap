@@ -90,6 +90,9 @@ local aug_gear = require("shared/aug_gear");
 --   feet    |      |         |         |    |   X   |
 --
 
+-- MG inventory system
+local mg_inv = require("mg-inventory");
+
 -- Update these tables when AF/relic/empy gear is upgraded
 local AF = {
     head="Acad. Mortar. +3",
@@ -678,6 +681,9 @@ end
 
 
 function job_self_command(command, eventArgs)
+    if mg_inv.job_self_command(command, eventArgs) then
+        return
+    end
     if auto_sc.self_command(command, eventArgs) then
         eventArgs.handled = true;
         return

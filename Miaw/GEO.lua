@@ -7,6 +7,8 @@ include("spelltools");
 local aug_gear = require("shared/aug_gear");
 local modesets = require("modesets");
 
+local mg_inv = require("mg-inventory");
+
 function get_sets()
     setup_spellcost_map(player);
 
@@ -270,6 +272,8 @@ function get_sets()
     Grimoire = nil;
 
     set_has_hachirin_no_obi(true);
+
+    mg_inv.export(sets)
 end
 
 
