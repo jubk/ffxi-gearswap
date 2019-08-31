@@ -5,7 +5,8 @@ For now it can only export the placement for the gear in your sets but later
 it will be able to help optimize placement of gear in wardrobes and
 automatically make gear available when changing jobs.
 
-To use it in a gearswap script add the following at the top of the file:
+To use it in a gearswap script place it in your gearswap common folder and
+add the following at the top of the gearswap file you want to use it in:
 
 -- Load MG inventory system
 local mg_inv = require("mg-inventory");
