@@ -611,9 +611,6 @@ function init_gear_sets()
             -- Cure potency +5%
             right_ear="Mendi. Earring",
 
-            -- MND +5
-            left_ring="Solemn Ring",
-
             -- Healing magic +10
             right_ring="Sirona's Ring",
         }
@@ -627,8 +624,8 @@ function init_gear_sets()
             -- enh. duration +10
             sub="Ammurapi Shield",
 
-            -- enhancing duration +9
-            head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +9',}},
+            -- enhancing duration +10
+            head={ name="Telchine Cap", augments={'Enh. Mag. eff. dur. +10',}},
             -- enhancing duration +12
             body=relic.body,
             -- enhancing duration +10

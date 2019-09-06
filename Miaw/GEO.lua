@@ -215,10 +215,6 @@ function get_sets()
 
             -- MND +8
             back = "Pahtli Cape",
-
-            -- MND +5
-            left_ring="Solemn Ring",
-
         }
     );
 
@@ -230,9 +226,6 @@ function get_sets()
 
              -- MND +8
             back="Pahtli Cape",
-
-            -- MND +5
-            left_ring="Solemn Ring",
         }
     );
 
@@ -258,10 +251,7 @@ function get_sets()
         right_ear="Digni. Earring",
         left_ring="Cacoethic Ring",
         right_ring="Cacoethic Ring +1",
-        back={
-            name="Mecisto. Mantle",
-            augments={'Cap. Point+50%','CHR+1','Rng.Acc.+1','DEF+12',}
-        },
+        back="Kayapa Cape",
     }
 
     nuke_mode = modesets.make_set('Nukemode', {'magicburst', 'nuking'});
@@ -273,11 +263,13 @@ function get_sets()
 
     set_has_hachirin_no_obi(true);
 
-    mg_inv.export(sets)
 end
 
 
 function self_command(command)
+    if mg_inv.self_command(command) then
+        return
+    end
     if modesets.self_command(command) then
         return
     end

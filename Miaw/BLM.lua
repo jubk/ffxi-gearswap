@@ -7,6 +7,9 @@ include("spelltools");
 local aug_gear = require("shared/aug_gear");
 local modesets = require("modesets");
 
+-- Load MG inventory system
+local mg_inv = require("mg-inventory");
+
 function get_sets()
     setup_spellcost_map(player);
 
@@ -170,8 +173,6 @@ function get_sets()
         neck = "Voltsurge Torque",
         -- Fast cast +2
         waist="Channeler's Stone",
-        -- Fast cast +7
-        hands="Gende. Gages +1",
         -- Fast cast +3
         back = "Swith Cape +1",
         -- Fast cast +4
@@ -265,9 +266,6 @@ function get_sets()
             -- MND +8
             back = "Pahtli Cape",
 
-            -- MND +5
-            left_ring="Solemn Ring",
-
             -- healing magic +10, mnd +3
             right_ring="Sirona's Ring",
         }
@@ -281,9 +279,6 @@ function get_sets()
 
             -- MND +8
             back="Pahtli Cape",
-
-            -- MND +5
-            left_ring="Solemn Ring",
         }
     );
 
@@ -346,6 +341,9 @@ end
 
 
 function self_command(command)
+    if mg_inv.self_command(command) then
+        return
+    end
     if modesets.self_command(command) then
         return
     end

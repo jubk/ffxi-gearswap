@@ -154,7 +154,7 @@ function init_gear_sets()
         right_ear="Volley Earring",
         left_ring="Mephitas's Ring +1",
         right_ring="Meghanada Ring",
-        back="Kayapa Cape",
+        back=capes.store_tp,
     };
 
     sets.precast.RA = set_combine(
@@ -276,8 +276,8 @@ function init_gear_sets()
             left_ring="Dingir Ring",
             -- macc 3, matk 3, AGI 5
             right_ring="Arvina Ringlet +1",
-            -- macc 5, matk 10
-            back="Izdubar Mantle",
+            -- wsdam 10%, macc/mdam
+            back=capes.magic_ranged_ws,
         }
     )
 

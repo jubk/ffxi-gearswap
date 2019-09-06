@@ -6,6 +6,11 @@ include("cyclable_sets");
 -- MG inventory system
 local mg_inv = require("mg-inventory");
 
+-- TODO:
+--  odnowa rings for HP sets
+--  Jumalik mail back in for cure fastcast and potency?
+
+
 function get_sets()
     sird_spells = T{
         'Flash',
@@ -201,8 +206,8 @@ function get_sets()
             right_ear="Friomisi Earring",
             -- macc +3, matk +3
             left_ring="Arvina Ringlet +1",
-            -- macc +5, matk +10
-            back="Izdubar Mantle",
+            -- matk +12
+            back="Argocham. Mantle",
         }
     );
     sets.ws['Burning Blade'] = set_combine(

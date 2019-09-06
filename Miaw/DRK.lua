@@ -1,6 +1,9 @@
 include("remove_silence");
 include("cancel_buffs");
 
+-- Load MG inventory system
+local mg_inv = require("mg-inventory");
+
 function get_sets()
     -- set_has_hachirin_no_obi(true);
     sets.base = {
@@ -8,7 +11,7 @@ function get_sets()
         head="Sulevia's Mask +2",
         body="Sulevia's Plate. +2",
         hands="Sulev. Gauntlets +2",
-        legs="Sulevi. Cuisses +2",
+        legs="Sulev. Cuisses +2",
         feet="Sulev. Leggings +2",
         neck="Sanctity Necklace",
         waist="Sailfi Belt",
@@ -63,7 +66,6 @@ function get_sets()
 
     sets.ws = {}
     sets.ws.base = set_combine(sets.base, {
-        right_ring="Ruby Ring",
         waist="Fotia Belt",
         neck="Fotia Gorget",
     })
@@ -123,5 +125,11 @@ function status_change(new,old)
         equip(sets.resting)
     elseif "Engaged" == new then
         equip(sets.engaged)
+    end
+end
+
+function self_command(command)
+    if mg_inv.self_command(command) then
+        return
     end
 end

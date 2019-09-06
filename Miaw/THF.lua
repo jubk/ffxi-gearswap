@@ -1,6 +1,9 @@
 include("remove_silence");
 include("cancel_buffs");
 
+-- Load MG inventory system
+local mg_inv = require("mg-inventory");
+
 local herc_matk = require("shared/herc_matk_gear");
 
 local capes = {
@@ -170,5 +173,11 @@ function status_change(new,old)
         equip(sets.resting)
     elseif "Engaged" == new then
         equip(sets.engaged[engaged_mode])
+    end
+end
+
+function self_command(command)
+    if mg_inv.self_command(command) then
+        return
     end
 end
