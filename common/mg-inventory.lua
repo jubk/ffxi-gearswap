@@ -1,18 +1,24 @@
 --[[
 
+Description
+===========
+
 This library adds some inventory management features for gearswap.
 For now it can only export the placement for the gear in your sets but later
 it will be able to help optimize placement of gear in wardrobes and
 automatically make gear available when changing jobs.
 
-To use it in a gearswap script place it in your gearswap common folder and
-add the following at the top of the gearswap file you want to use it in:
+Installation
+============
 
--- Load MG inventory system
+To use the library in a gearswap script place it in your gearswap common
+folder and add the following at the top of the gearswap file you want to
+use it in:
+
 local mg_inv = require("mg-inventory");
 
-And add a call to mg_inv.self_command (or mg_inv.job_self_command
-if using Mote-libs) to your self command.
+Also add a call to mg_inv.self_command (or mg_inv.job_self_command
+if using Mote-libs) to your self_command (or job_self_command) method:
 
 Example self_command:
 
@@ -32,40 +38,43 @@ function job_self_command(command, eventArgs)
     -- Rest of self command method goes here
 end
 
+Configuration
+=============
+
+When the library is loaded it creates a file in
+addons/GearSwap/data/<playername/mginv/settings.lua. You edit this file to
+specify fixed or floating positions for your gear. The file will contain an
+example to work from, or you can copy and paste data from the export commands.
+
+Commands
+========
+
 It supports the following commands:
 
   `//gs c mginv export`
     Exports the gear used in your current sets and where they are stored to the
-    <gearswap>/data/inventory-export directory.
+    <gearswap>/data/mginv/export directory.
 
-  `//gs c mginv export_reverse`
+  `//gs c mginv export_unused`
     Exports the gear _not_ used in your current sets and where they are stored
-    to the <gearswap>/data/inventory-export directory.
-    The export_reverse command can be good if you want to remove everything
+    to the <gearswap>/data/mginv/export directory.
+    The export_unused command can be good if you want to remove everything
     but gear for a certain job from one of your bag.
 
   `//gs c mginv summary`
-    Makes a summary file with all the items you have specified job preferences
-    for. The file will contain the name of the items as well as how many and
-    which jobs wants it placed where.
+    Makes a summary file with all the items in your inventory and whether they
+    are used or not.
+
+  `//gs c mginv gear_up`
+    Make gear for your current job available by putting it in mog wardrobes or
+    in the inventory
+
+  `//gs c mginv search <search string>`
+    Find items that your current job can equip and where the search string
+    matches name, augments or item description. Useful for finding specific
+    types of existing gear when building new sets.
 
 --]]
-
---[[
-TODO:
-<player.name>/mginv/settings.lua:
-sub set_gear_positions(fixed_positions, floating_positions)
-    fixed_positions[<itemname>]="Mog Wardrobe"
-    floating_positions[<itemname>]="Mog Wardrobe"
-    fixed_positions["Varar Ring]={"Mog Wardrobe", "Mog Wardrobe 4"},
-end
-
-<player.name>/mginv/data.lua:
-sub set_job_gear(job_gear)
-    job_gear[job][<itemname>]=true
-end
---]]
-
 
 return (function ()
     local MGInventory = {}
@@ -86,40 +95,48 @@ return (function ()
         {name="Mog Wardrobe 3", id=11},
         {name="Mog Wardrobe 4", id=12},
     }
+    local field_bags = {
+        ["Inventory"] = true,
+        ["Mog Wardrobe"] = true,
+        ["Mog Wardrobe 2"] = true,
+        ["Mog Wardrobe 3"] = true,
+        ["Mog Wardrobe 4"] = true,
+    }
+    local reverse_field_bags = {
+        "Mog Wardrobe 4",
+        "Mog Wardrobe 3",
+        "Mog Wardrobe 2",
+        "Mog Wardrobe",
+        "Inventory",
+    }
 
-    local config_dir = windower.addon_path..'data/' .. player.name
-    local config_file = config_dir .. "/" .. player.name .. "-mginv.lua"
-    local export_dir = windower.addon_path..'data/inventory-export'
     local default_config_file = [=[-- Config file for mg-invenotry.
 
-    --[[ Job gear configuration.
-    ============================
+    function setup(fixed_position, floating_position)
+        --[[
 
-    Add you job specific gear and where you want it here, for example
+        If you want certain gear to have a fixed position specify that
+        position here like this:
 
-        job_gear["SCH"]= {
-            ["voltsurge torque"]="Mog Wardrobe 2",
-            ["barkaro. earring"]="Mog Wardrobe",
-        }
+            fixed_position["Warp Ring"] = "Mog Wardrobe"
 
-    You can use the export command to export gear from your current jobs.
+        If you instead want the gear to be floating, eg. placed in a specific
+        location by default but allowed to move around, specify it as follows:
 
-    --]]
-    function mginv_job_gear(job_gear)
+            floating_position["Warp Ring"] = "Mog Wardrobe 3"
 
-        -- job_gear["SCH"]= { ["voltsurge torque"]="Mog Wardrobe 2", }
+        --]]
 
     end
 
     ]=]
     default_config_file = default_config_file:gsub("\n    ", "\n")
 
-    MGInventory.config = {}
+    MGInventory.config = {fixed_position={}, floating_position={}}
+    MGInventory.database = {job_usages={}}
 
     function MGInventory.init()
-        if not windower.dir_exists(config_dir) then
-            windower.create_dir(config_dir)
-        end
+        local config_file = config_file()
         if not windower.file_exists(config_file) then
             local f = io.open(config_file,'w+')
             f:write(default_config_file)
@@ -129,103 +146,264 @@ return (function ()
                   " created. Edit it to set up where you want your gear.")
         end
 
+        -- Create a gitignore file for the database
+        local gitignore_file = mginv_dir() .. "/.gitignore"
+        if not windower.file_exists(gitignore_file) then
+            local f = io.open(gitignore_file,'w+')
+            f:write("/database*.lua\n")
+            f:write("/export\n")
+            f:close()
+        end
+
         MGInventory.load_config()
-
-        local job_table = config.job_gear[player.main_job] or {}
-
-        print("MGinv initialized with " .. table.length(job_table) .. " " ..
-              "items registered for " .. player.main_job .. ".")
+        coroutine.schedule(update_database, 0.1)
 
         return MGInventory
     end
 
     function MGInventory.load_config()
         -- Create new empty config
-        config = {job_gear={}}
+        config = {fixed_position={}, floating_position={}}
 
         -- Set up the environement in which the config file will be executed
         local conf_env = { mginv = _G, }
         conf_env['_G'] = conf_env
 
         -- Load the config file
-        local funct, err = gearswap.loadfile(config_file)
+        local funct, err = gearswap.loadfile(config_file())
         -- Set it to run in the environment above
         gearswap.setfenv(funct, conf_env)
         -- Execute the config file
         funct()
         -- Config methods from the file can now be found in conf_env
-        conf_env.mginv_job_gear(config.job_gear)
+        conf_env.setup(config.fixed_position, config.floating_position)
     end
     
-    
-    function normalize_item(item)
-        local result = {}
+    function update_database()
+        if not sets then return end
+        local database_file = database_file()
+        local db
+        if windower.file_exists(database_file) then
+            db = dofile(database_file)
+        else
+            db = {job_usages={}}
+        end
 
-        if type(item) == "string" then
-            result.name = item
-        elseif type(item) == "table" then
-            if item.id and res.items[item.id] then
-                result.name = gearswap.get_short_name_by_item_id(item.id)
-            elseif item.name then
-                result.name = item.name
+        for itemname, usages in pairs(db.job_usages) do
+            -- Remove existing registration of current job
+            if usages and usages[player.main_job] then
+                usages[player.main_job] = nil
+                -- If this empties the list of using jobs, remove the item
+                -- entry as well.
+                if table.length(usages) == 0 then
+                    db.job_usages[itemname] = nil
+                end
             end
-            result.augments = gearswap.get_augment_string(item)
         end
-        if not result.name or result.name == "empty" then
+
+        process_items_in_gearsets(sets, function(gs_item)
+            local item = item_from_gearswap_data(gs_item)
+            if item then
+                if not db.job_usages[item.full_desc] then
+                    db.job_usages[item.full_desc] = {}
+                end
+                db.job_usages[item.full_desc][player.main_job] = true
+            end
+        end)
+
+        local f = io.open(database_file, "w+")
+        f:write("return " .. _dump_table(db))
+        f:write("\n")
+        f:close()
+
+        MGInventory.database = db
+
+        print(string.format(
+            "MG-inv database updated, %s items registered",
+            table.length(db.job_usages)
+        ))
+    end
+        
+    function player_dir()
+        local dir =  windower.addon_path .. "data/" .. player.name
+
+        if not windower.dir_exists(dir) then
+            windower.create_dir(dir)
+        end
+
+        return dir
+    end
+
+    function mginv_dir()
+        local dir =  player_dir() .. "/mginv"
+
+        if not windower.dir_exists(dir) then
+            windower.create_dir(dir)
+        end
+
+        return dir
+    end
+
+    function export_dir()
+        local dir =  mginv_dir() .. "/export"
+
+        if not windower.dir_exists(dir) then
+            windower.create_dir(dir)
+        end
+
+        return dir
+    end
+
+    function config_file()
+        return mginv_dir() .. "/settings.lua"
+    end
+
+    function database_file()
+        return mginv_dir() .. "/database.lua"
+    end
+
+    local res_item_name_cache = nil
+    function get_res_item_by_name(name)
+        if res_item_name_cache == nil then
+            res_item_name_cache = {}
+            for id, item in pairs(res.items) do
+                res_item_name_cache[item.en:lower()] = item
+                res_item_name_cache[item.enl:lower()] = item
+            end
+        end
+
+        return res_item_name_cache[name:lower()]
+    end
+
+    function item_from_gearswap_data(gs_item)
+        local name = ""
+        local augments = nil
+        local bag = nil
+
+
+        if type(gs_item) == "string" then
+            name = gs_item
+        elseif type(gs_item) == "table" and gs_item.name then
+            name = gs_item.name
+            augments = gearswap.get_augment_string(gs_item)
+            bag = gs_item.bag
+        end
+
+        return item_from_name(name, augments, bag)
+    end
+
+    function item_from_inventory_data(inv_item, bag)
+        local item = make_item(
+            inv_item.id, gearswap.get_augment_string(inv_item), bag
+        )
+        if item then
+            item.status = inv_item.status
+        end
+        return item
+    end
+
+    function item_from_name(name, augments, bag)
+        local res_item = get_res_item_by_name(name)
+        if not res_item then return nil end
+        return make_item(res_item.id, augments, bag)
+    end
+
+    function make_item(item_id, augment_string, bag)
+        local res_item = res.items[item_id]
+        if not res_item then
             return nil
+        end
+
+        local full_desc = res_item.en
+        if augment_string then
+            full_desc = full_desc .. "{" ..  augment_string .. "}"
+        end
+
+        return T{
+            id=item_id,
+            res_item=res_item,
+            name=res_item.en,
+            augments=augment_string,
+            bag=bag,
+            full_desc=full_desc
+        }
+    end
+
+    function kv_map(t, callback)
+        local out = T{}
+        for k, v in pairs(t) do
+            out:append(callback(k, v))
+        end
+        return out
+    end
+
+    function _dump_table(t, indent)
+        local i1 = indent or ""
+        local i2 = i1 .. "  "
+        local inner = kv_map(t, function(k, v)
+            k = i2 .. '["' .. quotemeta(k) .. '"]'
+            if type(v) == "table" then
+                return k .. " = " .. _dump_table(v, i2)
+            end
+            return k .. " = " .. '"' .. quotemeta(tostring(v)) .. '"'
+        end):concat(",\n")
+
+        if inner then
+            return "{\n" .. inner .. "\n" .. i1 .. "}"
         else
-            return result
+            return "{}"
         end
     end
 
-    function normalized_item_to_string(item)
-        if not item or not item.name then return "" end
-        if item.augments then
-            return (item.name .. "{" .. item.augments .. "}"):lower()
-        else
-            return item.name:lower()
-        end
+    function dump_table(t, indent)
+        local f = io.open(export_dir() .. "/dump.lua", "w+")
+        f:write(_dump_table(t))
+        f:close()
+        print("Dumped to " .. export_dir() .. "/dump.lua")
     end
 
-    function normalized_item_string(item)
-        return normalized_item_to_string(normalize_item(item))
-    end
+    function get_current_inventory()
+        --[[
+            returns data like:
+            {
+                items={
+                    item1={item=<item>, bags="Inventory"=<item>},
+                    item2{item_augments}={
+                        item=<item>,
+                        bags={
+                            "Mog Wardrobe"=true,
+                            "Mog Wardrobe 3"=true,
+                        }
+                    }
+                },
 
-    function get_current_inventory(add_simple_names)
-        local collection = {}
-        local simple_names = {}
+            }
+        ]]
+        local inv = T{
+            items=T{},
+            by_short_name=T{},
+        }
 
         for _, bag in ipairs(bags) do
-            for _, item in ipairs(windower.ffxi.get_items(bag.id)) do
-                local norm_item = normalize_item(item)
-                if norm_item ~= nil then
-                    collection[normalized_item_to_string(norm_item)] = bag.name
-                    if add_simple_names then
-                        local simple_name = norm_item.name:lower()
-                        if not simple_names[simple_name] and not collection[simple_name] then
-                            simple_names[simple_name] = bag.name
-                        end
+            for _, inv_item in ipairs(windower.ffxi.get_items(bag.id)) do
+                local item = item_from_inventory_data(inv_item)
+                if item ~= nil then
+                    if not inv.items[item.full_desc] then
+                        inv.items[item.full_desc] = {
+                            item=item,
+                            bags={}
+                        }
+                    end
+                    inv.items[item.full_desc].bags[bag.name] = true
+                    if not inv.by_short_name[item.name] then
+                        local existing = inv.items[item.full_desc]
+                        inv.by_short_name[item.name] = existing
                     end
                 end
             end
         end
 
-        for k, v in pairs(simple_names) do
-            if not collection[k] then
-                collection[k] = v
-            end
-        end
-
-        return collection
-    end
-
-    function get_short_name(name)
-        local idx = name:find("{")
-        if idx ~= nil then
-            return name:sub(1, idx - 1)
-        else
-            return name
-        end
+        return inv
     end
 
     function quotemeta(str)
@@ -249,46 +427,40 @@ return (function ()
         end
     end
 
-    function setup_export_dir()
-        if not windower.dir_exists(export_dir) then
-            windower.create_dir(export_dir)
-        end
-    end
-
     function MGInventory.export(sets)
-        local path = windower.addon_path ..
-                     'data/inventory-export/' ..
-                     player.name ..
+        local path = export_dir() ..
+                     "/" .. player.name ..
                      "_" .. player.main_job ..
                      "_" .. os.clock() ..
                      ".lua"
-        local inv = get_current_inventory(true)
+        local inv = get_current_inventory()
         local gear_data = {seen={}}
 
-        setup_export_dir()
-
-        process_items_in_gearsets(sets, function(item)
-            if type(item) == "string" then
-                item = {name=item}
-            end
-            if not item.name or item.name == "empty" then
+        process_items_in_gearsets(sets, function(inv_item)
+            local item = item_from_gearswap_data(inv_item)
+            if not item then
                 return
             end
-
-            local prefix = "    "
-            local item_str = normalized_item_string(item)
-            if gear_data.seen[item_str] then
-                return
+            -- Check if Item has already been processed
+            if not gear_data.seen[item.full_desc] then
+                gear_data.seen[item.full_desc] = true
             else
-                gear_data.seen[item_str] = true
+                return
             end
-            local bag = inv[item_str] or "Not found"
+
+            -- Find the bags the item is stored in or set it to be in the
+            -- "Not found" bag.
+            local bags = (
+                inv.items[item.full_desc] or
+                inv.by_short_name[item.name] or
+                { bags={["Not found"]=true} }
+            ).bags
             
-            if not gear_data[bag] then
-                gear_data[bag] = T{}
+            -- Add the item to the right bags in the output
+            for bag, _ in pairs(bags) do
+                gear_data[bag] = gear_data[bag] or T{}
+                gear_data[bag]:append(item.full_desc)
             end
-            
-            gear_data[bag]:append(item_str)
         end)
 
         local total = 0
@@ -333,44 +505,44 @@ return (function ()
               path:sub(windower.addon_path:length() + 1))
     end
 
-    function MGInventory.export_reverse(sets)
-        local path = windower.addon_path ..
-                     'data/inventory-export/' ..
-                     player.name ..
+    function MGInventory.export_unused(sets)
+        local path = export_dir() ..
+                     "/" .. player.name ..
                      "_" .. player.main_job ..
-                     "_reverse_" .. os.clock() ..
+                     "_unused_" .. os.clock() ..
                      ".lua"
 
-        local sets_gear = {}
-
-        setup_export_dir()
-
-        process_items_in_gearsets(sets, function(item)
-            if type(item) == "string" then
-                item = {name=item}
-            end
-            if not item.name or item.name == "empty" then
+        local inv = get_current_inventory()
+        process_items_in_gearsets(sets, function(inv_item)
+            local item = item_from_gearswap_data(inv_item)
+            if not item then
                 return
             end
-            sets_gear[normalized_item_string(item)] = true
+            if item.augments then
+                inv.items[item.full_desc] = nil
+            else
+                local inv_entry = inv.by_short_name[item.name]
+                if inv_entry then
+                    inv.items[inv_entry.item.full_desc] = nil
+                end
+            end
         end)
 
         local gear_data = {}
-        for itemname, bagname in pairs(get_current_inventory(false)) do
-            local shortname = get_short_name(itemname)
-            if not sets_gear[itemname] and not sets_gear[shortname] then
-                if not gear_data[bagname] then
-                    gear_data[bagname] = T{}
+
+        for itemname, inv_entry in pairs(inv.items) do
+            if inv_entry and inv_entry.bags then
+                for bag, _ in pairs(inv_entry.bags) do
+                    gear_data[bag] = gear_data[bag] or T{}
+                    gear_data[bag]:append(itemname)
                 end
-                gear_data[bagname]:append(itemname)
             end
         end
-        
         
         local total = 0
 
         local f = io.open(path,'w+')
-        f:write('job_gear_reverse["' .. player.main_job .. '"]={\n')
+        f:write('job_gear_unused["' .. player.main_job .. '"]={\n')
         for _, bag in ipairs(bags) do
             local items = gear_data[bag.name]
             if items then
@@ -393,64 +565,70 @@ return (function ()
         f:write('}')
         f:close()
 
+        print("Gear currently not used dumped to file " ..
+              path:sub(windower.addon_path:length() + 1))
     end
 
     function MGInventory.export_summary(sets)
-        local path = windower.addon_path ..
-                     'data/inventory-export/' ..
-                     player.name ..
+        local path = export_dir() ..
+                     "/" .. player.name ..
                      "_summary_" .. os.clock() ..
                      ".lua"
-        local inv = get_current_inventory(true)
         local result = {}
-        local seen_gear = {}
+        local db = MGInventory.database
 
-        local function add_item(itemname, used_or_unused, job, wanted_location)
-            local current_bag = inv[itemname] or "Not found"
-            if not result[current_bag] then
-                result[current_bag] = { used=T{}, unused=T{} }
-            end
-
-            if not result[current_bag][used_or_unused][itemname] then
-                result[current_bag][used_or_unused][itemname] = T{
-                    count=0,
-                    jobs=T{}
-                }
-            end
-            
-            local itemdata = result[current_bag][used_or_unused][itemname]
-
-            if job then
-                itemdata.count = itemdata.count + 1
-                itemdata.jobs:append(job .. " => " .. wanted_location)
-            end
+        local function format_key(item)
+            return '["' .. quotemeta(item.full_desc) .. '"]'
         end
 
-        local function format_line(itemname, data)
-            local result = '["' .. quotemeta(itemname) .. '"]=' ..
-                   "{" ..
-                   "count=" .. data.count
-            if table.length(data.jobs) > 0 then
-                result = result  .. ", " ..
-                         'jobs={"' .. data.jobs:concat('", "') .. '"}'
+        function format_used_by(item)
+            local all_usages = {}
+            for k in pairs(db.job_usages[item.full_desc] or {}) do
+                all_usages[k] = true
             end
-            result = result .. "}"
-            return result
+            for k in pairs(db.job_usages[item.name] or {}) do
+                all_usages[k] = true
+            end
+            local sorted_jobs = T{}
+            for k in pairs(all_usages) do
+                table.insert(sorted_jobs, k)
+            end
+            table.sort(sorted_jobs)
+            return string.format(
+                "Used by %s jobs: %s",
+                sorted_jobs:length(),
+                sorted_jobs:concat(", ")
+            )
         end
 
-        setup_export_dir()
-
-        for job, items in pairs(config.job_gear) do
-            for itemname, wanted_location in pairs(items) do
-                add_item(itemname, "used", job, wanted_location)
-                seen_gear[itemname] = true
+        function format_position(item, default)
+            local pos = nil
+            if config.fixed_position[item.full_desc] or
+               config.fixed_position[item.name] then
+                pos = "fixed"
+            elseif config.floating_position[item.full_desc] or
+               config.floating_position[item.name] then
+                pos = "floating"
+            else
+                pos = default
             end
+
+            return pos .. "_position"
         end
-        for itemname, bagname in pairs(get_current_inventory(false)) do
-            if bagname:find("Wardrobe") or bagname == "Inventory" then
-                local shortname = get_short_name(itemname)
-                if not seen_gear[itemname] and not seen_gear[shortname]then
-                    add_item(itemname, "unused")
+        
+        for itemname, inv_entry in pairs(get_current_inventory().items) do
+            local item = inv_entry.item
+            for bagname in pairs(inv_entry.bags) do
+                if bagname:find("Wardrobe") or bagname == "Inventory" then
+                    if not result[bagname] then
+                        result[bagname] = {used=T{}, unused=T{}}
+                    end
+                    if db.job_usages[item.full_desc] or
+                       db.job_usages[item.name] then
+                        result[bagname]["used"]:append(item)
+                    else
+                        result[bagname]["unused"]:append(item)
+                    end
                 end
             end
         end
@@ -458,22 +636,39 @@ return (function ()
         local total = 0
 
         local f = io.open(path,'w+')
-        f:write(player.name ..'_summary={\n')
+        f:write('function summary(fixed_position, floating_position)\n')
         for _, bag in ipairs(bags) do
             local items = result[bag.name]
             if items then
                 local count = 0
                 if table.length(items.used) > 0 then
+                    table.sort(items.used, function(a, b)
+                        return a.full_desc < b.full_desc
+                    end)
                     f:write("    -- " .. bag.name .. " (used):\n")
-                    for itemname, data in pairs(items.used) do
-                        f:write('    ' .. format_line(itemname, data) .. ",\n")
+                    for _, item in ipairs(items.used) do
+                        f:write(string.format(
+                            '    %s%s = "%s" -- %s\n',
+                            format_position(item, "fixed"),
+                            format_key(item),
+                            bag.name,
+                            format_used_by(item)
+                        ))
                         count = count + 1
                     end
                 end
                 if table.length(items.unused) > 0 then
+                    table.sort(items.unused, function(a, b)
+                        return a.full_desc < b.full_desc
+                    end)
                     f:write("    -- " .. bag.name .. " (unused):\n")
-                    for itemname, data in pairs(items.unused) do
-                        f:write('    ' .. format_line(itemname, data) .. ",\n")
+                    for _, item in ipairs(items.unused) do
+                        f:write(string.format(
+                            '    %s%s = "%s" -- Not used\n',
+                            format_position(item, "floating"),
+                            format_key(item),
+                            bag.name
+                        ))
                         count = count + 1
                     end
                 end
@@ -482,70 +677,16 @@ return (function ()
                 total = total + count
             end
         end
-        if result["Not found"] then
-            f:write("    -- Items not found:\n")
-            local count = 0
-            local items = result["Not found"]
-            for itemname, data in pairs(items) do
-                f:write('    ' .. format_line(itemname, data) .. ",\n")
-                count = count + 1
-            end
-            count = count + 1
-            f:write("    -- Count: " .. count .. "\n")
-            total = total + count
-        end
 
         f:write("\n")
         f:write("    -- Total: " .. total .. "\n")
         f:write("\n")
 
-        f:write('}')
+        f:write('end\n')
         f:close()
 
         print("Gear summary dumped to file " ..
               path:sub(windower.addon_path:length() + 1))
-    end
-
-    local job_bit_values = {}
-    local bit_value = 2
-    for _, job in ipairs({
-        "WAR", "MNK", "WHM", "BLM", "RDM", "THF", "PLD", "DRK", "BST", "BRD",
-        "RNG", "SAM", "NIN", "DRG", "SMN", "BLU", "COR", "PUP", "DNC","SCH",
-        "GEO", "RUN",
-    }) do
-        job_bit_values[bit_value] = job
-        bit_value = bit_value * 2
-    end
-
-    function jobmask_to_jobs(jobmask)
-        local result = {}
-        -- Start with the bit value for RUN (1 << 22)
-        local bit_value = 4194304
-        while bit_value >= 2 do
-            if jobmask >= bit_value then
-                result[job_bit_values[bit_value]] = true
-                jobmask = jobmask - bit_value
-            end
-            bit_value = bit_value / 2
-        end
-
-        return result
-    end
-
-    function match_jobmask(jobmask, job)
-        -- Start with the bit value for RUN (1 << 22)
-        local bit_value = 4194304
-        while bit_value >= 2 do
-            if jobmask >= bit_value then
-                if job_bit_values[bit_value] == job then
-                    return true
-                end
-                jobmask = jobmask - bit_value
-            end
-            bit_value = bit_value / 2
-        end
-
-        return false
     end
 
     function MGInventory.search(args)
@@ -641,11 +782,613 @@ return (function ()
     end
 
 
+    function say(message)
+        return add_to_chat(207, message)
+    end
+
+    function get_item_move_type(item, locked_map)
+        -- Locked items should not be moved
+        if locked_map[item.full_desc] then return nil end
+
+        -- Item with statuses cannot be moved
+        if item.status and item.status > 0 then return nil end
+
+        -- Furniture cannot be move since we are not sure if it is locked
+        if item.res_item.type and item.res_item.type == 10 then return nil end
+
+        -- Floating position items are floating
+        if config.floating_position[item.full_desc] or
+            config.floating_position[item.name] then
+            return "floating"
+        end
+        -- The rest of items can be moved if they are not fixed
+        if not config.fixed_position[item.name] and
+            not config.fixed_position[item.full_desc] then
+            return "moving"
+        end
+
+        return nil
+    end
+
+    function build_bag_data(bag_id, bag_name, locked_map)
+        local bag_info = windower.ffxi.get_items(bag_id)
+        if not bag_info.enabled then return nil end
+
+        -- bag_info.count is broken, so we count ourselves
+        local count = 0
+        for i, v in ipairs(bag_info) do
+            if v and v.id and v.id > 0 then
+                count = count + 1
+            end
+        end
+        local bag_data = {
+            id=bag_id,
+            name=bag_name,
+            free_slots=bag_info.max - count,
+            moving_items = T{},
+            floating_items = T{},
+            pending_adds=0,
+            pending_removes=0,
+            freeable_slots=0,
+        }
+        for _, bag_item in ipairs(bag_info) do
+            if bag_item then
+                local item = item_from_inventory_data(bag_item)
+                if item then
+                    local move_type = get_item_move_type(item, locked_map)
+                    if move_type then
+                        if item.res_item.slots then
+                            item.is_gear = true
+                        end
+                        item.res_item = nil
+                        bag_data[move_type .. "_items"]:append(item)
+                    end
+                end
+            end
+        end
+
+        -- Never move unknown stuff from inventory. It might have gotten
+        -- there without the players knowledge and they might lose track of
+        -- it if we move it around.
+        if bag_data.name == "Inventory" then
+            bag_data.moving_items = T{}
+        end
+
+        bag_data.freeable_slots = bag_data.moving_items:length() +
+                                  bag_data.floating_items:length()
+
+        return bag_data
+    end
+
+    function build_move(item, from_bag, to_bag)
+        if not item then
+            say(string.format(
+                'Item "%s" not defined when building move from %s to %s',
+                tostring(item),
+                from_bag,
+                to_bag
+            ))
+            return nil
+        end
+        local move = {item=item, from=from_bag, to=to_bag}
+        if from_bag == "Inventory" or to_bag == "Inventory" then
+            move.operations = 1
+        else
+            move.operations = 2
+        end
+        return move
+    end
+
+    function find_destination_bag(bag_status, item)
+        -- Loop over default bag order so we put stuff in storage before using
+        -- field bags.
+        for i, bag in ipairs(bags) do
+            local bag_data = bag_status[bag.name]
+            if (
+                -- Only look in bags that are enabled
+                bag_data and
+                -- We are not moving stuff to the inventory by default
+                bag.name ~= "Inventory" and
+                -- Non-field bags can contain anything, but we have to check
+                -- if the item is a gear item before trying to move it to
+                -- a field bag.
+                (
+                    not field_bags[bag.name] or
+                    item.is_gear
+                ) and
+                -- Check if there is room
+                bag_data.free_slots > 0
+            ) then
+                return bag.name
+            end
+        end
+        return nil
+    end
+
+    function find_field_bag(bag_status, item)
+        -- Loop over default bag order so we put stuff in storage before using
+        -- field bags.
+        for _, bagname in ipairs(reverse_field_bags) do
+            local bag_data = bag_status[bagname]
+            if (
+                -- Only look in bags that are enabled
+                bag_data and
+                item.is_gear and
+                -- Check if there is room
+                (
+                    bag_data.free_slots > 0 or
+                    bag_data.freeable_slots > 0
+                )
+            ) then
+                return bagname
+            end
+        end
+        return nil
+    end
+
+    function resolve_moves(unresolved_moves, locked_map)
+        -- List of current bags, their free slots and lists of floating
+        -- and moving items
+        local bag_status = T{}
+
+        -- The unresolved moves we want to perform
+        unresolved_moves = unresolved_moves or T{}
+        -- Gear that is already in place and should not be moved
+        locked_map = locked_map or T{}
+
+        -- Bags that can be used to store away items
+        local store_bags = T{}
+        -- Bags that can be used to access items in the field
+        local equip_bags = T{}
+
+        -- Temporary moves that are performed to start the process, which
+        -- needs to be backtraced in the end
+        local temp_moves = T{}
+
+        -- The plan for what we are going to do
+        local plan = T{}
+
+        -- Build the starting status for bags
+        for _, bag in ipairs(bags) do
+            local bag_data = build_bag_data(bag.id, bag.name, locked_map)
+            if bag_data then
+                bag_status[bag.name] = bag_data
+                if field_bags[bag.name] then
+                    equip_bags:append(bag_data)
+                else
+                    store_bags:append(bag_data)
+                end
+            end
+        end
+
+        if not bag_status["Inventory"] or
+            not (bag_status["Inventory"].free_slots > 0) then
+            say("Cannot move any items, no space left in inventory")
+            return
+        end
+
+        -- Look at the pending moves and figure out how much we will add or
+        -- free in each bag. Also checks if the bags we need are actually
+        -- available.
+        for _, move in ipairs(unresolved_moves) do
+            local from_bag = bag_status[move.from]
+            local to_bag = bag_status[move.to]
+            if not from_bag then
+                say("Cannot move item " .. move.item.full_desc ..
+                    " from bag " .. move.from ..
+                    " because that bag is not available.")
+                return
+            end
+            if not to_bag then
+                say("Cannot move item " .. move.item.full_desc ..
+                    " to bag " .. move.to ..
+                    " because that bag is not available.")
+                return
+            end
+            from_bag.pending_removes = from_bag.pending_removes + 1
+            to_bag.pending_adds = to_bag.pending_adds + 1
+        end
+
+        -- Calculate free space and freable slots in all bags. Bail out if
+        -- we find out we cannot make enough room in a certain bag.
+        for bagname, bag_data in pairs(bag_status) do
+            bag_data.free_slots = (
+                bag_data.free_slots - bag_data.pending_adds +
+                bag_data.pending_removes
+            )
+            bag_data.freeable_slots = (
+                bag_data.moving_items:length() +
+                bag_data.floating_items:length()
+            )
+            if (bag_data.free_slots + bag_data.freeable_slots) < 0 then
+                say("Cannot perform the wanted moves, not able to make room" ..
+                    " in bag " .. bagname .. ".")
+                return
+            end
+        end
+        
+        -- Plan moves needed to free up spaces in bags
+        for bagname, bag_data in pairs(bag_status) do
+            local missing_slots = 0 - bag_data.free_slots
+            while missing_slots > 0 do
+                local item = table.remove(bag_data.floating_items) or
+                             table.remove(bag_data.moving_items)
+                -- This should not happen due to the check above, but making
+                -- sure anyways.
+                if not item then
+                    say("Ran out of movable items while making room in " ..
+                        bagname)
+                    return
+                end
+                local dest_bag = find_destination_bag(bag_status, item)
+                if not dest_bag then
+                    say("Failed to move items: No possible destinations " ..
+                        "when trying to free up space in " .. bagname .. ".")
+                    return
+                end
+
+                local move = build_move(item, bagname, dest_bag)
+                table.insert(unresolved_moves, move)
+                missing_slots = missing_slots - 1
+            end
+        end
+        
+        -- Sum up the number of operations we need to
+        local sum_operations = 0
+        for _, move in ipairs(unresolved_moves) do
+            sum_operations = sum_operations + move.operations
+        end
+        local time_in_seconds = math.ceil(sum_operations * 0.85)
+        local minutes = math.floor(time_in_seconds / 60)
+        local seconds = time_in_seconds - (60 * minutes)
+        say(string.format(
+            "Resolved moves: %s items to move using %s move operations.",
+            table.length(unresolved_moves),
+            sum_operations
+        ))
+        say(string.format(
+            "Estimated ETA: %s minute(s) and %s second(s).",
+            minutes,
+            seconds
+        ))
+
+        unresolved_moves = table.reverse(unresolved_moves)
+
+
+        return moves_to_operations(
+            unresolved_moves, bag_status["Inventory"].free_slots
+        )
+    end
+
+    function moves_to_operations(unresolved_moves, free_inventory_slots)
+        local operations = T{}
+        local moves_last_round = 1
+        free_inventory_slots = free_inventory_slots or 0
+
+        if free_inventory_slots == 0 then
+            say("Cannot conver moves to operations: No free inventory slots.")
+            return
+        end
+
+        while(moves_last_round > 0 and unresolved_moves:length() > 0) do
+            moves_last_round = 0
+            -- Look for stuff we can move from inventory
+            for i, move in ipairs(unresolved_moves) do
+                if (move.operations > 0 and move.from == "Inventory") then
+                    operations:append({
+                        item=move.item,
+                        from=move.from,
+                        to=move.to
+                    })
+                    move.operations = move.operations - 1
+                    free_inventory_slots = free_inventory_slots + 1
+                    moves_last_round = moves_last_round + 1
+                end
+            end
+            -- Look for first part of multistep moves where we have to move
+            -- stuff to inventory
+            for i, move in ipairs(unresolved_moves) do
+                if move.operations == 2 and free_inventory_slots > 0 then
+                    operations:append({
+                        item=move.item,
+                        from=move.from,
+                        to="Inventory"
+                    })
+                    move.operations = move.operations - 1
+                    move.from = "Inventory"
+                    moves_last_round = moves_last_round + 1
+                    free_inventory_slots = free_inventory_slots - 1
+                end
+            end
+            -- Filter out moves that have finised all operations
+            local next_unresolved = T{}
+            for i, move in ipairs(unresolved_moves) do
+                if move.operations > 0 then
+                    next_unresolved:append(move)
+                end
+            end
+            unresolved_moves = next_unresolved
+        end
+
+        -- Clean up any remaining moves. This should only be moves into the
+        -- inventory
+        if unresolved_moves:length() > 0 then
+            for i, move in ipairs(unresolved_moves) do
+                if move.operations > 1 then
+                    say("Move with too many operations in last resolve " ..
+                        "stage")
+                    return
+                end
+                operations:append({
+                    item=move.item,
+                    from=move.from,
+                    to=move.to,
+                })
+                if move.to == "Inventory" then
+                    free_inventory_slots = free_inventory_slots - 1
+                    if free_inventory_slots < 0 then
+                        say("Ran out of inventory while building " ..
+                            "operations")
+                        return
+                    end
+                end
+            end
+        end
+                
+        --for _, move in ipairs(operations) do
+        --    say("Pending operation: " .. move.item.full_desc .. " from " ..
+        --        move.from .. " to " .. move.to)
+        --end
+    
+        return operations
+    end
+
+    function perform_operations(operations)
+        local last_operation = nil
+        -- It is faster to pop instead of shifting the operations
+        local operations = table.reverse(operations)
+        
+        local bag_to_id = T{}
+        for _, bag in ipairs(bags) do
+            bag_to_id[bag.name] = bag.id
+        end
+
+        function find_item_in_bag(bagname, item)
+            local bag_data = windower.ffxi.get_items(bag_to_id[bagname])
+            
+            for _, v in ipairs(bag_data) do
+                if v and v.id == item.id then
+                    local inv_item = item_from_inventory_data(v)
+                    if inv_item and inv_item.full_desc == item.full_desc then
+                        return v
+                    end
+                end
+            end
+        end
+
+        function verify_last()
+            if last_operation == nil then return true end
+
+            local inv_data = find_item_in_bag(
+                last_operation.to, last_operation.item
+            )
+
+            if inv_data then
+                last_operation = nil
+                return true
+            else
+                say(string.format(
+                    "Item %s was not found in %s.",
+                    last_operation.item.full_desc, last_operation.to
+                ))
+                --last_operation = nil
+                return false
+            end
+        end
+
+        function execute_operation(op)
+            if last_operation then
+                say("Trying to execute an operations while another is active")
+                return false
+            end
+
+            local from_id = bag_to_id[op.from]
+            local to_id = bag_to_id[op.to]
+            
+            -- Find source info
+            local inv_data = find_item_in_bag(op.from, op.item)
+            if not inv_data then
+                say(string.format(
+                    "Could not find item %s to move from %s.",
+                    op.item.full_desc, op.from
+                ))
+                return false
+            end
+
+            if inv_data.status and inv_data.status > 0 then
+                say(string.format(
+                    "Trying to move item with status: %s in %s",
+                    op.item.full_desc, op.from
+                ))
+                return false
+            end
+
+            if op.to == "Inventory" then
+                --say(string.format("%s Inv move: %s from %s to %s", os.clock(), op.item.full_desc, from_id, op.to))
+                windower.ffxi.get_item(
+                    from_id, inv_data.slot, inv_data.count
+                )
+            else
+                --say(string.format("%s Bag move: %s from %s to %s", os.clock(), op.item.full_desc, op.from, op.to))
+                windower.ffxi.put_item(
+                    to_id, inv_data.slot, inv_data.count
+                )
+            end
+            last_operation = op
+
+            return true
+        end
+
+        function process()
+            if not verify_last() then return end
+            local next_op = table.remove(operations)
+            if next_op then
+                say(string.format(
+                    'Moving %s from %s to %s',
+                    next_op.item.full_desc,
+                    next_op.from,
+                    next_op.to
+                ))
+                if execute_operation(next_op) then
+                    coroutine.schedule(process, 0.8)
+                end
+            else
+                say("Done: No more operations to process")
+            end
+        end
+
+        process()
+    end
+    
+    function make_sources_available(needed_sources, locked_map)
+        local bag_status = T{}
+        for _, bag in ipairs(bags) do
+            if field_bags[bag.name] then
+                local bag_data = build_bag_data(bag.id, bag.name, locked_map)
+                bag_status[bag.name] = bag_data
+            end
+        end
+
+        local needed_moves = T{}
+
+        for _, src in ipairs(needed_sources) do
+            local dest_bag_name = find_field_bag(
+                bag_status, src.item, locked_map
+            )
+            if dest_bag_name then
+                local dest_bag = bag_status[dest_bag_name]
+                needed_moves:append(
+                    build_move(src.item, src.from, dest_bag_name)
+                )
+                if dest_bag.free_slots > 0 then
+                    dest_bag.free_slots = dest_bag.free_slots - 1
+                elseif dest_bag.freeable_slots > 0 then
+                    dest_bag.freeable_slots = dest_bag.freeable_slots - 1
+                end
+            else
+                say(string.format(
+                    "Cannot find a field bag to put %s in.",
+                    src.item.full_desc
+                ))
+                return
+            end
+        end
+
+        local operations = resolve_moves(needed_moves, locked_map)
+        if operations then
+            perform_operations(operations)
+        end
+    end
+
+    function gear_up()
+        local inv = get_current_inventory()
+        local needed_sources = T{}
+        local locked_map = T{}
+        local seen_items = T{}
+
+        process_items_in_gearsets(sets, function(gs_item)
+            local item = item_from_gearswap_data(gs_item)
+            if not item then return end
+            if seen_items[item.full_desc] then
+                return
+            else
+                seen_items[item.full_desc] = true
+            end
+            local inv_data = inv.items[item.full_desc] or
+                             inv.by_short_name[item.full_desc]
+            if not inv_data then return end
+
+            if item.res_item.slots then
+                item.is_gear = true
+            end
+
+            local available_in_field = false
+            local source_bag
+            for v in pairs(inv_data.bags) do
+                if item.bag then
+                    if item.bag == v then
+                        available_in_field = true
+                    else
+                        source_bag = v
+                    end
+                else
+                    if field_bags[v] then
+                        available_in_field = true
+                    else
+                        source_bag = v
+                    end
+                end
+            end
+            if not available_in_field then
+                needed_sources:append(T{item=item, from=source_bag})
+            else
+                locked_map[item.full_desc] = true
+            end
+        end)
+
+        make_sources_available(needed_sources, locked_map)
+    end
+
+
+    function test()
+        local ops = resolve_moves(
+            T{
+                build_move(item_from_name("Brewer's Shield"),
+                           "Mog Wardrobe 4", "Mog Safe"),
+                build_move(item_from_name("Alchemist's Belt"),
+                           "Mog Wardrobe 4", "Mog Safe"),
+                build_move(item_from_name("Alchemist's Smock"),
+                           "Mog Wardrobe 4", "Mog Safe"),
+                build_move(item_from_name("Alchemst. Torque"),
+                           "Mog Wardrobe 4", "Mog Safe"),
+                build_move(item_from_name("Craftkeeper's Ring"),
+                           "Mog Wardrobe 4", "Mog Safe"),
+                build_move(item_from_name("Craftmaster's Ring"),
+                           "Mog Wardrobe 4", "Mog Safe"),
+                build_move(item_from_name("Caduceus"),
+                           "Mog Wardrobe 4", "Mog Safe"),
+
+                --build_move(item_from_name("Brewer's Shield"),
+                --           "Mog Safe", "Mog Wardrobe 4"),
+                --build_move(item_from_name("Alchemist's Belt"),
+                --           "Mog Safe", "Mog Wardrobe 4"),
+                --build_move(item_from_name("Alchemist's Smock"),
+                --           "Mog Safe", "Mog Wardrobe 4"),
+                --build_move(item_from_name("Alchemst. Torque"),
+                --           "Mog Safe", "Mog Wardrobe 4"),
+                --build_move(item_from_name("Craftkeeper's Ring"),
+                --           "Mog Safe", "Mog Wardrobe 4"),
+                --build_move(item_from_name("Craftmaster's Ring"),
+                --           "Mog Safe", "Mog Wardrobe 4"),
+                --build_move(item_from_name("Caduceus"),
+                --           "Mog Safe", "Mog Wardrobe 4"),
+
+                --build_move(item_from_name("B. Bamboo Grass"),
+                --           "Mog Safe 2", "Mog Safe"),
+            },
+            T{["Windurstian Flag"]=true}
+        )
+        if ops then perform_operations(ops) end
+        --print(_dump_table(windower.ffxi.get_items().safe[73]))
+    end
+
     local command_handlers = {
         export=function(args) MGInventory.export(sets) end,
-        export_reverse=function(args) MGInventory.export_reverse(sets) end,
+        export_unused=function(args) MGInventory.export_unused(sets) end,
         summary=function(args) MGInventory.export_summary(sets) end,
-        searchinv=function(args) MGInventory.search(args) end
+        searchinv=function(args) MGInventory.search(args) end,
+        gear_up=function(args) gear_up() end,
+        test=function(args) test() end,
     }
 
     function MGInventory.job_self_command(commands, eventArgs)
