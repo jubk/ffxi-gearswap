@@ -4,9 +4,13 @@ Description
 ===========
 
 This library adds some inventory management features for gearswap.
-For now it can only export the placement for the gear in your sets but later
-it will be able to help optimize placement of gear in wardrobes and
-automatically make gear available when changing jobs.
+Features:
+ - Configure where your gear is supposed to be stored.
+ - Items can be both fixed (should never move) and floating (might be moved
+   temporarily out of the way).
+ - Gear up command makes sure the gear from you gearswap sets are always in
+   either wardrobes or main inventory.
+ - TODO: Clean up command moves stuff bag to where it is supposed to be.
 
 Installation
 ============
