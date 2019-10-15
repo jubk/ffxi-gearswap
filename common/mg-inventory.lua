@@ -59,17 +59,18 @@ It supports the following commands:
 
   `//mginv export`
     Exports the gear used in your current sets and where they are stored to the
-    <gearswap>/data/mginv/export directory.
+    <gearswap>/data/<charactername>/mginv/export directory.
 
   `//mginv export_unused`
     Exports the gear _not_ used in your current sets and where they are stored
-    to the <gearswap>/data/mginv/export directory.
+    to the <gearswap>/data/<charactername>/mginv/export directory.
     The export_unused command can be good if you want to remove everything
     but gear for a certain job from one of your bag.
 
   `//mginv summary`
     Makes a summary file with all the items in your inventory and whether they
-    are used or not.
+    are used or not. The resulting file is placed in the
+    <gearswap>/data/<charactername>/mginv/export directory.
 
   `//mginv gearup`
     Make gear for your current job available by putting it in mog wardrobes or
@@ -447,7 +448,7 @@ return (function ()
         local path = export_dir() ..
                      "/" .. player.name ..
                      "_" .. player.main_job ..
-                     "_" .. os.clock() ..
+                     "_" .. os.date('%Y-%m-%d_%H%m%S') ..
                      ".lua"
         local inv = get_current_inventory()
         local gear_data = {seen={}}
@@ -525,7 +526,7 @@ return (function ()
         local path = export_dir() ..
                      "/" .. player.name ..
                      "_" .. player.main_job ..
-                     "_unused_" .. os.clock() ..
+                     "_unused_" .. os.date('%Y-%m-%d_%H%m%S') ..
                      ".lua"
 
         local inv = get_current_inventory()
@@ -588,7 +589,7 @@ return (function ()
     function MGInventory.export_summary(sets)
         local path = export_dir() ..
                      "/" .. player.name ..
-                     "_summary_" .. os.clock() ..
+                     "_summary_" .. os.date('%Y-%m-%d_%H%m%S') ..
                      ".lua"
         local result = {}
         local db = MGInventory.database
