@@ -15,16 +15,16 @@ Features:
 Installation
 ============
 
-To use the library in a gearswap script place it in your gearswap common
-folder and add the following at the top of the gearswap file you want to
-use it in:
+-- To use the library in a gearswap script place it in your gearswap common
+-- folder and add the following at the top of the gearswap file you want to
+-- use it in:
 
 local mg_inv = require("mg-inventory");
 
-Also add a call to mg_inv.self_command (or mg_inv.job_self_command
-if using Mote-libs) to your self_command (or job_self_command) method:
+-- Also add a call to mg_inv.self_command (or mg_inv.job_self_command
+-- if using Mote-libs) to your self_command (or job_self_command) method:
 
-Example self_command:
+-- Example self_command:
 
 function self_command(command)
     if mg_inv.self_command(command) then
@@ -33,7 +33,7 @@ function self_command(command)
     -- Rest of self command method goes here
 end
 
-Example job_self_command method:
+-- Example job_self_command method:
 
 function job_self_command(command, eventArgs)
     if mg_inv.job_self_command(command, eventArgs) then
@@ -41,6 +41,8 @@ function job_self_command(command, eventArgs)
     end
     -- Rest of self command method goes here
 end
+
+-- End of neccessary code changes
 
 Configuration
 =============
@@ -55,25 +57,28 @@ Commands
 
 It supports the following commands:
 
-  `//gs c mginv export`
+  `//mginv export`
     Exports the gear used in your current sets and where they are stored to the
     <gearswap>/data/mginv/export directory.
 
-  `//gs c mginv export_unused`
+  `//mginv export_unused`
     Exports the gear _not_ used in your current sets and where they are stored
     to the <gearswap>/data/mginv/export directory.
     The export_unused command can be good if you want to remove everything
     but gear for a certain job from one of your bag.
 
-  `//gs c mginv summary`
+  `//mginv summary`
     Makes a summary file with all the items in your inventory and whether they
     are used or not.
 
-  `//gs c mginv gear_up`
+  `//mginv gearup`
     Make gear for your current job available by putting it in mog wardrobes or
     in the inventory
 
-  `//gs c mginv search <search string>`
+  `//mginv cleanup`
+    Try to move all gear to its configured location.
+
+  `//mginv search <search string>`
     Find items that your current job can equip and where the search string
     matches name, augments or item description. Useful for finding specific
     types of existing gear when building new sets.
@@ -129,6 +134,11 @@ return (function ()
 
             floating_position["Warp Ring"] = "Mog Wardrobe 3"
 
+        If you need to have two of the same item in different wardrobes,
+        specify a list of locations instead:
+
+            fixed_position["Varar Ring"] = {"Mog Wardrobe", "Mog Wardrobe 4"}
+
         --]]
 
     end
@@ -161,6 +171,8 @@ return (function ()
 
         MGInventory.load_config()
         coroutine.schedule(update_database, 0.1)
+
+        send_command("alias mginv gs c mginv")
 
         return MGInventory
     end
@@ -790,9 +802,9 @@ return (function ()
         return add_to_chat(207, message)
     end
 
-    function get_item_move_type(item, locked_map)
+    function get_item_move_type(item, bag_name, locked_map)
         -- Locked items should not be moved
-        if locked_map[item.full_desc] then return nil end
+        if item_is_locked(item, bag_name, locked_map) then return nil end
 
         -- Item with statuses cannot be moved
         if item.status and item.status > 0 then return nil end
@@ -839,7 +851,9 @@ return (function ()
             if bag_item then
                 local item = item_from_inventory_data(bag_item)
                 if item then
-                    local move_type = get_item_move_type(item, locked_map)
+                    local move_type = get_item_move_type(
+                        item, bag_name, locked_map
+                    )
                     if move_type then
                         if item.res_item.slots then
                             item.is_gear = true
@@ -1032,6 +1046,8 @@ return (function ()
                 end
 
                 local move = build_move(item, bagname, dest_bag)
+                say("Moving " .. item.full_desc .. " from " ..
+                    bagname .. " to " .. dest_bag .. " to make room")
                 table.insert(unresolved_moves, move)
                 missing_slots = missing_slots - 1
             end
@@ -1058,7 +1074,6 @@ return (function ()
 
         unresolved_moves = table.reverse(unresolved_moves)
 
-
         return moves_to_operations(
             unresolved_moves, bag_status["Inventory"].free_slots
         )
@@ -1070,25 +1085,12 @@ return (function ()
         free_inventory_slots = free_inventory_slots or 0
 
         if free_inventory_slots == 0 then
-            say("Cannot conver moves to operations: No free inventory slots.")
+            say("Cannot convert moves to operations: No free inventory slots.")
             return
         end
 
         while(moves_last_round > 0 and unresolved_moves:length() > 0) do
             moves_last_round = 0
-            -- Look for stuff we can move from inventory
-            for i, move in ipairs(unresolved_moves) do
-                if (move.operations > 0 and move.from == "Inventory") then
-                    operations:append({
-                        item=move.item,
-                        from=move.from,
-                        to=move.to
-                    })
-                    move.operations = move.operations - 1
-                    free_inventory_slots = free_inventory_slots + 1
-                    moves_last_round = moves_last_round + 1
-                end
-            end
             -- Look for first part of multistep moves where we have to move
             -- stuff to inventory
             for i, move in ipairs(unresolved_moves) do
@@ -1102,6 +1104,19 @@ return (function ()
                     move.from = "Inventory"
                     moves_last_round = moves_last_round + 1
                     free_inventory_slots = free_inventory_slots - 1
+                end
+            end
+            -- Look for stuff we can move from inventory
+            for i, move in ipairs(unresolved_moves) do
+                if (move.operations > 0 and move.from == "Inventory") then
+                    operations:append({
+                        item=move.item,
+                        from=move.from,
+                        to=move.to
+                    })
+                    move.operations = move.operations - 1
+                    free_inventory_slots = free_inventory_slots + 1
+                    moves_last_round = moves_last_round + 1
                 end
             end
             -- Filter out moves that have finised all operations
@@ -1322,12 +1337,14 @@ return (function ()
                 if item.bag then
                     if item.bag == v then
                         available_in_field = true
+                        add_item_to_locked_map(item, v, locked_map)
                     else
                         source_bag = v
                     end
                 else
                     if field_bags[v] then
                         available_in_field = true
+                        add_item_to_locked_map(item, v, locked_map)
                     else
                         source_bag = v
                     end
@@ -1335,12 +1352,97 @@ return (function ()
             end
             if not available_in_field then
                 needed_sources:append(T{item=item, from=source_bag})
-            else
-                locked_map[item.full_desc] = true
             end
         end)
 
         make_sources_available(needed_sources, locked_map)
+    end
+
+
+    function add_item_to_locked_map(item, bag_name, locked_map)
+        local key = item.full_desc .. ":" .. bag_name
+        locked_map[key] = bag_name
+    end
+
+    function item_is_locked(item, bag_name, locked_map)
+        local key = item.full_desc .. ":" .. bag_name
+        return locked_map[key]
+    end
+
+    function get_position_info(iteminfo)
+        local result = {}
+        result.needed_moves = T{}
+        result.correct_position = T{}
+
+        -- Bail out if item is nowhere
+        if not iteminfo.bags then
+            return result
+        end
+
+        local item = iteminfo.item
+        -- Find the wanted position
+        local position = config.fixed_position[item.full_desc] or
+                         config.fixed_position[item.name] or
+                         config.floating_position[item.full_desc] or
+                         config.floating_position[item.name]
+
+        -- If there is not wanted position, bail out
+        if not position then
+            return result
+        end
+
+        -- Build a list of where this/these item(s) are supposed to be
+        local needed_positions = {}
+        if type(position) == "string" then
+            needed_positions[position] = true
+        else
+            for i, pos in ipairs(position) do
+                needed_positions[pos] = true
+            end
+        end
+
+        -- Find out which items are wrongly placed
+        local wrongly_placed = T{}
+        for pos, _ in pairs(iteminfo.bags) do
+            if needed_positions[pos] then
+                needed_positions[pos] = false
+                add_item_to_locked_map(item, pos, result.correct_position)
+                print(item.full_desc .. " is correctly placed in " .. pos)
+            else
+                wrongly_placed:append(pos)
+                print(item.full_desc .. " is wrongly placed in " .. pos)
+            end
+        end
+
+        for dest, needed in pairs(needed_positions) do
+            if needed then
+                local src = wrongly_placed:remove()
+                if src then
+                    result.needed_moves:append(build_move(item, src, dest))
+                end
+            end
+        end
+
+        return result
+    end
+
+    function cleanup()
+        local inv = get_current_inventory()
+        local moves = T{}
+        local locked_map = T{}
+
+        for name, iteminfo in pairs(inv.items) do
+            local pos_info = get_position_info(iteminfo)
+            moves:extend(pos_info.needed_moves)
+            for k, v in pairs(pos_info.correct_position) do
+                locked_map[k] = v
+            end
+        end
+
+        local operations = resolve_moves(moves, locked_map)
+        if operations then
+            perform_operations(operations)
+        end
     end
 
 
@@ -1391,7 +1493,8 @@ return (function ()
         export_unused=function(args) MGInventory.export_unused(sets) end,
         summary=function(args) MGInventory.export_summary(sets) end,
         searchinv=function(args) MGInventory.search(args) end,
-        gear_up=function(args) gear_up() end,
+        gearup=function(args) gear_up() end,
+        cleanup=function(args) cleanup() end,
         test=function(args) test() end,
     }
 
