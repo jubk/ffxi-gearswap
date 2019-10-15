@@ -225,8 +225,8 @@ function init_gear_sets()
             body="Mummu Jacket +2",
             -- racc +47, ratk +43
             hands=ambu.hands,
-            -- racc +54, Store TP +8
-            legs="Adhemar Kecks +1",
+            -- racc +50, Store TP +10
+            legs="Malignance Tights",
             -- racc +46, ratk +42
             feet=ambu.feet,
             -- racc +30, ratk 30, store tp +8

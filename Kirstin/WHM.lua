@@ -10,27 +10,27 @@ include("shared/staves");
 local aug_gear = require('shared/aug_gear');
 
 AF = {
-    head="Healer's Cap",
-    body="Healer's Briault",
-    hands="Theophany Mitts",
-    legs="Th. Pantaloons +2",
-    feet="Theo. Duckbills",
+    head="Theo. Cap +2",
+    body="Theo. Briault +2",
+    hands="Theophany Mitts +2",
+    legs="Th. Pantaloons +3",
+    feet="Theo. Duckbills +2",
 }
 
 relic = {
-    head="Piety Cap +1",
-    body="Piety Briault +1",
-    hands="Cleric's Mitts",
-    legs="Cleric's Pantaln.",
-    feet="Cleric's Duckbills",
+    head="Piety Cap +2",
+    body="Piety Briault +3",
+    hands="Piety Mitts +1",
+    legs="Piety Pantaln. +1",
+    feet="Piety Duckbills +1",
 }
 
 empy = {
     head="Ebers Cap +1",
     body="Ebers Bliaud +1",
-    hands="Ebers Mitts",
+    hands="Ebers Mitts +1",
     legs="Ebers Pant. +1",
-    feet="Orsn. Duckbills +1",
+    feet="Ebers Duckbills +1",
 }
 
 capes = {

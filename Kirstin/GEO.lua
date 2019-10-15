@@ -106,14 +106,14 @@ indicolure:set('Indi-Haste')    -- Indi Spell Default     (when you first load l
 validateTextInformation()
 
 -- Optional. Swap to your geo macro sheet / book
-set_macros(1,5) -- Sheet, Book   
+set_macros(1,8) -- Sheet, Book
     
 -- Setup your Gear Sets below:
 function get_sets()
 
     AF = {
         head="Geo. Galero +3",
-        body="Geomancy Tunic +2",
+        body="Geomancy Tunic +3",
         hands="Geo. Mitaines +3",
         legs="Geomancy Pants +2",
         feet="Geo. Sandals +3",

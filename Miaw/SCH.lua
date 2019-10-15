@@ -193,8 +193,8 @@ end
 function init_gear_sets()
 
     sets.standard = {
-        -- pdt -20%
-        main="Terra's staff",
+        -- dt -20%
+        main="Malignance Pole",
 
         -- dt -5
         sub="Kaja Grip",
@@ -267,6 +267,11 @@ function init_gear_sets()
         }
     );
     sets.idle.Town.Sublimation = set_combine(sets.idle.Field.Sublimation, {});
+
+    sets.TH={
+        body="Volte Jupon",
+        waist="Chaac Belt",
+    }
 
     sets.resting = set_combine(
         sets.standard,
@@ -579,6 +584,11 @@ function init_gear_sets()
             -- macc 20
             back="Lugh's Cape",
         }
+    )
+
+    sets.midcast['Enfeebling Magic'].Dia = set_combine(
+        sets.midcast['Enfeebling Magic'].Dia,
+        sets.TH
     )
 
     sets.midcast['Healing Magic'] = set_combine(

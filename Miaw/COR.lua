@@ -234,6 +234,31 @@ function init_gear_sets()
         back="Gunslinger's Cape",
     };
 
+    sets.weapons = {}
+    sets.weapons.bullet = {
+        waist="Liv. Bul. Pouch",
+    }
+    sets.weapons.dp = {
+        main="Naegling",
+        sub="Hep. Rapier +1",
+        range="Death Penalty",
+    }
+    sets.weapons.armageddon = {
+        main="Naegling",
+        sub="Fettering Blade",
+        range="Armageddon",
+    }
+    sets.weapons.shield = {
+        main="Kustawi +1",
+        sub="Nusku Shield",
+        range="Armageddon",
+    }
+    sets.weapons.savage_blade = {
+        main="Naegling",
+        sub="Fettering Blade",
+        range={ name="Ataktos", augments={'Delay:+60','TP Bonus +1000',}},
+    }
+
     sets.precast.RA = set_combine(
         sets.base,
         {
@@ -310,18 +335,73 @@ function init_gear_sets()
             name="Samnuha Tights",
             augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}
         },
-        -- Stopre TP +8
+        -- Store TP +8
         neck="Iskur Gorget",
         -- Store TP +3, acc +6, DA +3
         right_ear="Cessance Earring",
+
+        -- Store TP +5
+        right_ring="Ilabrat Ring",
+
         -- Store TP +1-5, DA +3
         waist="Kentarch Belt +1",
 
         -- store tp +10
         back=capes.melee_tp,
     });
-    -- Comment in for hybrid
-    --sets.engaged = set_combine(sets.engaged, {neck="Loricate Torque +1",right_ring="Defending Ring",});
+    -- TODO: Setup a way to switch to hybrid
+    sets.engaged.Hybrid = set_combine(sets.engaged, {
+        neck="Loricate Torque +1",
+        legs="Malignance Tights",
+        right_ring="Defending Ring",
+    })
+
+    -- Need (haste_factor * dual_wield_factor) <= 0.2
+
+    local gear_haste_cap = 256
+    local magic_haste_cap = 448
+    -- (1 - h)(1 - d) <= 0.2 <=>
+    -- 1 - d - h + (-d * -h) <= 0.2 <=>
+    -- 1 - d - h + d*h <= 0.2 <=>
+    -- - d - h + d*h <= -0.8 <=>
+    -- d + h - d*h > 0.8
+
+    -- d + .25 - .25d > 0.8
+    -- 0.75d > 0.55
+    -- d > 0.73333
+
+    -- (d + .25) + (h + .25) - ((d + .25) * (h + .25)) > 0.8
+    -- d + h + .5 - (d*h + .25d + .25h + 0,0625) > 0.8
+    -- 0.75d + 0.75h + 0,4375 - d*h > 0.8
+    -- d + h + 0.58 - 1.333*d*h > 1.06
+    -- d + h - 1.33*d*h > 0.56
+
+
+    function calc_delay()
+        local gear_haste = 0
+        local magic_haste = 0
+        local ja_haste = 0
+        local dw_level = 0
+        
+        if player.sub_job == "NIN" then
+            dw_level = dw_level + 256
+        elseif player.sub_job == "DNC" then
+            dw_level = dw_level + 154
+        end
+    end
+
+    --  Haste I is 150/1024
+    --  Haste II is 307/1024
+    --  Idris GEO-haste is 418/1024
+    --  Advancing march is 108/1024
+    --  Vicotory march is 163/1024
+    -- Honor march is 126/1024
+    -- Magic haste cap is 448/1024
+    -- Gear haste cap is 256/1024
+
+    -- NIN subjob dual wield is 256/1024
+    -- DNC subjob dual wield is 154/1024
+    
 
     sets.midcast.RA = set_combine(
         sets.base,
@@ -332,8 +412,8 @@ function init_gear_sets()
             body="Mummu Jacket +2",
             -- racc +47, ratk +43
             hands=ambu.hands,
-            -- racc +54, Store TP +8
-            legs="Adhemar Kecks +1",
+            -- racc +50, Store TP +10
+            legs="Malignance Tights",
             -- racc +46, ratk +42
             feet=ambu.feet,
             -- racc +30, ratk 30, store tp +8
