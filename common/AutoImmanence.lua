@@ -579,7 +579,7 @@ local AutoImmanence = function(options)
             end
             opts['nuke'] = rest:match('%s*([%d%a%s]+)')
 
-            if two then
+            if two and two ~= "" then
                 element = element .. "_helix"
             end
 
