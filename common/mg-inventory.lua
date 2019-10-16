@@ -1408,10 +1408,10 @@ return (function ()
             if needed_positions[pos] then
                 needed_positions[pos] = false
                 add_item_to_locked_map(item, pos, result.correct_position)
-                print(item.full_desc .. " is correctly placed in " .. pos)
+                -- print(item.full_desc .. " is correctly placed in " .. pos)
             else
                 wrongly_placed:append(pos)
-                print(item.full_desc .. " is wrongly placed in " .. pos)
+                -- print(item.full_desc .. " is wrongly placed in " .. pos)
             end
         end
 
