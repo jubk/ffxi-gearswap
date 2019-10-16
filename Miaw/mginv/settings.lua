@@ -74,8 +74,8 @@ function setup(fixed_position, floating_position)
     fixed_position["Sulev. Cuisses +2"] = "Mog Safe" -- Used by 1 jobs: DRK
     fixed_position["Sulev. Gauntlets +2"] = "Mog Safe" -- Used by 1 jobs: DRK
     fixed_position["Sulev. Leggings +2"] = "Mog Safe" -- Used by 1 jobs: DRK
-    fixed_position["Sulevia's Mask +2"] = "Mog Safe" -- Used by 2 jobs: DRK, PLD
-    fixed_position["Sulevia's Plate. +2"] = "Mog Wardrobe" -- Used by 1 jobs: DRK
+    fixed_position["Sulevia's Mask +2"] = "Mog Wardrobe" -- Used by 2 jobs: DRK, PLD
+    fixed_position["Sulevia's Plate. +2"] = "Mog Safe" -- Used by 1 jobs: DRK
     fixed_position["Trux Earring"] = "Mog Wardrobe" -- Used by 1 jobs: PLD
     fixed_position["Varar Ring"] = {"Mog Wardrobe", "Mog Wardrobe 4"} -- Used by 1 jobs: BST
     fixed_position["Vengeful Ring"] = "Mog Wardrobe" -- Used by 1 jobs: PLD
