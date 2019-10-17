@@ -145,6 +145,7 @@ return (function ()
     end
 
     ]=]
+    local res_item_name_cache = nil
     default_config_file = default_config_file:gsub("\n    ", "\n")
 
     MGInventory.config = {fixed_position={}, floating_position={}}
@@ -279,7 +280,24 @@ return (function ()
         return mginv_dir() .. "/database.lua"
     end
 
-    local res_item_name_cache = nil
+
+    function translate_bagname(name)
+        if not name then
+            return name
+        end
+        return ({
+            ["inventory"] = "Inventory",
+            ["wardrobe"] = "Mog Wardrobe",
+            ["wardrobe2"] = "Mog Wardrobe 2",
+            ["wardrobe3"] = "Mog Wardrobe 3",
+            ["wardrobe4"] = "Mog Wardrobe 4",
+            ["mog wardrobe"] = "Mog Wardrobe",
+            ["mog wardrobe2"] = "Mog Wardrobe 2",
+            ["mog wardrobe3"] = "Mog Wardrobe 3",
+            ["mog wardrobe4"] = "Mog Wardrobe 4",
+        })[name:lower()] or name
+    end
+
     function get_res_item_by_name(name)
         if res_item_name_cache == nil then
             res_item_name_cache = {}
@@ -303,7 +321,7 @@ return (function ()
         elseif type(gs_item) == "table" and gs_item.name then
             name = gs_item.name
             augments = gearswap.get_augment_string(gs_item)
-            bag = gs_item.bag
+            bag = translate_bagname(gs_item.bag)
         end
 
         return item_from_name(name, augments, bag)
@@ -927,7 +945,14 @@ return (function ()
     function find_field_bag(bag_status, item)
         -- Loop over default bag order so we put stuff in storage before using
         -- field bags.
-        for _, bagname in ipairs(reverse_field_bags) do
+        local bags = reverse_field_bags
+
+        -- If item is coded to be in a specific bag, only try that one
+        if item.bag then
+            bags = T{translate_bagname(item.bag)}
+        end
+
+        for _, bagname in ipairs(bags) do
             local bag_data = bag_status[bagname]
             if (
                 -- Only look in bags that are enabled
@@ -1176,10 +1201,20 @@ return (function ()
         function find_item_in_bag(bagname, item)
             local bag_data = windower.ffxi.get_items(bag_to_id[bagname])
             
+            -- Search for name + augments match
             for _, v in ipairs(bag_data) do
                 if v and v.id == item.id then
                     local inv_item = item_from_inventory_data(v)
                     if inv_item and inv_item.full_desc == item.full_desc then
+                        return v
+                    end
+                end
+            end
+            -- Search for name only match
+            for _, v in ipairs(bag_data) do
+                if v and v.id == item.id then
+                    local inv_item = item_from_inventory_data(v)
+                    if inv_item and inv_item.name == item.name then
                         return v
                     end
                 end
@@ -1315,17 +1350,25 @@ return (function ()
         local needed_sources = T{}
         local locked_map = T{}
         local seen_items = T{}
+        local multi_items = T{}
 
         process_items_in_gearsets(sets, function(gs_item)
             local item = item_from_gearswap_data(gs_item)
             if not item then return end
-            if seen_items[item.full_desc] then
+            -- Skip already seen items
+            local seen_key = item.full_desc
+            if item.bag then
+                seen_key = seen_key .. ":" .. item.bag
+            end
+            if seen_items[seen_key] then
                 return
             else
-                seen_items[item.full_desc] = true
+                seen_items[seen_key] = true
             end
+
+            -- Find out which items of this type we have in the inventory
             local inv_data = inv.items[item.full_desc] or
-                             inv.by_short_name[item.full_desc]
+                             inv.by_short_name[item.name]
             if not inv_data then return end
 
             if item.res_item.slots then
@@ -1334,15 +1377,22 @@ return (function ()
 
             local available_in_field = false
             local source_bag
-            for v in pairs(inv_data.bags) do
-                if item.bag then
-                    if item.bag == v then
-                        available_in_field = true
-                        add_item_to_locked_map(item, v, locked_map)
-                    else
-                        source_bag = v
-                    end
-                else
+            -- If item specifies which bag it should be gotten from, store
+            -- it for later processing, since there might be multiple items
+            -- of the same type.
+            if item.bag then
+                if not multi_items[item.name] then
+                    multi_items[item.name] = T{
+                        item=item,
+                        sources=inv_data.bags,
+                        dests=T{}
+                    }
+                end
+                local bagname = translate_bagname(item.bag)
+                multi_items[item.name].dests[bagname] = true
+                return
+            else
+                for v in pairs(inv_data.bags) do
                     if field_bags[v] then
                         available_in_field = true
                         add_item_to_locked_map(item, v, locked_map)
@@ -1355,6 +1405,37 @@ return (function ()
                 needed_sources:append(T{item=item, from=source_bag})
             end
         end)
+
+        for itemname, multi in pairs(multi_items) do
+            -- Remove any items that are already in the right location
+            for name in pairs(multi.dests) do
+                if multi.sources[name] then
+                    multi.sources[name] = nil
+                    multi.dests[name] = false
+                end
+            end
+            local remaining_sources = T{}
+            for k, v in pairs(multi.sources) do
+                remaining_sources:append(k)
+            end
+            for dest_name, needed in pairs(multi.dests) do
+                if needed then
+                    local source = remaining_sources:remove()
+                    if source then
+                        local item = T{}
+                        for k, v in pairs(multi.item) do
+                            item[k] = v
+                        end
+                        item.bag = dest_name
+                        needed_sources:append(T{item=item, from=source})
+                    else
+                        say("Can not find out how to move multiple " ..
+                            itemname .. " items.")
+                        return
+                    end
+                end
+            end
+        end
 
         make_sources_available(needed_sources, locked_map)
     end
