@@ -4,7 +4,9 @@ include("elemental_obis");
 include("cyclable_sets");
 
 -- MG inventory system
-local mg_inv = require("mg-inventory");
+local mg_inv = require("mg-inventory")
+local mg_lib = require("mg-lib")
+
 
 -- TODO:
 --  odnowa rings for HP sets
@@ -12,6 +14,7 @@ local mg_inv = require("mg-inventory");
 
 
 function get_sets()
+    mg_lib.hud.initialize({})
     sird_spells = T{
         'Flash',
         'Blind',

@@ -21,7 +21,7 @@ local capes = {
 local MG = require("mg-lib")
 
 function get_sets()
-    MG.hub.initialize({})
+    MG.hud.initialize({})
 
     -- set_has_hachirin_no_obi(true);
     sets.base = {

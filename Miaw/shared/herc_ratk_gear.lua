@@ -1,4 +1,4 @@
-local harc_ratk_gear = {
+local herc_ratk_gear = {
     head={
         name="Herculean Helm",
         augments={
@@ -26,4 +26,4 @@ local harc_ratk_gear = {
     },
 };
 
-return harc_ratk_gear;
+return herc_ratk_gear;

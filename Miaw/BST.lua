@@ -33,7 +33,13 @@ function get_sets()
         head="Tali'ah Turban +2",
         body="Tali'ah Manteel +2",
         hands="Tali'ah Gages +1",
-        legs="Valor. Hose",
+        legs={
+            name="Valor. Hose", augments={
+                'Pet: Accuracy+28 Pet: Rng. Acc.+28',
+                'Pet: STR+2',
+                'Pet: Attack+15 Pet: Rng.Atk.+15',
+            }
+        },
         feet="Tali'ah Crackows +2",
         neck="Shulmanu Collar",
         waist="Olseni Belt",

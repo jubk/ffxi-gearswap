@@ -3,10 +3,13 @@ include("remove_silence");
 include("cancel_buffs");
 include("elemental_obis");
 
-local herc_matk = require("shared/herc_matk_gear");
+local herc_matk = require("shared/herc_matk_gear")
+local herc_ratk = require("shared/herc_ratk_gear")
 
 -- MG inventory system
 local mg_inv = require("mg-inventory");
+-- MG library
+local MG = require("mg-lib")
 
 --              AF/Relic/Empyrean gear status
 --
@@ -88,6 +91,20 @@ local capes = {
         name="Camulus's Mantle",
         augments={
             'DEX+20','Accuracy+20 Attack+20','Accuracy+5','"Store TP"+10',
+        }
+    },
+    --melee_dual_wield={
+    --    name="Camulus's Mantle",
+    --    augments={
+    --        'DEX+20','Accuracy+20 Attack+20','Accuracy+10',
+    --        '"Dual Wield"+10','Phys. dmg. taken-10%',
+    --    }
+    --},
+    melee_double_attack={
+        name="Camulus's Mantle",
+        augments={
+            'DEX+20','Accuracy+20 Attack+20','Accuracy+10',
+            '"Dbl.Atk."+10','Phys. dmg. taken-10%',
         }
     },
 }
@@ -217,6 +234,7 @@ function job_setup()
 end
 
 function init_gear_sets()
+    MG.hud.initialize({})
 
     -- sets
     sets.base = {
@@ -234,30 +252,44 @@ function init_gear_sets()
         back="Gunslinger's Cape",
     };
 
+    state.CombatWeapon = M{
+        ["description"] = "Weapon Mode",
+        "Death Penalty",
+        "Armageddon",
+        "Savage Blade",
+        "Single Wield"
+    }
+
     sets.weapons = {}
     sets.weapons.bullet = {
         waist="Liv. Bul. Pouch",
     }
-    sets.weapons.dp = {
+    sets.weapons["Death Penalty"] = {
         main="Naegling",
         sub="Hep. Rapier +1",
         range="Death Penalty",
     }
-    sets.weapons.armageddon = {
+    sets.weapons["Armageddon"] = {
         main="Naegling",
         sub="Fettering Blade",
         range="Armageddon",
     }
-    sets.weapons.shield = {
+    sets.weapons["Single Wield"] = {
         main="Kustawi +1",
         sub="Nusku Shield",
         range="Armageddon",
     }
-    sets.weapons.savage_blade = {
+    sets.weapons["Savage Blade"] = {
         main="Naegling",
         sub="Fettering Blade",
         range={ name="Ataktos", augments={'Delay:+60','TP Bonus +1000',}},
     }
+
+    MG.hud:add_mote_mode(state.CombatWeapon, {
+        keybind="Ctrl-F10",
+        autoequip_table=sets.weapons,
+    })
+    state.CombatWeapon:set("Death Penalty")
 
     sets.precast.RA = set_combine(
         sets.base,
@@ -327,9 +359,46 @@ function init_gear_sets()
 
     sets.resting = set_combine(sets.base, {});
 
+    state.OffenseMode:options(
+        "No haste",
+        "Low haste",
+        "Medium haste",
+        "Full haste"
+    )
+
+    MG.hud:add_mote_mode(state.OffenseMode, T{
+        keybind="ctrl-f11",
+        callback=function()
+            if player.status == "Engaged" then
+                MG.force_equip_set(get_melee_set())
+            end
+        end
+    })
+
+    state.HybridMode:options("Normal", "Hybrid")
+    MG.hud:add_mote_mode(state.HybridMode, T{
+        keybind="ctrl-f12",
+        callback=function()
+            if player.status == "Engaged" then
+                MG.force_equip_set(get_melee_set())
+            end
+        end
+    })
+
     sets.engaged = set_combine(sets.base, {
-        -- Store TP +6
-        body="Mummu Jacket +2",
+        -- TA +4
+        head={
+            name="Adhemar Bonnet +1",
+            augments={'DEX+12','AGI+12','Accuracy+20',}
+        },
+        -- TA +4, dual wield +6
+        body={
+            name="Adhemar Jacket +1",
+            augments={'DEX+12','AGI+12','Accuracy+20',}
+        },
+        -- DW+5, TA+2
+        hands="Floral Gauntlets",
+
         -- Store TP +7, DA +3, TA +3
         legs={
             name="Samnuha Tights",
@@ -337,45 +406,69 @@ function init_gear_sets()
         },
         -- Store TP +8
         neck="Iskur Gorget",
+
+        -- Dual Wield +5
+        left_ear="Suppanomimi",
+
         -- Store TP +3, acc +6, DA +3
         right_ear="Cessance Earring",
 
-        -- Store TP +5
-        right_ring="Ilabrat Ring",
+        left_ring="Petrov Ring",
 
-        -- Store TP +1-5, DA +3
-        waist="Kentarch Belt +1",
+        -- TA +3, DA +3
+        right_ring="Epona's Ring",
 
-        -- store tp +10
-        back=capes.melee_tp,
+        -- DW +5
+        waist="Shetal Stone",
+
+        -- double attack +10
+        back=capes.melee_double_attack,
     });
-    -- TODO: Setup a way to switch to hybrid
+    sets.engaged["No haste"] = set_combine(sets.engaged, {
+    })
+    sets.engaged["Low haste"] = set_combine(sets.engaged, {
+    })
+    sets.engaged["Medium haste"] = set_combine(sets.engaged, {
+        -- TA +4, store TP +7
+        hands={
+            name="Adhemar Wrist. +1",
+            augments={'DEX+12','AGI+12','Accuracy+20',}
+        },
+    })
+    sets.engaged["Full haste"] = set_combine(sets.engaged["Medium haste"], {
+        -- DA +5
+        right_ear="Brutal Earring",
+        waist="Windbuffet Belt +1",
+    })
+    sets.engaged["Single Wield"] = set_combine(sets.engaged, {
+        -- TA +2, QA +2
+        waist="Windbuffet Belt +1",
+        -- Dual wield +6
+        legs={
+            name="Carmine Cuisses +1",
+            augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}
+        },
+        -- DA +5
+        left_ear="Brutal Earring",
+    })
+
+    -- Hybrid melee sets
     sets.engaged.Hybrid = set_combine(sets.engaged, {
         neck="Loricate Torque +1",
         legs="Malignance Tights",
         right_ring="Defending Ring",
     })
+    for _, setname in ipairs({
+        "No haste", "Low haste", "Medium haste", "Full haste", "Single Wield"
+    }) do
+        local set = sets.engaged[setname]
+        set.Hybrid = set_combine(set, sets.engaged.Hybrid)
+    end
 
     -- Need (haste_factor * dual_wield_factor) <= 0.2
 
     local gear_haste_cap = 256
     local magic_haste_cap = 448
-    -- (1 - h)(1 - d) <= 0.2 <=>
-    -- 1 - d - h + (-d * -h) <= 0.2 <=>
-    -- 1 - d - h + d*h <= 0.2 <=>
-    -- - d - h + d*h <= -0.8 <=>
-    -- d + h - d*h > 0.8
-
-    -- d + .25 - .25d > 0.8
-    -- 0.75d > 0.55
-    -- d > 0.73333
-
-    -- (d + .25) + (h + .25) - ((d + .25) * (h + .25)) > 0.8
-    -- d + h + .5 - (d*h + .25d + .25h + 0,0625) > 0.8
-    -- 0.75d + 0.75h + 0,4375 - d*h > 0.8
-    -- d + h + 0.58 - 1.333*d*h > 1.06
-    -- d + h - 1.33*d*h > 0.56
-
 
     function calc_delay()
         local gear_haste = 0
@@ -388,20 +481,20 @@ function init_gear_sets()
         elseif player.sub_job == "DNC" then
             dw_level = dw_level + 154
         end
+
+        --  Haste I is 150/1024
+        --  Haste II is 307/1024
+        --  Idris GEO-haste is 418/1024
+        --  Advancing march is 108/1024
+        --  Vicotory march is 163/1024
+        -- Honor march is 126/1024
+        -- Magic haste cap is 448/1024
+        -- Gear haste cap is 256/1024
+
+        -- NIN subjob dual wield is 256/1024
+        -- DNC subjob dual wield is 154/1024
+
     end
-
-    --  Haste I is 150/1024
-    --  Haste II is 307/1024
-    --  Idris GEO-haste is 418/1024
-    --  Advancing march is 108/1024
-    --  Vicotory march is 163/1024
-    -- Honor march is 126/1024
-    -- Magic haste cap is 448/1024
-    -- Gear haste cap is 256/1024
-
-    -- NIN subjob dual wield is 256/1024
-    -- DNC subjob dual wield is 154/1024
-    
 
     sets.midcast.RA = set_combine(
         sets.base,
@@ -485,12 +578,7 @@ function init_gear_sets()
         head=relic.head,
         -- racc 57, ratk 35, wsd +10%
         body=AF.body,
-        legs={
-            name="Herculean Trousers",
-            augments={
-                'Rng.Acc.+26','Weapon skill damage +4%','DEX+5','Rng.Atk.+15',
-            }
-        },
+        legs=herc_ratk.legs,
         -- wsd +10,
         feet=relic.feet,
         -- WS boost
@@ -552,7 +640,7 @@ function init_gear_sets()
                 augments={'Rng.Atk.+4','TP Bonus +250',}
             },
             right_ear="Ishvara Earring",
-            left_ring="Cacoethic Ring +1",
+            left_ring="Regal Ring",
             right_ring="Apate Ring",
             back=capes.ranged_ws
         }
@@ -637,6 +725,10 @@ function init_gear_sets()
     set_has_hachirin_no_obi(true);
     -- COR can't equip Twilight Cape
     set_has_twilight_cape(false);
+
+    -- Setup macros and lockstyle
+    set_macro_page(1, 6)
+    send_command('pause 3; input /lockstyleset 2')
 end
 
 function stop_wasting_bullets(eventArgs)
