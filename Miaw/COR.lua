@@ -5,6 +5,7 @@ include("elemental_obis");
 
 local herc_matk = require("shared/herc_matk_gear")
 local herc_ratk = require("shared/herc_ratk_gear")
+local herc_tp = require("shared/herc_tp_gear")
 
 -- MG inventory system
 local mg_inv = require("mg-inventory");
@@ -14,16 +15,16 @@ local MG = require("mg-lib")
 --              AF/Relic/Empyrean gear status
 --
 --  AF       | Base | B +1 | Rf | Rf +1 | Rf +2 | Rf +3 |
---   head    |      |      |    |   X   |       |       |
+--   head    |      |      |    |       |   X   |       |
 --   body    |      |      |    |       |       |   X   |
---   hands   |      |      |    |   X   |       |       |
+--   hands   |      |      |    |       |   X   |       |
 --   legs    |      |      |    |       |   X   |       |
---   feet    |      |      |    |       |       |       |
+--   feet    |      |      |    |       |       |   X   |
 --
 --  Relic    | Base | Base +1 | Base +2 | RF | Rf +1 | Rf +2 | Rf +3 |
---   head    |      |         |         |    |       |   X   |       |
+--   head    |      |         |         |    |       |       |   X   |
 --   body    |      |         |         |    |       |       |   X   |
---   hands   |      |         |         |    |   X   |       |       |
+--   hands   |      |         |         |    |       |       |   X   |
 --   legs    |      |         |         |    |   X   |       |       |
 --   feet    |      |         |         |    |       |       |   X   |
 --
@@ -36,17 +37,18 @@ local MG = require("mg-lib")
 --
 
 local AF = {
-    head="Lak. Hat +1",
+    head="Laksa. Tricorne +2", -- Macc quickdraw
     body="Laksa. Frac +3",
-    hands="Lak. Gants +1",
-    legs="Laksa. Trews +2",
+    hands="Laksa. Gants +2", -- Macc quickdraw
+    legs="Laksa. Trews +2", -- Not used
+    feet="Laksa. Boots +3", -- Macc quickdraw
 };
 
 local relic = {
-    head="Lanun Tricorne +2",
+    head="Lanun Tricorne +3",
     body="Lanun Frac +3",
-    hands="Lanun Gants +1",
-    legs="Lanun Trews +1",
+    hands="Lanun Gants +3",
+    legs="Lanun Trews +1", -- Only used for Snake Eye
     feet="Lanun Bottes +3",
 };
 
@@ -87,10 +89,11 @@ local capes = {
             'AGI+10','Weapon skill damage +10%',
         }
     },
-    melee_tp={
+    str_ws={
         name="Camulus's Mantle",
         augments={
-            'DEX+20','Accuracy+20 Attack+20','Accuracy+5','"Store TP"+10',
+            -- TODO: acc+5 => STR+10
+            'STR+20','Accuracy+20 Attack+20','Accuracy+5','Weapon skill damage +10%',
         }
     },
     --melee_dual_wield={
@@ -257,7 +260,7 @@ function init_gear_sets()
         "Death Penalty",
         "Armageddon",
         "Savage Blade",
-        "Single Wield"
+        "Single Wield",
     }
 
     sets.weapons = {}
@@ -299,22 +302,29 @@ function init_gear_sets()
 
             -- Snapshot +5
             head="Aurore Beret +1",
-            -- Rapid shot +20
-            body=AF.body,
-            -- Snapshot +9
-            hands = relic.hands,
-            -- Snapshot +10, Triple shot +5
-            legs="Oshosi Trousers",
-            -- Snapshot 10
-            feet=ambu.feet,
+            -- Snapshot +12
+            body="Oshosi Vest",
             -- snapshot +2, racc +15
             neck="Commodore Charm",
-            -- Snapshot 3
-            waist="Impulse Belt",
+            -- Snapshot +8, rapid shot +11
+            hands={
+                name="Carmine Fin. Ga. +1",
+                augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}
+            },
+            -- Snapshot +10, recycle +15
+            legs={
+                name="Adhemar Kecks +1",
+                augments={'AGI+12','Rng.Acc.+20','Rng.Atk.+20',}
+            },
+            -- Snapshot +10
+            feet="Meg. Jam. +2",
+            -- Rapid shot +5
+            waist="Yemaya Belt",
+        
             -- Snapshot 6.5
             back="Navarch's Mantle",
 
-            -- Total: 57.5
+            -- Total: 68.5
             -- Cap with no buffs: 70
             -- Cap with flurry: 55
             -- Cap with flurry II: 40
@@ -327,9 +337,13 @@ function init_gear_sets()
             -- macc +25, matk +35
             ammo="Living Bullet",
             head=herc_matk.head,
-            -- matk +29, macc +30
-            body="Samnuha Coat",
-            hands=herc_matk.hands,
+            -- matk +61
+            body=relic.body,
+            -- matk +42, store tp +6
+            hands={
+                name="Carmine Fin. Ga. +1",
+                augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}
+            },
             legs=herc_matk.legs,
             -- Quickdraw +25
             feet=empy.feet,
@@ -341,8 +355,8 @@ function init_gear_sets()
             left_ear="Friomisi Earring",
             -- matk 6
             right_ear="Hecate's Earring",
-            -- macc 7
-            left_ring="Etana Ring",
+            -- matk +10
+            left_ring="Dingir Ring",
             -- macc 3, matk 3
             right_ring="Arvina Ringlet +1",
             -- Store TP +10
@@ -350,8 +364,24 @@ function init_gear_sets()
         }
     );
     sets.precast.JA.QuickDrawAcc = set_combine(sets.precast.QuickDraw, {
+        -- macc +56
+        head=AF.head,
         -- macc +15
         neck="Commodore Charm",
+        -- macc +53
+        hands=AF.hands,
+        -- macc +50
+        legs="Malignance Tights",
+        -- macc +52
+        feet=AF.feet,
+        -- macc +10
+        left_ear="Digni. Earring",
+        -- set bonus
+        left_ring="Regal Ring",
+        -- macc +7
+        right_ring="Etana Ring",
+
+        -- AF set bonus + regal ring = 30 macc
     })
 
     -- +18% runspeed
@@ -363,7 +393,8 @@ function init_gear_sets()
         "No haste",
         "Low haste",
         "Medium haste",
-        "Full haste"
+        "Full haste",
+        "Single Wield"
     )
 
     MG.hud:add_mote_mode(state.OffenseMode, T{
@@ -436,18 +467,22 @@ function init_gear_sets()
         },
     })
     sets.engaged["Full haste"] = set_combine(sets.engaged["Medium haste"], {
+        -- TA +6, acc +35
+        feet=herc_tp.feet,
         -- DA +5
         right_ear="Brutal Earring",
         waist="Windbuffet Belt +1",
     })
     sets.engaged["Single Wield"] = set_combine(sets.engaged, {
-        -- TA +2, QA +2
-        waist="Windbuffet Belt +1",
         -- Dual wield +6
         legs={
             name="Carmine Cuisses +1",
             augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}
         },
+        -- TA +6, acc +35
+        feet=herc_tp.feet,
+        -- TA +2, QA +2
+        waist="Windbuffet Belt +1",
         -- DA +5
         left_ear="Brutal Earring",
     })
@@ -515,18 +550,49 @@ function init_gear_sets()
             waist="Yemaya Belt",
             -- ratk +25, AGI+10, matk +10, recycle +10
             left_ring="Dingir Ring",
-            -- racc +6, ratk +6
-            right_ring="Meghanada Ring",
+            -- AGI +10, store TP +5
+            right_ring="Ilabrat Ring",
             -- ratk +4, store tp +4, agi +2
             left_ear="Neritic Earring",
-            -- racc +4, store tp +2
-            right_ear="Volley Earring",
+            -- racc +7, ratk +7, store tp +4
+            right_ear="Enervating Earring",
             -- racc +30, ratk 20, AGI +20, store tp +10
             back=capes.storetp,
-            -- TODO: Envervating Earring, vagary body boss
         }
     );
 
+    sets.midcast.RA.TripleShot = set_combine(
+        sets.midcast.RA,
+        {
+            -- Triple shot +4, Triple Shot Damage +10
+            head="Oshosi Mask",
+            -- Triple shot +12
+            body=empy.body,
+            -- Racc 44, ratk 76, might become quad shot
+            hands=relic.hands,
+            -- Snapshot +10, Triple shot +5
+            legs="Oshosi Trousers",
+            -- racc +4, store tp +2
+            right_ear="Volley Earring",
+            -- Triple Shot +5
+            back=capes.storetp,
+        }
+    )
+
+    sets.midcast.RA.TripleShotCrit = set_combine(
+        sets.midcast.RA.TripleShot,
+        {
+            head=ambu.head,
+            body=ambu.body,
+            hands="Mummu Wrists +2",
+            legs="Darraigner's Brais",
+            feet="Oshosi Leggings",
+            left_ring="Mummu Ring",
+            right_ring="Begrudging Ring",
+            -- TODO: K. Kachina Belt +1
+            -- TODO: Critrate cape
+        }
+    )
 
     sets.precast.WS = set_combine(sets.base, {
         -- wsd +10%
@@ -613,7 +679,8 @@ function init_gear_sets()
                 augments={'Rng.Atk.+4','TP Bonus +250',}
             },
             right_ring="Archon Ring",
-            waist="Eschan Stone",
+            -- AGI +10
+            waist="Svelt. Gouriz +1",
         }
     );
     sets.precast.WS["Last Stand"] = set_combine(
@@ -634,7 +701,7 @@ function init_gear_sets()
             hands="Meg. Gloves +2",
             legs="Meg. Chausses +2",
             feet=relic.feet,
-            waist="Eschan Stone",
+            waist="Prosilio Belt +1",
             left_ear={
                 name="Moonshade Earring",
                 augments={'Rng.Atk.+4','TP Bonus +250',}
@@ -642,7 +709,7 @@ function init_gear_sets()
             right_ear="Ishvara Earring",
             left_ring="Regal Ring",
             right_ring="Apate Ring",
-            back=capes.ranged_ws
+            back=capes.str_ws
         }
     )
 
@@ -663,22 +730,6 @@ function init_gear_sets()
             right_ring="Kishar Ring",
         }
     );
-
-    sets.TripleShot = set_combine(
-        sets.midcast.RA,
-        {
-            -- Triple shot +4, Triple Shot Damage +10
-            head="Oshosi Mask",
-            -- Triple shot +12
-            body=empy.body,
-            -- Snapshot +10, Triple shot +5
-            legs="Oshosi Trousers",
-            -- racc +4, store tp +2
-            right_ear="Volley Earring",
-            -- Triple Shot +5
-            back=capes.storetp,
-        }
-    )
 
     sets.precast.CorsairRoll = {
         -- duration +50
@@ -721,6 +772,10 @@ function init_gear_sets()
     sets.precast.JA['Snake Eye'] = set_combine(
         sets.base, { legs=relic.legs }
     )
+    sets.precast.JA['Fold'] = {}
+    sets.precast.JA['Fold'].DoubleBust = set_combine(
+        sets.base, { hands=relic.hands }
+    )
 
     set_has_hachirin_no_obi(true);
     -- COR can't equip Twilight Cape
@@ -729,6 +784,7 @@ function init_gear_sets()
     -- Setup macros and lockstyle
     set_macro_page(1, 6)
     send_command('pause 3; input /lockstyleset 2')
+
 end
 
 function stop_wasting_bullets(eventArgs)
@@ -749,6 +805,16 @@ function job_pretarget(spell, eventArgs)
     if table.contains(magic_ws, spell.english)
        and not sets.precast.WS[spell.english] then
         classes.CustomClass = "Magic"
+    end
+    if spell.action_type == 'Ranged Attack' then
+        classes.CustomRangedGroups:clear()
+        if buffactive['Triple Shot'] then
+            if buffactive['Aftermath: Lv.3'] then
+                classes.CustomRangedGroups:append("TripleShotCrit")
+            else
+                classes.CustomRangedGroups:append("TripleShot")
+            end
+        end
     end
 end
 
@@ -813,9 +879,6 @@ end
 function job_post_midcast(spell, eventArgs)
     if '/magic' == spell.prefix  then
         equip(get_day_and_weather_gear(spell))
-    end
-    if spell.action_type == 'Ranged Attack' and buffactive['Triple Shot'] then
-        equip(sets.TripleShot)
     end
 end
 

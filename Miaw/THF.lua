@@ -48,36 +48,68 @@ function get_sets()
     })
     sets.resting = set_combine(sets.base, {})
     sets.engaged = {
-        StoreTP = set_combine(sets.base, {
-            body="Mummu Jacket +2",
-            hands="Meg. Gloves +2",
-            legs={
-                name="Samnuha Tights",
-                augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}
-            },
-            feet="Meg. Jam. +2",
-            neck="Iskur Gorget",
-            waist="Kentarch Belt +1",
-            left_ear="Cessance Earring",
-            right_ear="Digni. Earring",
-            left_ring="Ilabrat Ring",
-            right_ring="Moonbeam Ring",
-        }),
-        Damage = set_combine(sets.base, {
-            hands="Meg. Gloves +2",
-            feet="Meg. Jam. +2",
-        }),
-        TH = set_combine(sets.base, {}),
+        head={
+            name="Adhemar Bonnet +1",
+            augments={'DEX+12','AGI+12','Accuracy+20',}
+        },
+        body={
+            name="Adhemar Jacket +1",
+            augments={'DEX+12','AGI+12','Accuracy+20',}
+        },
+        hands={
+            name="Floral Gauntlets",
+            augments={'Rng.Acc.+11','Accuracy+5','"Triple Atk."+2',}
+        },
+        legs={
+            name="Samnuha Tights",
+            augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}
+        },
+        feet="Meg. Jam. +2",
+        neck="Iskur Gorget",
+        waist="Shetal Stone",
+        left_ear="Suppanomimi",
+        right_ear="Cessance Earring",
+        left_ring="Petrov Ring",
+        right_ring="Epona's Ring",
+        back={
+            name="Canny Cape",
+            augments={'DEX+3','AGI+2','"Dual Wield"+4',}
+        },
     }
+    sets.engaged.StoreTP = set_combine(sets.engaged, {})
+    sets.engaged.Damage = set_combine(sets.engaged, {
+        hands="Meg. Gloves +2",
+        feet="Meg. Jam. +2",
+    })
+    sets.engaged.TH = set_combine(sets.engaged, {
+        hands="Plun. Armlets +1",
+    })
 
     sets.fastcast = set_combine(sets.base, {})
     sets.magic_accuracy = set_combine(sets.base, {})
 
     sets.ws = {}
     sets.ws.base = set_combine(sets.base, {
+        body="Mummu Jacket +2",
+        -- WS damage +7%
+        hands="Meg. Gloves +2",
+        -- WS damage +3%
+        feet={
+            name="Herculean Boots",
+            augments={
+                'Rng.Acc.+14 Rng.Atk.+14',
+                'Weapon skill damage +3%',
+                'Rng.Acc.+2',
+                'Rng.Atk.+12',
+            }
+        },
         right_ring="Apate Ring",
         waist="Fotia Belt",
         neck="Fotia Gorget",
+        right_ear={
+            name="Moonshade Earring",
+            augments={'Rng.Atk.+4','TP Bonus +250',}
+        },
     })
     sets.ws['Aeolian Edge'] = set_combine(sets.base, {
         ammo="Seething Bomblet",
