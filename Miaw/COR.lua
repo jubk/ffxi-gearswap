@@ -500,6 +500,42 @@ function init_gear_sets()
         set.Hybrid = set_combine(set, sets.engaged.Hybrid)
     end
 
+    -- Acc swaps
+    state.AccSwaps = M{['description'] = 'Acc Swaps'}
+    state.AccSwaps:options("None", "MediumAcc", "HighAcc")
+    MG.hud:add_mote_mode(state.AccSwaps, T{
+        keybind="ctrl-home",
+        callback=function()
+            if player.status == "Engaged" then
+                MG.force_equip_set(get_melee_set())
+            end
+        end
+    })
+
+    sets.acc = {}
+    sets.acc.None = {
+        -- Baseline acc: 1132
+    }
+    sets.acc.MediumAcc = {
+        -- Baseline acc: 1197
+        head={ name="Carmine Mask", augments={'Accuracy+15','Mag. Acc.+10','"Fast Cast"+3',}},
+        legs="Malignance Tights",
+        waist="Olseni Belt",
+        left_ear="Digni. Earring",
+    }
+    sets.acc.HighAcc = {
+        -- Baseline acc: 1258
+        sub="Eletta Knife",
+        head={ name="Carmine Mask", augments={'Accuracy+15','Mag. Acc.+10','"Fast Cast"+3',}},
+        hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+        legs="Malignance Tights",
+        feet="Meg. Jam. +2",
+        waist="Olseni Belt",
+        left_ear="Digni. Earring",
+        left_ring="Cacoethic Ring +1",
+        right_ring="Cacoethic Ring",
+    }
+
     -- Need (haste_factor * dual_wield_factor) <= 0.2
 
     local gear_haste_cap = 256
@@ -785,6 +821,15 @@ function init_gear_sets()
     set_macro_page(1, 6)
     send_command('pause 3; input /lockstyleset 2')
 
+end
+
+function customize_melee_set(set)
+    print("Customizin")
+    -- Adjust melee sets with acc swaps
+    local acc_swaps = sets.acc[state.AccSwaps.value or ""]
+    if acc_swaps then
+        return set_combine(set, acc_swaps)
+    end
 end
 
 function stop_wasting_bullets(eventArgs)
