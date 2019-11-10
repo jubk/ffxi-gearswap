@@ -269,12 +269,12 @@ function init_gear_sets()
     }
     sets.weapons["Death Penalty"] = {
         main="Naegling",
-        sub="Hep. Rapier +1",
+        sub="Blurred Knife +1",
         range="Death Penalty",
     }
     sets.weapons["Armageddon"] = {
         main="Naegling",
-        sub="Fettering Blade",
+        sub="Blurred Knife +1",
         range="Armageddon",
     }
     sets.weapons["Single Wield"] = {
@@ -284,7 +284,7 @@ function init_gear_sets()
     }
     sets.weapons["Savage Blade"] = {
         main="Naegling",
-        sub="Fettering Blade",
+        sub="Blurred Knife +1",
         range={ name="Ataktos", augments={'Delay:+60','TP Bonus +1000',}},
     }
 
@@ -441,8 +441,8 @@ function init_gear_sets()
         -- Dual Wield +5
         left_ear="Suppanomimi",
 
-        -- Store TP +3, acc +6, DA +3
-        right_ear="Cessance Earring",
+        -- Dual Wield +4
+        right_ear="Eabani Earring",
 
         left_ring="Petrov Ring",
 
@@ -483,8 +483,10 @@ function init_gear_sets()
         feet=herc_tp.feet,
         -- TA +2, QA +2
         waist="Windbuffet Belt +1",
+        -- Store TP +3, acc +6, DA +3
+        left_ear="Cessance Earring",
         -- DA +5
-        left_ear="Brutal Earring",
+        right_ear="Brutal Earring",
     })
 
     -- Hybrid melee sets
@@ -517,19 +519,20 @@ function init_gear_sets()
         -- Baseline acc: 1132
     }
     sets.acc.MediumAcc = {
-        -- Baseline acc: 1197
+        -- Baseline acc: 1196
         head={ name="Carmine Mask", augments={'Accuracy+15','Mag. Acc.+10','"Fast Cast"+3',}},
-        legs="Malignance Tights",
+        legs=ambu.legs,
         waist="Olseni Belt",
         left_ear="Digni. Earring",
     }
     sets.acc.HighAcc = {
-        -- Baseline acc: 1258
+        -- Baseline acc: 1257
         sub="Eletta Knife",
         head={ name="Carmine Mask", augments={'Accuracy+15','Mag. Acc.+10','"Fast Cast"+3',}},
         hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-        legs="Malignance Tights",
-        feet="Meg. Jam. +2",
+        legs=ambu.legs,
+        -- TA +6, acc +35
+        feet=herc_tp.feet,
         waist="Olseni Belt",
         left_ear="Digni. Earring",
         left_ring="Cacoethic Ring +1",
@@ -824,7 +827,6 @@ function init_gear_sets()
 end
 
 function customize_melee_set(set)
-    print("Customizin")
     -- Adjust melee sets with acc swaps
     local acc_swaps = sets.acc[state.AccSwaps.value or ""]
     if acc_swaps then
