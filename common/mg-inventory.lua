@@ -969,10 +969,40 @@ return (function ()
         return nil
     end
 
+    function get_move_key(move)
+        return move.item.name.." from "..move.from.." to "..move.to
+    end
+
     function resolve_moves(unresolved_moves, locked_map)
         -- List of current bags, their free slots and lists of floating
         -- and moving items
         local bag_status = T{}
+
+        -- Filter out items with no mention of augments that matches the same
+        -- item with augments.
+        local non_aug_map = T{}
+        for i, move in ipairs(unresolved_moves) do
+            if move.item.full_desc:match("{") then
+                non_aug_map[get_move_key(move)] = move.item.full_desc
+            end
+        end
+
+        local org_moves = unresolved_moves
+        unresolved_moves = T{}
+        for i, move in ipairs(org_moves) do
+            local skip = false
+            if not move.item.full_desc:match("{") then
+                local key = get_move_key(move)
+                if non_aug_map[key] then
+                    say("Skipping moving " .. key .. " because it is " ..
+                        "already handled by moving " .. non_aug_map[key])
+                    skip = true
+                end
+            end
+            if not skip then
+                unresolved_moves:append(move)
+            end
+        end
 
         -- The unresolved moves we want to perform
         unresolved_moves = unresolved_moves or T{}
