@@ -125,6 +125,7 @@ function job_setup()
     CurrentUnlucky = 0;
 
     CheapAmmoList = {
+        "Chrono Bullet",
         "Divine Bullet",
         "Devastating Bullet",
         "Orichalc. Bullet",
@@ -150,6 +151,7 @@ function job_setup()
         "Eminent Bullet",
         "Divine Bullet",
         "Devastating Bullet",
+        "Chrono Bullet",
     };
 
     -- QuickDrawAmmo defaults to HighDamAmmo, but uses these if available:
@@ -160,15 +162,24 @@ function job_setup()
         "Living Bullet",
     };
 
+    -- QuickDrawAmmo defaults to HighDamAmmo, but uses these if available:
+    AccAmmoList = {
+        "Living Bullet",
+        "Chrono Bullet",
+        "Devastating Bullet",
+    };
+
+
     DontWasteBullets = T{
         "Oberon's Bullet",
         "Animikii Bullet",
     };
 
     -- Fallbacks for unconfigured ammo
+    AccAmmo = "Devastating Bullet"
     CheapAmmo = "Devastating Bullet";
-    HighDamAmmo = "Devastating Bullet";
-    QuickDrawAmmo = "Animikii Bullet";
+    HighDamAmmo = "Chrono Bullet";
+    QuickDrawAmmo = "Divine Bullet";
 
     job_self_command("updateammo");
 
@@ -259,6 +270,7 @@ function init_gear_sets()
         ["description"] = "Weapon Mode",
         "Death Penalty",
         "Armageddon",
+        "Fomalhaut",
         "Savage Blade",
         "Single Wield",
     }
@@ -276,6 +288,11 @@ function init_gear_sets()
         main="Naegling",
         sub="Blurred Knife +1",
         range="Armageddon",
+    }
+    sets.weapons["Fomalhaut"] = {
+        main="Naegling",
+        sub="Blurred Knife +1",
+        range="Fomalhaut",
     }
     sets.weapons["Single Wield"] = {
         main="Kustawi +1",
@@ -299,6 +316,7 @@ function init_gear_sets()
         {
             -- COR gifts: 10 snapshot
             -- Flurry is 15, flurry II is 30
+            ammo = AccAmmo,
 
             -- Snapshot +5
             head="Aurore Beret +1",
@@ -573,6 +591,7 @@ function init_gear_sets()
     sets.midcast.RA = set_combine(
         sets.base,
         {
+            ammo = AccAmmo,
             -- racc +48, ratk +44
             head=ambu.head,
             -- racc +46, store TP +6, crit +9
@@ -599,6 +618,14 @@ function init_gear_sets()
             back=capes.storetp,
         }
     );
+    sets.midcast.RA.MediumAcc = set_combine(sets.midcast.RA, {
+        body="Laksa. Frac +3",
+        waist="Eschan Stone",
+        left_ear="Volley Earring",
+        left_ring="Cacoethic Ring +1",
+        right_ring="Cacoethic Ring",
+    });
+    sets.midcast.RA.HighAcc = set_combine(sets.midcast.RA.MediumAcc, {});
 
     sets.midcast.RA.TripleShot = set_combine(
         sets.midcast.RA,
@@ -617,6 +644,19 @@ function init_gear_sets()
             back=capes.storetp,
         }
     )
+    sets.midcast.RA.TripleShot.MediumAcc = set_combine(
+        sets.midcast.RA.TripleShot,
+        {
+            waist="Eschan Stone",
+            -- racc +4, store tp +2
+            left_ear="Volley Earring",
+            -- racc +7, ratk +7, store tp +4
+            right_ear="Enervating Earring",
+            left_ring="Cacoethic Ring +1",
+            right_ring="Cacoethic Ring",
+        }
+    )
+    sets.midcast.RA.TripleShot.HighAcc = sets.midcast.RA.TripleShot.MediumAcc
 
     sets.midcast.RA.TripleShotCrit = set_combine(
         sets.midcast.RA.TripleShot,
@@ -632,6 +672,21 @@ function init_gear_sets()
             -- TODO: Critrate cape
         }
     )
+
+    sets.midcast.RA.TripleShotCrit.MediumAcc = set_combine(
+        sets.midcast.RA.TripleShotCrit,
+        {
+            legs="Malignance Tights",
+            waist="Eschan Stone",
+            -- racc +4, store tp +2
+            left_ear="Volley Earring",
+            -- racc +7, ratk +7, store tp +4
+            right_ear="Enervating Earring",
+            left_ring="Cacoethic Ring +1",
+            right_ring="Cacoethic Ring",
+        }
+    )
+    sets.midcast.RA.TripleShotCrit.HighAcc = sets.midcast.RA.TripleShotCrit.MediumAcc
 
     sets.precast.WS = set_combine(sets.base, {
         -- wsd +10%
@@ -862,6 +917,9 @@ function job_pretarget(spell, eventArgs)
                 classes.CustomRangedGroups:append("TripleShot")
             end
         end
+        if state.AccSwaps.value then
+            classes.CustomRangedGroups:append(state.AccSwaps.value)
+        end
     end
 end
 
@@ -944,9 +1002,6 @@ function filtered_action(spell)
 end
 
 function job_self_command(command, eventArgs)
-    if mg_inv.job_self_command(command, eventArgs) then
-        return
-    end
     if "updateammo" == command then
         local sacks = {
             player.inventory,
@@ -978,10 +1033,19 @@ function job_self_command(command, eventArgs)
                 end
             end
         end
+        for i, ammo in ipairs(AccAmmoList) do
+            for i, sack in ipairs(sacks) do
+                if sack[ammo] then
+                    AccAmmo = ammo;
+                    break
+                end
+            end
+        end
 
         add_to_chat(128, "Ammo summary:");
         add_to_chat(128, "- High Damage Ammo: " .. HighDamAmmo);
         add_to_chat(128, "- Quick Draw Ammo:  " .. QuickDrawAmmo);
         add_to_chat(128, "- Cheap Ammo:       " .. CheapAmmo);
+        add_to_chat(128, "- Acc Ammo:         " .. AccAmmo);
     end
 end
