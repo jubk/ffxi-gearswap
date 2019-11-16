@@ -76,6 +76,10 @@ It supports the following commands:
     Make gear for your current job available by putting it in mog wardrobes or
     in the inventory
 
+  `//mginv gearup inv`
+    Make gear for your current job available by putting it in the main
+    inventory
+
   `//mginv cleanup`
     Try to move all gear to its configured location.
 
@@ -112,13 +116,14 @@ return (function ()
         ["Mog Wardrobe 3"] = true,
         ["Mog Wardrobe 4"] = true,
     }
-    local reverse_field_bags = {
+    local reverse_field_bags = T{
         "Mog Wardrobe 4",
         "Mog Wardrobe 3",
         "Mog Wardrobe 2",
         "Mog Wardrobe",
         "Inventory",
     }
+    local available_bags = reverse_field_bags
 
     local default_config_file = [=[-- Config file for mg-invenotry.
 
@@ -196,6 +201,20 @@ return (function ()
         -- Config methods from the file can now be found in conf_env
         conf_env.setup(config.fixed_position, config.floating_position)
     end
+
+    function set_up_self_command()
+        -- Put a wrapper around existing self command that checks for
+        -- mginv commands.
+        if self_command then
+            local orig_self_command = self_command
+            self_command = function(...)
+                if MGInventory.self_command(unpack(arg)) then
+                    return
+                end
+                orig_self_command(unpack(arg))
+            end
+        end
+    end
     
     function update_database()
         if not sets then return end
@@ -235,6 +254,8 @@ return (function ()
         f:close()
 
         MGInventory.database = db
+
+        set_up_self_command()
 
         print(string.format(
             "MG-inv database updated, %s items registered",
@@ -945,7 +966,7 @@ return (function ()
     function find_field_bag(bag_status, item)
         -- Loop over default bag order so we put stuff in storage before using
         -- field bags.
-        local bags = reverse_field_bags
+        local bags = available_bags
 
         -- If item is coded to be in a specific bag, only try that one
         if item.bag then
@@ -1036,7 +1057,7 @@ return (function ()
         -- Calculate free space and freable slots in all bags. Bail out if
         -- we find out we cannot make enough room in a certain bag.
         for bagname, bag_data in pairs(bag_status) do
-            bag_data.free_slots = (
+            bag_data.free_slots_after = (
                 bag_data.free_slots - bag_data.pending_adds +
                 bag_data.pending_removes
             )
@@ -1044,7 +1065,7 @@ return (function ()
                 bag_data.moving_items:length() +
                 bag_data.floating_items:length()
             )
-            if (bag_data.free_slots + bag_data.freeable_slots) < 0 then
+            if (bag_data.free_slots_after + bag_data.freeable_slots) < 0 then
                 say("Cannot perform the wanted moves, not able to make room" ..
                     " in bag " .. bagname .. ".")
                 return
@@ -1053,7 +1074,7 @@ return (function ()
         
         -- Plan moves needed to free up spaces in bags
         for bagname, bag_data in pairs(bag_status) do
-            local missing_slots = 0 - bag_data.free_slots
+            local missing_slots = 0 - bag_data.free_slots_after
             while missing_slots > 0 do
                 local item = table.remove(bag_data.floating_items) or
                              table.remove(bag_data.moving_items)
@@ -1153,6 +1174,7 @@ return (function ()
                 end
             end
             unresolved_moves = next_unresolved
+
         end
 
         -- Clean up any remaining moves. This should only be moves into the
@@ -1345,12 +1367,18 @@ return (function ()
         end
     end
 
-    function gear_up()
+    function gear_up(args)
         local inv = get_current_inventory()
         local needed_sources = T{}
         local locked_map = T{}
         local seen_items = T{}
         local multi_items = T{}
+
+        if args[1] and args[1] == "inv" then
+            available_bags = T{"Inventory"}
+        else
+            available_bags = reverse_field_bags
+        end
 
         process_items_in_gearsets(sets, function(gs_item)
             local item = item_from_gearswap_data(gs_item)
@@ -1575,7 +1603,7 @@ return (function ()
         export_unused=function(args) MGInventory.export_unused(sets) end,
         summary=function(args) MGInventory.export_summary(sets) end,
         searchinv=function(args) MGInventory.search(args) end,
-        gearup=function(args) gear_up() end,
+        gearup=function(args) gear_up(args) end,
         cleanup=function(args) cleanup() end,
         test=function(args) test() end,
     }
