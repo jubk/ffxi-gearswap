@@ -21,28 +21,6 @@ Installation
 
 local mg_inv = require("mg-inventory");
 
--- Also add a call to mg_inv.self_command (or mg_inv.job_self_command
--- if using Mote-libs) to your self_command (or job_self_command) method:
-
--- Example self_command:
-
-function self_command(command)
-    if mg_inv.self_command(command) then
-        return
-    end
-    -- Rest of self command method goes here
-end
-
--- Example job_self_command method:
-
-function job_self_command(command, eventArgs)
-    if mg_inv.job_self_command(command, eventArgs) then
-        return
-    end
-    -- Rest of self command method goes here
-end
-
--- End of neccessary code changes
 
 Configuration
 =============
