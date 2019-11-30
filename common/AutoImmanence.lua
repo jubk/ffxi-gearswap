@@ -11,7 +11,7 @@
         function get_sets()
             -- Other get_sets code here
 
-            local auto_sc = AutoImmanence();
+            auto_sc = AutoImmanence();
         end
 
     To activate a skillchain do:
