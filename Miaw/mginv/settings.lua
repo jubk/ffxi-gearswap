@@ -1,6 +1,6 @@
 -- Config file for mg-invenotry.
 
-function setup(fixed_position, floating_position)
+function setup()
     --[[
 
     If you want certain gear to have a fixed position specify that
@@ -14,6 +14,15 @@ function setup(fixed_position, floating_position)
         floating_position["Warp Ring"] = "Mog Wardrobe 3"
 
     --]]
+
+    -- Mog Safe
+    fixed_position["Alchemist's Belt"] = "Mog Safe" -- Used by 1 jobs: extra_sets["crafting"]
+    fixed_position["Alchemist's Smock"] = "Mog Safe" -- Used by 1 jobs: extra_sets["crafting"]
+    fixed_position["Alchemst. Torque"] = "Mog Safe" -- Used by 1 jobs: extra_sets["crafting"]
+    fixed_position["Brewer's Shield"] = "Mog Safe" -- Used by 1 jobs: extra_sets["crafting"]
+    fixed_position["Caduceus"] = "Mog Safe" -- Used by 1 jobs: extra_sets["crafting"]
+    fixed_position["Craftkeeper's Ring"] = "Mog Safe" -- Used by 1 jobs: extra_sets["crafting"]
+    fixed_position["Craftmaster's Ring"] = "Mog Safe" -- Used by 1 jobs: extra_sets["crafting"]
 
 
     -- Mog Wardrobe (used):
@@ -325,5 +334,14 @@ function setup(fixed_position, floating_position)
     fixed_position["Skullrender{'DMG:+15','Pet: Accuracy+20','Pet: Attack+20'}"] = "Mog Wardrobe 4" -- Not used
     fixed_position["Taming Sari{'STR+10','DEX+10','DMG:+15','\"Treasure Hunter\"+1'}"] = "Mog Wardrobe 4" -- Not used
 
+    extra_sets["crafting"] = {
+        main="Caduceus",
+        sub="Brewer's Shield",
+        body="Alchemist's Smock",
+        neck="Alchemst. Torque",
+        waist="Alchemist's Belt",
+        left_ring="Craftmaster's Ring",
+        right_ring="Craftkeeper's Ring",
+    }
 end
 
