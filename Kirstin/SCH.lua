@@ -47,6 +47,13 @@ local empy = {
 function get_sets()
     mote_include_version = 2
     include('Mote-Include.lua');
+
+    -- Setup AutoImmanence.
+    auto_sc = AutoImmanence({
+        -- The command alias to use, default is 'sc', so you can use
+        -- //sc fusion to start a fusion skillchain
+        command_alias='sc'
+    })
 end
 
 function job_setup()
@@ -56,12 +63,6 @@ function job_setup()
     -- Initialise map of spells MP cost
     spelltools.setup_spellcost_map(player);
 
-    -- Setup AutoImmanence.
-    auto_sc = AutoImmanence({
-        -- The command alias to use, default is 'sc', so you can use
-        -- //sc fusion to start a fusion skillchain
-        command_alias='sc'
-    })
     -- Make it possible to abort skilchains with alt-q and ctrl-q
     send_command('bind ^q gs c sc abort')
     send_command('bind !q gs c sc abort')
@@ -596,13 +597,6 @@ function init_gear_sets()
 end
 
 
-function job_self_command(command, eventArgs)
-    if auto_sc.self_command(command, eventArgs) then
-        eventArgs.handled = true;
-        return
-    end
-end
-
 function remove_silence(spell)
     -- Do nothing if "spell" is not magic
     if not table.contains({'/magic','/ninjutsu','/song'}, spell.prefix) then
@@ -651,7 +645,6 @@ function filtered_action(spell)
         cancel_spell();
         return;
     end
-    auto_sc.filtered_action(spell)
 end
 
 -- Ensures that idle set is Sublimation whenever sublimation is charging.
@@ -726,8 +719,6 @@ function job_precast(spell, action, spellMap, eventArgs)
         eventArgs.cancel = true;
     end
 
-    auto_sc.precast(spell, eventArgs)
-
     if eventArgs.cancel then
         return;
     end
@@ -755,11 +746,6 @@ function job_post_precast(spell, action, spellMap, eventArgs)
         send_command('input /recast "' .. spell.name .. '"');
     end
 end
-
-function job_midcast(spell, action, spellMap, eventArgs)
-    auto_sc.midcast(spell)
-end
-
 
 function job_post_midcast(spell, action, spellMap, eventArgs)
     if '/magic' == spell.prefix then
@@ -815,8 +801,6 @@ end
 
 
 function job_aftercast(spell, action, spellMap, eventArgs)
-    auto_sc.aftercast(spell)
-
     -- Reset CastingMode back to previous value if it was overwritten
     if OriginalCastingMode ~= nil then
         state.CastingMode:set(OriginalCastingMode)

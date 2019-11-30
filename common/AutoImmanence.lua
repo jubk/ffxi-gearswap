@@ -6,41 +6,12 @@
         -- Top of file
         local AutoImmanence = require("AutoImmanence")
 
+    And then make an instance of the handler in either your get_sets method:
+  
         function get_sets()
-            ...
-            auto_sc = AutoImmanence()
-            ..
-        end
+            -- Other get_sets code here
 
-        function precast(spell)
-            ...
-            auto_sc.precast(spell)
-            ...
-        end
-
-        function midcast(spell)
-            ...
-            auto_sc.midcast(spell)
-            ...
-        end
-
-        function aftercast(spell)
-            ...
-            auto_sc.aftercast(spell)
-            ...
-        end
-
-        function self_command(command)
-            if auto_sc.self_command(command) then
-                return
-            end
-            ...
-        end
-
-        function filtered_action(spell)
-            ...
-            auto_sc.filtered_action(spell) then
-            ...
+            local auto_sc = AutoImmanence();
         end
 
     To activate a skillchain do:
@@ -59,9 +30,16 @@
         //sc water
         //sc darkness
 
+    If you add a postfix of "2" to any skillchain name a helix will be used
+    to close the skillchain, which will make the magic burst window longer:
+
+        //sc fragmentation2
+        //sc ice2
+
 ]]
 
-local AutoImmanence = function(options)
+local AutoImmanence;
+AutoImmanence = function(options)
     local TRANSLATIONS = {
         fire="\253\2\2\27R\253",
         stone="\253\2\2\27X\253",
@@ -127,6 +105,25 @@ local AutoImmanence = function(options)
         translate=t,
         active_skillchain=nil
     }
+
+    -- Initialize methods wrappers on next tick after loading
+    coroutine.schedule(function ()
+        for i, methodname in ipairs(T{"precast", "midcast", "aftercast", "filtered_action"}) do
+            local orig_method = _G[methodname]
+            _G[methodname] = function(...)
+                public[methodname](unpack(arg))
+                orig_method(unpack(arg))
+            end
+        end
+
+        local orig_self_command = _G["self_command"]
+        _G["self_command"] = function(...)
+            if public.self_command(unpack(arg)) then
+                return
+            end
+            orig_self_command(unpack(arg))
+        end
+    end, 0.0001)
 
     function Step(name, perform_method)
         local name=name
