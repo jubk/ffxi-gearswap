@@ -545,7 +545,6 @@ function init_gear_sets()
     }
     sets.acc.HighAcc = {
         -- Baseline acc: 1257
-        sub="Eletta Knife",
         head={ name="Carmine Mask", augments={'Accuracy+15','Mag. Acc.+10','"Fast Cast"+3',}},
         hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         legs=ambu.legs,
