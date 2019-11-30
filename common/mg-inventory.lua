@@ -58,6 +58,12 @@ It supports the following commands:
     Make gear for your current job available by putting it in the main
     inventory
 
+  `//mginv gearup <extra_set_name>`
+  `//mginv gearup <extra_set_name> inv`
+     Make the gear defined in extra_sets.extra_set_name available. If the
+     inv option is passed as well, the items will be placed in the main 
+     inventory.
+
   `//mginv cleanup`
     Try to move all gear to its configured location.
 
@@ -105,7 +111,7 @@ return (function ()
 
     local default_config_file = [=[-- Config file for mg-invenotry.
 
-    function setup(fixed_position, floating_position)
+    function setup()
         --[[
 
         If you want certain gear to have a fixed position specify that
@@ -122,6 +128,19 @@ return (function ()
         specify a list of locations instead:
 
             fixed_position["Varar Ring"] = {"Mog Wardrobe", "Mog Wardrobe 4"}
+
+        You can also configure extra sets that you want to be albe to extract
+        from your bags:
+
+            extra_sets.crafting = {
+                main="Caduceus",
+                sub="Brewer's Shield",
+                body="Alchemist's Smock",
+                neck="Alchemst. Torque",
+                waist="Alchemist's Belt",
+                left_ring="Craftmaster's Ring",
+                right_ring="Craftkeeper's Ring",
+            }
 
         --]]
 
@@ -164,10 +183,15 @@ return (function ()
 
     function MGInventory.load_config()
         -- Create new empty config
-        config = {fixed_position={}, floating_position={}}
+        config = {fixed_position={}, floating_position={}, extra_sets=T{}}
 
         -- Set up the environement in which the config file will be executed
-        local conf_env = { mginv = _G, }
+        local conf_env = {
+            mginv = _G,
+            extra_sets = config.extra_sets,
+            fixed_position = config.fixed_position,
+            floating_position = config.floating_position
+        }
         conf_env['_G'] = conf_env
 
         -- Load the config file
@@ -205,17 +229,21 @@ return (function ()
         end
 
         for itemname, usages in pairs(db.job_usages) do
-            -- Remove existing registration of current job
-            if usages and usages[player.main_job] then
-                usages[player.main_job] = nil
-                -- If this empties the list of using jobs, remove the item
-                -- entry as well.
-                if table.length(usages) == 0 then
-                    db.job_usages[itemname] = nil
+            -- Clean out usages from current job and extra sets usages
+            for key, _ in pairs(usages) do
+                if key == player.main_job or key:startswith("extra_sets") then
+                    usages[key] = nil
                 end
+            end
+
+            -- If this empties the list of using jobs, remove the item
+            -- entry as well.
+            if table.length(usages) == 0 then
+                db.job_usages[itemname] = nil
             end
         end
 
+        -- Collect new usages from gear sets
         process_items_in_gearsets(sets, function(gs_item)
             local item = item_from_gearswap_data(gs_item)
             if item then
@@ -225,6 +253,21 @@ return (function ()
                 db.job_usages[item.full_desc][player.main_job] = true
             end
         end)
+
+        -- Re-register extra_sets usages
+        for name, set in pairs(config.extra_sets) do
+            name = 'extra_sets.' .. name
+            for slot, gs_item in pairs(set) do
+                local item = item_from_gearswap_data(gs_item)
+                if item then
+                    if not db.job_usages[item.full_desc] then
+                        db.job_usages[item.full_desc] = {}
+                    end
+
+                    db.job_usages[item.full_desc][name] = true
+                end
+            end
+        end
 
         local f = io.open(database_file, "w+")
         f:write("return " .. _dump_table(db))
@@ -401,7 +444,7 @@ return (function ()
             returns data like:
             {
                 items={
-                    item1={item=<item>, bags="Inventory"=<item>},
+                    item1={item=<item>, bags="Inventory"},
                     item2{item_augments}={
                         item=<item>,
                         bags={
@@ -1381,14 +1424,19 @@ return (function ()
         local locked_map = T{}
         local seen_items = T{}
         local multi_items = T{}
+        local source_sets = sets
 
-        if args[1] and args[1] == "inv" then
-            available_bags = T{"Inventory"}
-        else
-            available_bags = reverse_field_bags
+        available_bags = reverse_field_bags
+
+        for i, v in ipairs(args) do
+            if v == "inv" then
+                available_bags = T{"Inventory"}
+            elseif config.extra_sets[v] then
+                source_sets = config.extra_sets[v]
+            end
         end
 
-        process_items_in_gearsets(sets, function(gs_item)
+        process_items_in_gearsets(source_sets, function(gs_item)
             local item = item_from_gearswap_data(gs_item)
             if not item then return end
             -- Skip already seen items
