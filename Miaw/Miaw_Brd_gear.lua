@@ -93,47 +93,61 @@ function init_gear_sets()
 	})
 	
 	sets.precast.FC.BardSong = set_combine(sets.precast.FC, {
+		range="Eminent Flute",
 	})
 
 	sets.precast.FC.SongDebuff = set_combine(sets.precast.FC.BardSong,{
+		range="Eminent Flute",
 		-- range="Marsyas"
 	})
 	sets.precast.FC.SongDebuff.Resistant = set_combine(sets.precast.FC.BardSong,{
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	})
 	sets.precast.FC.Lullaby = {
+		range="Eminent Flute",
 		--range="Marsyas"
 	}
 	sets.precast.FC.Lullaby.Resistant = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby'] = {
+		range="Eminent Flute",
 		--range="Marsyas"
 	}
 	sets.precast.FC['Horde Lullaby'].Resistant = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby'].AoE = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby II'] = {
+		range="Eminent Flute",
 		--range="Marsyas"
 	}
 	sets.precast.FC['Horde Lullaby II'].Resistant = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby II'].AoE = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 		
 	sets.precast.FC.Mazurka = set_combine(sets.precast.FC.BardSong,{
+		range="Eminent Flute",
 		--range="Marsyas"
 	})
 	sets.precast.FC['Honor March'] = set_combine(sets.precast.FC.BardSong,{
+		range="Eminent Flute",
 		--range="Marsyas"
 	})
 
 	sets.precast.FC.Daurdabla = set_combine(sets.precast.FC.BardSong, {
+		range="Eminent Flute",
 		-- range=info.ExtraSongInstrument
 	})
 	sets.precast.DaurdablaDummy = sets.precast.FC.Daurdabla
@@ -196,8 +210,8 @@ function init_gear_sets()
 		ear2="Loquacious Earring",
 		--body="Inyanga Jubbah +2",
 		--hands="Leyline Gloves",
-		ring1="Kishar Ring",
-		--ring2="Lebeche Ring",
+		ring2="Kishar Ring",
+		--ring1="Lebeche Ring",
 		--back="Intarabus's Cape",
 		--waist="Witful Belt",
 		--legs="Aya. Cosciales +2",
@@ -209,27 +223,35 @@ function init_gear_sets()
 		--legs="Fili Rhingrave +1"
 	}
 	sets.midcast.Lullaby = {
+		range="Eminent Flute",
 		--range="Marsyas"
 	}
 	sets.midcast.Lullaby.Resistant = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.midcast['Horde Lullaby'] = {
+		range="Eminent Flute",
 		--range="Marsyas"
 	}
 	sets.midcast['Horde Lullaby'].Resistant = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.midcast['Horde Lullaby'].AoE = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.midcast['Horde Lullaby II'] = {
+		range="Eminent Flute",
 		--range="Marsyas"
 	}
 	sets.midcast['Horde Lullaby II'].Resistant = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.midcast['Horde Lullaby II'].AoE = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.midcast.Madrigal = {
@@ -240,6 +262,7 @@ function init_gear_sets()
 		--hands="Fili Manchettes +1"
 	}
 	sets.midcast['Honor March'] = set_combine(sets.midcast.March,{
+		range="Eminent Flute",
 		--range="Marsyas"
 	})
 	sets.midcast.Minuet = {
@@ -249,9 +272,11 @@ function init_gear_sets()
 	sets.midcast.Carol = {}
 	sets.midcast["Sentinel's Scherzo"] = {} --feet="Fili Cothurnes +1" Brioso Slippers still provides more Duration
 	sets.midcast['Magic Finale'] = {
+		range="Eminent Flute",
 		--range="Gjallarhorn"
 	}
 	sets.midcast.Mazurka = {
+		range="Eminent Flute",
 		--range="Marsyas"
 	}
 	
@@ -276,8 +301,9 @@ function init_gear_sets()
 	sets.midcast.SongDebuff = {
 		--main="Kali",
 		sub="Ammurapi Shield",
+		range="Eminent Flute",
 		--range="Marsyas",
-		ammo=empty,
+		--ammo=empty,
 		--head="Aya. Zucchetto +2",
 		--neck="Moonbow Whistle",
 		--ear1="Gwati Earring",
@@ -296,8 +322,9 @@ function init_gear_sets()
 	sets.midcast.SongDebuff.Resistant = {
 		--main="Kali",
 		sub="Ammurapi Shield",
+		range="Eminent Flute",
 		--range="Gjallarhorn",
-		ammo=empty,
+		--ammo=empty,
 		--head="Aya. Zucchetto +2",
 		--neck="Moonbow Whistle",
 		--ear1="Gwati Earring",
@@ -316,16 +343,17 @@ function init_gear_sets()
 	sets.midcast.SongRecast = {
 		main=gear.grioavolr_fc_staff,
 		--sub="Clerisy Strap +1",
+		range="Eminent Flute",
 		--range="Gjallarhorn",
-		ammo=empty,
+		--ammo=empty,
 		--head="Nahtirah Hat",
 		neck="Voltsurge Torque",
 		--ear1="Enchntr. Earring +1",
 		ear2="Loquacious Earring",
 		--body="Inyanga Jubbah +2",
 		--hands="Gendewitha Gages +1",
-		ring1="Kishar Ring",
-		ring2="Prolix Ring",
+		ring2="Kishar Ring",
+		ring1="Prolix Ring",
 		--back="Intarabus's Cape",
 		--waist="Witful Belt",
 		--legs="Fili Rhingrave +1",
@@ -336,11 +364,13 @@ function init_gear_sets()
 
 	-- Cast spell with normal gear, except using Daurdabla instead
     sets.midcast.Daurdabla = {
+		range="Eminent Flute",
 		--range=info.ExtraSongInstrument
 	}
 
 	-- Dummy song with Daurdabla; minimize duration to make it easy to overwrite.
     sets.midcast.DaurdablaDummy = set_combine(sets.midcast.SongRecast, {
+		range="Eminent Flute",
 		--range=info.ExtraSongInstrument
 	})
 
@@ -455,7 +485,8 @@ function init_gear_sets()
 
 	-- Resting sets
 	sets.resting = {
-		head=empty,neck="Loricate Torque +1",
+		--head=empty,
+		neck="Loricate Torque +1",
 		ear1="Etiolation Earring",
 		--ear2="Ethereal Earring",
 		--body="Respite Cloak",
@@ -504,7 +535,8 @@ function init_gear_sets()
 		--main="Terra's Staff",
 		--sub="Umbra Strap",
 		ammo="Staunch Tathlum",
-		head=empty,neck="Loricate Torque +1",
+		--head=empty,
+		neck="Loricate Torque +1",
 		ear1="Etiolation Earring",
 		--ear2="Ethereal Earring",
 		--body="Respite Cloak",
@@ -521,7 +553,7 @@ function init_gear_sets()
 		--main="Terra's Staff",
 		--sub="Umbra Strap",
 		ammo="Staunch Tathlum",
-		head=empty,
+		--head=empty,
 		neck="Loricate Torque +1",
 		ear1="Etiolation Earring",
 		--ear2="Ethereal Earring",
@@ -547,7 +579,7 @@ function init_gear_sets()
 	-- EG: sets.engaged.Dagger.Accuracy.Evasion
 	
 	sets.engaged = {
-		--main="Aeneas",
+		main="Tauret",
 		sub="Genmei Shield",
 		--ammo="Ginsen",
 		--head="Aya. Zucchetto +2",

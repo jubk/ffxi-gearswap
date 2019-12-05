@@ -322,8 +322,8 @@ function init_gear_sets()
             head="Aurore Beret +1",
             -- Snapshot +12
             body="Oshosi Vest",
-            -- snapshot +2, racc +15
-            neck="Commodore Charm",
+            -- snapshot +4, racc +25
+            neck="Comm. Charm +2",
             -- Snapshot +8, rapid shot +11
             hands={
                 name="Carmine Fin. Ga. +1",
@@ -342,7 +342,7 @@ function init_gear_sets()
             -- Snapshot 6.5
             back="Navarch's Mantle",
 
-            -- Total: 68.5
+            -- Total: 70.5
             -- Cap with no buffs: 70
             -- Cap with flurry: 55
             -- Cap with flurry II: 40
@@ -618,6 +618,8 @@ function init_gear_sets()
         }
     );
     sets.midcast.RA.MediumAcc = set_combine(sets.midcast.RA, {
+        -- racc +25
+        neck="Comm. Charm +2",
         body="Laksa. Frac +3",
         waist="Eschan Stone",
         left_ear="Volley Earring",
@@ -757,6 +759,8 @@ function init_gear_sets()
         {
             -- macc +25, matk +35
             ammo="Living Bullet",
+            -- matk +7, mdam +25, AGI +15
+            neck="Comm. Charm +2",
             body=relic.body,
         }
     );
@@ -766,7 +770,8 @@ function init_gear_sets()
             -- macc +25, matk +35
             ammo="Living Bullet",
             head="Pixie Hairpin +1",
-            neck="Sanctity Necklace",
+            -- matk +7, mdam +25, AGI +15
+            neck="Comm. Charm +2",
             right_ear={
                 name="Moonshade Earring",
                 augments={'Rng.Atk.+4','TP Bonus +250',}
@@ -790,6 +795,8 @@ function init_gear_sets()
         sets.precast.WS,
         {
             head="Meghanada Visor +2",
+            -- STR+15
+            neck="Comm. Charm +2",
             body=AF.body,
             hands="Meg. Gloves +2",
             legs="Meg. Chausses +2",
