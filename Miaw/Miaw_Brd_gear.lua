@@ -1,3 +1,17 @@
+-- MG library
+local MG = require("mg-lib")
+
+local mg_initialized = false
+
+function setup_mg()
+	if mg_initialized then return end
+
+	MG.hud.initialize({})
+	MG.BardSongs({})
+
+	mg_initialized = true
+end
+
 function user_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal','Acc')
@@ -6,9 +20,9 @@ function user_setup()
 	state.Weapons:options('None','Aeneas','DualWeapons','DualSwords','DualNukeWeapons')
 
 	-- Adjust this if using the Terpander (new +song instrument)
-    info.ExtraSongInstrument = 'Terpander'
+    info.ExtraSongInstrument = 'Daurdabla'
 	-- How many extra songs we can keep from Daurdabla/Terpander
-    info.ExtraSongs = 1
+    info.ExtraSongs = 2
 	
 	-- Set this to false if you don't want to use custom timers.
     state.UseCustomTimers = M(false, 'Use Custom Timers')
@@ -22,7 +36,11 @@ function user_setup()
 	-- send_command('bind !q gs c weapons NukeWeapons;gs c update')
 	-- send_command('bind ^q gs c weapons Swords;gs c update')
 
+	send_command('bind ^f10 gs c cycle Weapons')
+
 	select_default_macro_book()
+
+	setup_mg()
 end
 
 function init_gear_sets()
@@ -31,22 +49,53 @@ function init_gear_sets()
 	-- Start defining the sets
 	--------------------------------------
 
+	local AF = {
+		head="Brioso Roundlet +1",
+		feet="Brioso Slippers +2",
+	}
+
+	local relic = {
+		body="Bihu Jstcorps +1",
+		hands="Bihu Cuffs +1",
+		legs="Bihu Cannions +1",
+		feet="Bihu Slippers +1",
+	}
+
+	local empy = {
+		head="Fili Calot +1",
+		body="Fili Hongreline +1",
+		hands="Fili Manchettes +1",
+		legs="Fili Rhingrave +1",
+		feet="Fili Cothurnes +1",
+	}
+
+	local ambu = {
+		head="Aya. Zucchetto +2",
+		body="Ayanmo Corazza +1",
+		hands="Aya. Manopolas +1",
+		legs="Aya. Cosciales +1",
+		feet="Aya. Gambieras +2",
+	}
+
 	-- Weapons sets
 	sets.weapons.Aeneas = {
 		--main="Aeneas",
+		main="Tauret",
 		sub="Genmei Shield"
 	}
 	sets.weapons.DualWeapons = {
-		--main="Aeneas",
-		sub="Taming Sari"
+		main="Tauret",
+		sub="Blurred Knife +1",
 	}
 	sets.weapons.DualSwords = {
 		--main="Vampirism",
 		--sub="Vampirism"
+		main="Naegling",
+		sub="Demers. Degen +1",
 	}
 	sets.weapons.DualNukeWeapons = {
-		main="Malevolence",
-		sub="Malevolence"
+		main={ name="Malevolence", augments={'INT+9','Mag. Acc.+10','"Mag.Atk.Bns."+9','"Fast Cast"+4',}},
+		sub={ name="Malevolence", augments={'INT+10','Mag. Acc.+10','"Mag.Atk.Bns."+8','"Fast Cast"+5',}},
 	}
 	
 	-- Precast Sets
@@ -62,6 +111,8 @@ function init_gear_sets()
 				'Magic Damage +3',
 			}
 		},
+		-- fc +14
+		body="Inyanga Jubbah +2",
 		-- fc +7
 		hands="Gende. Gages +1",
 		-- fc +4
@@ -85,7 +136,11 @@ function init_gear_sets()
 	}
 
 	sets.precast.FC.Cure = set_combine(sets.precast.FC, {
-		feet="Vanya Clogs"
+		feet="Vanya Clogs",
+		-- cure casting time -15%
+		legs="Doyen Pants",
+		feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
+		back="Pahtli Cape",
 	})
 
 	sets.precast.FC['Enhancing Magic'] = set_combine(sets.precast.FC, {
@@ -93,62 +148,56 @@ function init_gear_sets()
 	})
 	
 	sets.precast.FC.BardSong = set_combine(sets.precast.FC, {
-		range="Eminent Flute",
+		main="Kali",
+		sub="Genmei Shield",
+		head="Fili Calot +1",
+		range="Gjallarhorn",
+		-- song casting time -6%
+		legs="Doyen Pants",
+		-- song casting time -6%
+		feet="Telchine Pigaches",
 	})
 
 	sets.precast.FC.SongDebuff = set_combine(sets.precast.FC.BardSong,{
-		range="Eminent Flute",
-		-- range="Marsyas"
+		range="Marsyas"
 	})
 	sets.precast.FC.SongDebuff.Resistant = set_combine(sets.precast.FC.BardSong,{
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	})
 	sets.precast.FC.Lullaby = {
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	}
 	sets.precast.FC.Lullaby.Resistant = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby'] = {
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	}
 	sets.precast.FC['Horde Lullaby'].Resistant = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby'].AoE = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby II'] = {
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	}
 	sets.precast.FC['Horde Lullaby II'].Resistant = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby II'].AoE = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 		
 	sets.precast.FC.Mazurka = set_combine(sets.precast.FC.BardSong,{
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	})
 	sets.precast.FC['Honor March'] = set_combine(sets.precast.FC.BardSong,{
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	})
 
 	sets.precast.FC.Daurdabla = set_combine(sets.precast.FC.BardSong, {
-		range="Eminent Flute",
-		-- range=info.ExtraSongInstrument
+		range=info.ExtraSongInstrument
 	})
 	sets.precast.DaurdablaDummy = sets.precast.FC.Daurdabla
 		
@@ -156,13 +205,13 @@ function init_gear_sets()
 	-- Precast sets to enhance JAs
 	
 	sets.precast.JA.Nightingale = {
-		--feet="Bihu Slippers +1"
+		feet=relic.feet
 	}
 	sets.precast.JA.Troubadour = {
-		--body="Bihu Jstcorps +1"
+		body=relic.body
 	}
 	sets.precast.JA['Soul Voice'] = {
-		--legs="Bihu Cannions +1"
+		legs=relic.legs
 	}
 
 	-- Waltz set (chr and vit)
@@ -171,18 +220,18 @@ function init_gear_sets()
 	-- Weaponskill sets
 	-- Default set for any weaponskill that isn't any more specifically defined
 	sets.precast.WS = {
-		--head="Aya. Zucchetto +2",
+		head=ambu.head,
 		--neck="Caro Necklace",
 		ear1="Moonshade Earring",
 		ear2="Ishvara Earring",
-		--body="Ayanmo Corazza +2",
-		--hands="Aya. Manopolas +2",
+		body=ambu.body,
+		hands=ambu.hands,
 		--ring1="Ramuh Ring +1",
 		ring2="Ilabrat Ring",
 		--back="Ground. Mantle +1",
 		--waist="Grunfeld Rope",
-		--legs="Aya. Cosciales +2",
-		--feet="Aya. Gambieras +2"
+		legs=ambu.legs,
+		feet=ambu.feet,
 	}
 		
 	-- Swap to these on Moonshade using WS if at 3000 TP
@@ -203,193 +252,179 @@ function init_gear_sets()
 	-- General set for recast times.
 	sets.midcast.FastRecast = {
 		main=gear.grioavolr_fc_staff,
-		--sub="Clerisy Strap +1",
+		sub="Clerisy Strap",
 		--head="Nahtirah Hat",
 		neck="Voltsurge Torque",
 		--ear1="Enchntr. Earring +1",
 		ear2="Loquacious Earring",
-		--body="Inyanga Jubbah +2",
+		body="Inyanga Jubbah +2",
 		--hands="Leyline Gloves",
 		ring2="Kishar Ring",
 		--ring1="Lebeche Ring",
 		--back="Intarabus's Cape",
 		--waist="Witful Belt",
-		--legs="Aya. Cosciales +2",
+		legs=ambu.legs,
 		--feet="Gende. Galosh. +1"
 	}
 
 	-- Gear to enhance certain classes of songs
 	sets.midcast.Ballad = {
-		--legs="Fili Rhingrave +1"
+		legs=empy.legs,
 	}
 	sets.midcast.Lullaby = {
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	}
 	sets.midcast.Lullaby.Resistant = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.midcast['Horde Lullaby'] = {
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	}
 	sets.midcast['Horde Lullaby'].Resistant = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.midcast['Horde Lullaby'].AoE = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.midcast['Horde Lullaby II'] = {
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	}
 	sets.midcast['Horde Lullaby II'].Resistant = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.midcast['Horde Lullaby II'].AoE = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.midcast.Madrigal = {
-		--head="Fili Calot +1"
+		head=empy.head
 	}
 	sets.midcast.Paeon = {}
 	sets.midcast.March = {
-		--hands="Fili Manchettes +1"
+		hands=empy.hands
 	}
 	sets.midcast['Honor March'] = set_combine(sets.midcast.March,{
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	})
 	sets.midcast.Minuet = {
-		--body="Fili Hongreline +1"
+		body=empy.body
 	}
 	sets.midcast.Minne = {}
 	sets.midcast.Carol = {}
-	sets.midcast["Sentinel's Scherzo"] = {} --feet="Fili Cothurnes +1" Brioso Slippers still provides more Duration
+	sets.midcast["Sentinel's Scherzo"] = {} 
 	sets.midcast['Magic Finale'] = {
-		range="Eminent Flute",
-		--range="Gjallarhorn"
+		range="Gjallarhorn"
 	}
 	sets.midcast.Mazurka = {
-		range="Eminent Flute",
-		--range="Marsyas"
+		range="Marsyas"
 	}
 	
 
 	-- For song buffs (duration and AF3 set bonus)
 	sets.midcast.SongEffect = {
-		--head="Brioso Roundlet +2",
-		--neck="Moonbow whistle",
+		main="Kali",
+		sub="Genmei Shield",
+		head=AF.head,
+		neck="Moonbow whistle",
 		ear2="Loquacious Earring",
 		--ear1="Musical earring",
-		--body="Fili Hongreline +1",
-		--hands="Fili Manchettes",
+		body=empy.body,
+		hands=empy.hands,
 		--back="Intarabus's cape",
 		--waist="Harfner's sash",
-		--legs="Inyanga Shalwar +2",
-		--feet="Brioso Slippers +3"
+		legs="Inyanga Shalwar +2",
+		feet=AF.feet,
 	}
 		
 	sets.midcast.SongEffect.DW = {}
 
 	-- For song defbuffs (duration primary, accuracy secondary)
 	sets.midcast.SongDebuff = {
-		--main="Kali",
+		ain="Kali",
 		sub="Ammurapi Shield",
-		range="Eminent Flute",
-		--range="Marsyas",
+		range="Marsyas",
 		--ammo=empty,
-		--head="Aya. Zucchetto +2",
-		--neck="Moonbow Whistle",
+		head=ambu.head,
+		neck="Moonbow Whistle",
 		--ear1="Gwati Earring",
 		ear2="Digni. Earring",
-		--body="Fili Hongreline +1",
+		body=empy.body,
 		--hands="Inyan. Dastanas +2",
 		--ring1="Stikini Ring",
 		--ring2="Stikini Ring",
 		--back="Intarabus's Cape",
 		waist="Luminary Sash",
-		--legs="Inyanga Shalwar +2",
-		--feet="Brioso Slippers +1"
+		legs="Inyanga Shalwar +2",
+		feet=AF.feet,
 	}
 
 	-- For song defbuffs (accuracy primary, duration secondary)
 	sets.midcast.SongDebuff.Resistant = {
-		--main="Kali",
+		main="Kali",
 		sub="Ammurapi Shield",
-		range="Eminent Flute",
-		--range="Gjallarhorn",
+		range="Gjallarhorn",
 		--ammo=empty,
-		--head="Aya. Zucchetto +2",
-		--neck="Moonbow Whistle",
+		head=ambu.head,
+		neck="Moonbow Whistle",
 		--ear1="Gwati Earring",
 		ear2="Digni. Earring",
-		--body="Inyanga Jubbah +2",
+		body="Inyanga Jubbah +2",
 		--hands="Inyan. Dastanas +2",
 		--ring1="Stikini Ring",
 		--ring2="Stikini Ring",
 		--back="Intarabus's Cape",
 		waist="Luminary Sash",
-		--legs="Inyanga Shalwar +2",
-		--feet="Aya. Gambieras +2"
+		legs="Inyanga Shalwar +2",
+		feet=ambu.feet,
 	}
 
 	-- Song-specific recast reduction
 	sets.midcast.SongRecast = {
 		main=gear.grioavolr_fc_staff,
-		--sub="Clerisy Strap +1",
-		range="Eminent Flute",
-		--range="Gjallarhorn",
+		sub="Clerisy Strap",
+		range="Gjallarhorn",
 		--ammo=empty,
 		--head="Nahtirah Hat",
 		neck="Voltsurge Torque",
 		--ear1="Enchntr. Earring +1",
 		ear2="Loquacious Earring",
-		--body="Inyanga Jubbah +2",
+		body="Inyanga Jubbah +2",
 		--hands="Gendewitha Gages +1",
 		ring2="Kishar Ring",
 		ring1="Prolix Ring",
 		--back="Intarabus's Cape",
 		--waist="Witful Belt",
-		--legs="Fili Rhingrave +1",
-		--feet="Aya. Gambieras +2"
+		legs=empy.legs,
+		feet=ambu.feet,
 	}
 		
 	sets.midcast.SongDebuff.DW = {}
 
 	-- Cast spell with normal gear, except using Daurdabla instead
     sets.midcast.Daurdabla = {
-		range="Eminent Flute",
-		--range=info.ExtraSongInstrument
+		range=info.ExtraSongInstrument
 	}
 
 	-- Dummy song with Daurdabla; minimize duration to make it easy to overwrite.
     sets.midcast.DaurdablaDummy = set_combine(sets.midcast.SongRecast, {
-		range="Eminent Flute",
-		--range=info.ExtraSongInstrument
+		range=info.ExtraSongInstrument
 	})
 
 	-- Other general spells and classes.
 	sets.midcast.Cure = {
-		--main="Serenity",
-		--sub="Curatio Grip",
+		main="Daybreak",
+		sub="Genmei Shield",
 		--head="Gende. Caubeen",
-		--neck="Incanter's Torque",
+		neck="Nodens Gorget",
 		--ear1="Gifted Earring",
 		ear2="Mendi. Earring",
 		--body="Gendewitha bliaut",
-		--hands="Inyanga dastanas +1",
+		hands={ name="Telchine Gloves", augments={'"Cure" potency +4%','Enh. Mag. eff. dur. +10',}},
 		--ring1="Ephedra ring",
 		--ring2="Menelaus's Ring",
-		--back="Dispercer's cape",
+		back="Solemnity Cape",
 		waist="Bishop's sash",
-		--legs="Vanya slops",
-		feet="Vanya clogs"
+		legs="Gyve Trousers",
+		feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
 	}
 		
 	sets.Self_Healing = {
@@ -453,7 +488,7 @@ function init_gear_sets()
 		
 	sets.midcast['Elemental Magic'].Resistant = {
 		--main="Marin Staff +1",
-		--sub="Clerisy Strap +1",
+		sub="Clerisy Strap",
 		--ammo="Dosis Tathlum",
 		--head="Buremte Hat",
 		neck="Sanctity Necklace",
@@ -462,7 +497,7 @@ function init_gear_sets()
 		--body="Chironic Doublet",
 		hands="Volte Gloves",
 		ring1="Shiva Ring +1",
-		ring2="Shiva Ring +1",
+		--ring2="Shiva Ring +1",
 		--back="Toro Cape",
 		--waist="Yamabuki-no-Obi",
 		legs="Gyve Trousers",
@@ -500,49 +535,66 @@ function init_gear_sets()
 	}
 	
 	sets.idle = {
-		--head="Ayanmo zucchetto +2",
+		main="Naegling",
+		sub="Genmei Shield",
+		head=ambu.head,
+		legs=ambu.legs,
+		feet=ambu.feet,
 		neck="Loricate Torque +1",
 		ear1="Etiolation Earring",
 		--ear2="Ethereal Earring",
-		--body="Ayanmo corazza +2",
-		--hands="Ayanmo manopolas +2",
-		--ring1="Fortified ring",
-		--ring2="Spiral ring",
+		body=ambu.body,
+		hands=ambu.hands,
+		left_ring="Defending Ring",
+		right_ring="Vocane Ring",
+		back="Solemnity Cape",
 		--back="Umbra Cape",
 		--waist="Flume Belt",
 		--legs="Assid. Pants",
-		--feet="Fili Cothurnes"
+		feet=empy.feet,
 	}
 
 	sets.idle.PDT ={
-		--head="Ayanmo zucchetto +2",
+		main="Naegling",
+		sub="Genmei Shield",
+		legs=ambu.legs,
+		feet=ambu.feet,
+		head=ambu.head,
 		neck="Loricate Torque +1",
 		ear1="Etiolation Earring",
 		--ear2="Ethereal Earring",
-		--body="Ayanmo corazza +2",
-		--hands="Ayanmo manopolas +2",
-		--ring1="Fortified ring",
-		--ring2="Spiral ring",
+		body=ambu.body,
+		hands=ambu.hands,
+		left_ring="Defending Ring",
+		right_ring="Vocane Ring",
+		back="Solemnity Cape",
 		--back="Umbra Cape",
 		--waist="Flume Belt",
 		--legs="Assid. Pants",
-		--feet="Fili Cothurnes"
+		feet=empy.feet,
 	}
 	
 	-- Defense sets
 
 	sets.defense.PDT = {
+		main="Naegling",
+		sub="Genmei Shield",
 		--main="Terra's Staff",
 		--sub="Umbra Strap",
 		ammo="Staunch Tathlum",
-		--head=empty,
+		head="Hike Khat",
+		body="Inyanga Jubbah +2",
+		hands="Volte Gloves",
+		legs=ambu.legs,
+		feet=ambu.feet,
 		neck="Loricate Torque +1",
 		ear1="Etiolation Earring",
 		--ear2="Ethereal Earring",
 		--body="Respite Cloak",
 		hands=gear.chironic_refresh_hands,
-		ring1="Defending Ring",
-		--ring2="Dark Ring",
+		left_ring="Defending Ring",
+		right_ring="Vocane Ring",
+		back="Solemnity Cape",
 		--back="Umbra Cape",
 		--waist="Flume Belt",
 		--legs="Assid. Pants +1",
@@ -550,17 +602,24 @@ function init_gear_sets()
 	}
 
 	sets.defense.MDT = {
+		main="Naegling",
+		sub="Genmei Shield",
 		--main="Terra's Staff",
 		--sub="Umbra Strap",
 		ammo="Staunch Tathlum",
-		--head=empty,
+		head="Hike Khat",
+		body="Inyanga Jubbah +2",
+		hands="Volte Gloves",
+		legs=ambu.legs,
+		feet=ambu.feet,
 		neck="Loricate Torque +1",
 		ear1="Etiolation Earring",
 		--ear2="Ethereal Earring",
 		--body="Respite Cloak",
 		hands=gear.chironic_refresh_hands,
-		ring1="Defending Ring",
-		--ring2="Dark Ring",
+		left_ring="Defending Ring",
+		right_ring="Vocane Ring",
+		back="Solemnity Cape",
 		--back="Umbra Cape",
 		--waist="Flume Belt",
 		--legs="Assid. Pants +1",
@@ -568,7 +627,7 @@ function init_gear_sets()
 	}
 
 	sets.Kiting = {
-		--feet="Fili Cothurnes +1"
+		feet=empy.feet,
 	}
 
 	-- Engaged sets
@@ -582,69 +641,77 @@ function init_gear_sets()
 		main="Tauret",
 		sub="Genmei Shield",
 		--ammo="Ginsen",
-		--head="Aya. Zucchetto +2",
+		head=ambu.head,
+		neck="Sanctity Necklace",
 		--neck="Asperity Necklace",
 		ear1="Cessance Earring",
 		ear2="Brutal Earring",
-		--body="Ayanmo Corazza +2",
-		--hands="Aya. Manopolas +2",
+		body=ambu.body,
+		hands=ambu.hands,
 		ring1="Petrov Ring",
 		ring2="Ilabrat Ring",
+		back="Kayapa Cape",
 		--back="Bleating Mantle",
 		waist="Windbuffet Belt +1",
-		--legs="Aya. Cosciales +2",
-		--feet="Battlecast Gaiters"
+		legs=ambu.legs,
+		feet=ambu.feet,
 	}
 	sets.engaged.Acc = {
 		--main="Aeneas",
 		sub="Genmei Shield",
 		--ammo="Ginsen",
-		--head="Aya. Zucchetto +2",
+		head=ambu.head,
+		neck="Sanctity Necklace",
 		--neck="Combatant's Torque",
 		ear1="Digni. Earring",
 		--ear2="Telos Earring",
-		--body="Ayanmo Corazza +2",
-		--hands="Aya. Manopolas +2",
+		body=ambu.body,
+		hands=ambu.hands,
 		--ring1="Ramuh Ring +1",
 		ring2="Ilabrat Ring",
+		back="Kayapa Cape",
 		--back="Letalis Mantle",
 		waist="Olseni Belt",
-		--legs="Aya. Cosciales +2",
-		--feet="Aya. Gambieras +2"
+		legs=ambu.legs,
+		feet=ambu.feet,
 	}
 	sets.engaged.DW = {
 		--main="Aeneas",
 		sub="Blurred Knife +1",
 		--ammo="Ginsen",
-		--head="Aya. Zucchetto +2",
+		head=ambu.head,
+		neck="Sanctity Necklace",
 		--neck="Asperity Necklace",
 		ear1="Suppanomimi",
 		ear2="Brutal Earring",
-		--body="Ayanmo Corazza +2",
-		--hands="Aya. Manopolas +2",
+		body=ambu.body,
+		hands=ambu.hands,
 		ring1="Petrov Ring",
 		ring2="Ilabrat Ring",
+		back="Kayapa Cape",
 		--back="Bleating Mantle",
 		--waist="Reiki Yotai",
-		--legs="Aya. Cosciales +2",
-		--feet="Battlecast Gaiters"
+		legs=ambu.legs,
+		feet=ambu.feet,
 	}
 	sets.engaged.DW.Acc = {
 		--main="Aeneas",
 		sub="Blurred Knife +1",
 		--ammo="Ginsen",
-		--head="Aya. Zucchetto +2",
+		head=ambu.head,
+		neck="Sanctity Necklace",
 		--neck="Combatant's Torque",
 		ear1="Suppanomimi",
 		--ear2="Telos Earring",
-		--body="Ayanmo Corazza +2",
-		--hands="Aya. Manopolas +2",
+		body=ambu.body,
+		hands=ambu.hands,
 		--ring1="Ramuh Ring +1",
 		ring2="Ilabrat Ring",
+		back="Kayapa Cape",
 		--back="Bleating Mantle",
 		--waist="Reiki Yotai",
-		--legs="Aya. Cosciales +2",
-		--feet="Battlecast Gaiters"
+		legs=ambu.legs,
+		feet=ambu.feet,
 	}
 
 

@@ -23,6 +23,7 @@ MG.hud = (function()
 
         keybind_color = {128, 128, 128},
         value_color = {125,125,255},
+        heading_color = {255, 115, 0},
 
         visible = true,
         draggable = true,
@@ -57,6 +58,7 @@ MG.hud = (function()
         )
         new.keybind_color_text = color(new.keybind_color) or ""
         new.value_color_text = color(new.value_color) or ""
+        new.heading_color_text = color(new.heading_color) or ""
 
         hud.settings = new
 
@@ -115,7 +117,7 @@ MG.hud = (function()
     function build_template()
         local template = ''
         for i, elem in pairs(elements) do
-            template = template .. elem:get_template() .. '\\cr\n'
+            template = template .. elem:get_template(hud) .. '\\cr\n'
         end
         return template
     end
@@ -140,7 +142,27 @@ MG.hud = (function()
     end
 
     function hud:add_mote_mode(mote_mode, options)
-        elements:append(MG.MoteWrapper(hud, mote_mode, options))
+        hud:add_element(MG.MoteWrapper(hud, mote_mode, options))
+    end
+
+    function hud:add_heading(text)
+        self:add_element({
+            get_template = function() 
+                local template = T{}
+    
+                template:append(hud.settings.heading_color_text)
+                template:append(text)
+    
+                return template:concat("")
+            end,
+            get_context = function()
+                return {}
+            end,
+        })
+    end
+
+    function hud:add_element(elem)
+        elements:append(elem)
         rebuild_output()
         hud:update_context()
     end
@@ -170,6 +192,7 @@ MG.MoteWrapper = (function()
         self.mode = mote_mode
         self.wrapper_index = idx
         self.keybind_text = options.keybind_text
+        self.description = options.description or self.mode.description
 
         idx = idx + 1
 
@@ -196,7 +219,9 @@ MG.MoteWrapper = (function()
             local binding = MG.InputHandler.bind(
                 options.keybind,
                 function(mods)
-                    if mods.shift then
+                    if self.mode._track._type == "boolean" then
+                        self.mode:toggle()
+                    elseif mods.shift then
                         self.mode:cycleback()
                     else
                         self.mode:cycle()
@@ -223,7 +248,7 @@ MG.MoteWrapper = (function()
             template:append(self.hud.settings.default_color_text)
         end
 
-        template:append(self.mode.description)
+        template:append(self.description)
         template:append(": ")
 
         template:append(self.hud.settings.value_color_text)
@@ -756,6 +781,457 @@ MG.force_equip_set = function(set)
         nil,
         set
     )
+end
+
+MG.actionsystem_idx = 0
+
+MG.ActionSystem = function(name)
+
+    local action_queue = T{}
+    local action_coroutine = nil
+    local name = name or "Default action system"
+    local on_change_handlers = T{}
+    local id = MG.actionsystem_idx
+
+    MG.actionsystem_idx = MG.actionsystem_idx +1
+
+    function trigger_action_change()
+        for i, method in ipairs(on_change_handlers) do
+            method()
+        end
+    end
+
+    function clear_coroutine()
+        if action_coroutine then
+            coroutine.close(action_coroutine)
+            action_coroutine = nil
+        end
+    end
+
+    function process_actions()
+        local next_action = action_queue[1]
+
+        trigger_action_change()
+
+        -- Do not do anything if there is no next action
+        if not next_action then 
+            clear_coroutine()
+            return 
+        end
+
+        -- If next action has not 
+        if not next_action.started then
+            next_action:perform()
+            return process_actions()
+        end
+
+        if next_action:is_done() then
+            -- Remove current action
+            action_queue:remove(1)
+            -- And call ourselves again
+            return process_actions()
+        end
+
+        -- Figure out when we should next checke progress, capping
+        -- the wait time at 0.1 seconds
+        local next_check = next_action.done_time - os.clock()
+        if 0.1 < next_check then next_check = 0.1 end
+
+        action_coroutine = coroutine.schedule(process_actions, next_check)
+    end
+
+    function Action(name, command, delay)
+        local action = T{}
+        action.name = name
+        action.command = command
+        action.delay = delay
+        action.done_time = 0
+        action.started = false
+        action.done = false
+        
+        local handlers = T{
+            check_done=T{}
+        }
+
+        function action:perform()
+            if type(self.command) == "function" then
+                self.command(self)
+            elseif type(self.command) == "string" then
+                windower.send_command(self.command)
+            end
+            self.done_time = os.clock() + self.delay
+            self.started = true
+        end
+
+        function action:is_done(queue)
+            for i, handler in ipairs(handlers.check_done) do
+                local result = handler(self, queue)
+                if result ~= nil then
+                    return result
+                end
+            end
+            if self:remaining_delay() <= 0 then
+                return true
+            end
+        end
+
+
+        function action:remaining_delay()
+            if self.started then
+                local delay = self.done_time - os.clock()
+                if delay < 0 then
+                    delay = 0
+                end
+                return delay
+            else
+                return self.delay
+            end
+        end
+
+        function action:on_check_done(callback)
+            handlers.check_done:append(callback)
+        end
+
+        return action
+    end
+
+    -- Default waiting action to make system start
+    action_queue:append(Action("System startup", function() end, 0.1))
+
+    local public = T{}
+
+    function public:add_action(name, command, delay)
+        local action = Action(name, command, delay)
+
+        action_queue:append(action)
+
+        return action
+    end
+
+    function public:cancel()
+        clear_coroutine()
+        -- Reset queue
+        action_queue = T{}
+    end
+
+    function public:start()
+        if not action_coroutine then
+            process_actions()
+        end
+    end
+
+    function public:current_action()
+        if action_queue[1] then
+            return action_queue[1].name
+        end
+        return "None"
+    end
+
+    function public:remaining_delay()
+        if action_queue[1] then
+            return action_queue[1]:remaining_delay()
+        end
+        return 0
+    end
+
+    function public:remaining_actions()
+        return action_queue:length()
+    end
+
+    function public:get_template()
+    end
+
+    local remaining_actions_key = string.format('AS_%d_current_action', id)
+    local current_action_key = string.format('AS_%d_remaining_actions', id)
+    local delay_key = string.format('AS_%d_delay', id)
+
+    function public:get_template(hud)
+        local template = T{}
+
+        template:append(hud.settings.heading_color_text)
+        template:append(name .. '\\cr\n')
+
+        template:append(hud.settings.default_color_text)
+        template:append("Current action: ")
+        template:append(hud.settings.value_color_text)
+        template:append('${' .. current_action_key .. '|}')
+        template:append('\\cr\n')
+
+        template:append(hud.settings.default_color_text)
+        template:append("Delay: ")
+        template:append(hud.settings.value_color_text)
+        template:append('${' .. delay_key .. '|}')
+        template:append('\\cr\n')
+
+        template:append(hud.settings.default_color_text)
+        template:append("Remaining actions: ")
+        template:append(hud.settings.value_color_text)
+        template:append('${' .. remaining_actions_key .. '|}')
+
+        return template:concat("")
+    end
+
+    function public:get_context()
+        local context = {}
+
+        context[current_action_key] = public:current_action()
+        context[delay_key] = string.format('% 2.2f', public:remaining_delay())
+        context[remaining_actions_key] = public:remaining_actions()
+
+        return context
+    end
+
+    function public:on_action_change(method)
+        on_change_handlers:append(method)
+    end
+
+    return public
+end
+
+MG.BardSongs = function(options)
+    local state = {}
+
+    local SongChoices = T{
+        "Honor March",
+        "Valor Minuet V",
+        "Valor Minuet IV",
+        "Blade Madrigal",
+        "Sword Madrigal",
+        "Fire Carol II",
+        "Victory March",
+        "Advancing March",
+    }:update(options.SongChoices or {})
+
+    local keybinds = T{
+        Song1 = "Ctrl-F1",
+        Song2 = "Ctrl-F2",
+        Song3 = "Ctrl-F3",
+        Song4 = "Ctrl-F4",
+        CCSong = "Ctrl-F5",
+    }:update(options.KeyBinds or {})
+
+    local defaultsongs = T{
+        Song1 = "Honor March",
+        Song2 = "Valor Minuet V",
+        Song3 = "Valor Minuet IV",
+        Song4 = "Blade Madrigal",
+    }:update(options.DefaultSongs or {})
+
+    local dummysongs = T{
+        "Fire Carol",
+        "Ice Carol",
+    }:update(options.DummySongs)
+
+    local process_available_songs = false
+
+    function set_available_songs()
+
+        if not process_available_songs then
+            return
+        end
+        process_available_songs = false
+
+
+        local old_values = T{
+            Song1 = state.Song1.value,
+            Song2 = state.Song2.value,
+            Song3 = state.Song3.value,
+            Song4 = state.Song4.value,
+            CCSong = state.CCSong.value,
+        }
+
+        local available_songs = T{}
+        local used_songs = T{}
+
+        for k, v in pairs(old_values) do
+            used_songs[v] = true
+            available_songs[k] = T{}
+        end
+
+        -- Clarion Call song always has "None" as first option
+        available_songs.CCSong:append("None")
+
+        for i, song in ipairs(SongChoices) do
+            if not used_songs[song] then
+                -- Append song to all lists
+                for k, avail_list in pairs(available_songs) do
+                    avail_list:append(song)
+                end
+            else
+                for k, avail_list in pairs(available_songs) do
+                    -- Append song to list which already has this value
+                    if state[k] and state[k].value == song then
+                        avail_list:append(song)
+                    end
+                end
+            end
+        end
+
+
+        for k, v in pairs(old_values) do
+            state[k]:options(unpack(available_songs[k]))
+            state[k]:set(v)
+        end
+
+        process_available_songs = true
+    end
+
+    state.Song1 = M{['description'] = "Song 1", defaultsongs["Song1"]}
+	state.Song2 = M{['description'] = "Song 2", defaultsongs["Song2"]}
+	state.Song3 = M{['description'] = "Song 3", defaultsongs["Song3"]}
+	state.Song4 = M{['description'] = "Song 4", defaultsongs["Song4"]}
+	state.CCSong = M{['description'] = "Clarion Call Song", "None"}
+
+
+    MG.hud:add_heading("Songs")
+    MG.hud:add_mote_mode(state.Song1, {keybind=keybinds["Song1"],callback=set_available_songs})
+    MG.hud:add_mote_mode(state.Song2, {keybind=keybinds["Song2"],callback=set_available_songs})
+    MG.hud:add_mote_mode(state.Song3, {keybind=keybinds["Song3"],callback=set_available_songs})
+    MG.hud:add_mote_mode(state.Song4, {keybind=keybinds["Song4"],callback=set_available_songs})
+    MG.hud:add_mote_mode(state.CCSong, {keybind=keybinds["CCSong"],callback=set_available_songs})
+
+    process_available_songs = true
+    set_available_songs()
+
+    local actions = MG.ActionSystem("Song actions")
+   
+    actions:start()
+
+    MG.hud:add_element(actions)
+    actions:on_action_change(function() MG.hud:update_context() end)
+
+    -- Callback the reduces casting time on spells if nightingale is up
+    function shorten_nightingale_casting_time_handler(action, queue)
+        if buffactive["Nightingale"] and (action:remaining_delay() >= 4) then
+            action.done_time = os.clock() + 4
+        end
+    end
+
+    function add_song_action(songname, target)
+        local target = target or "<me>"
+        local action = actions:add_action(
+            "Sing " .. songname, 
+            string.format('input /ma "%s" %s', songname, target),
+            -- TODO: Figure out correct delay
+            7
+        )
+
+        action:on_check_done(shorten_nightingale_casting_time_handler)
+        return action
+    end
+
+    function add_ja_action(name)
+        actions:add_action(
+            "Use job ability '" .. name .. "'", 
+            'input /ja "' .. name .. '" <me>',
+            1.1
+        )
+    end
+
+    local commands = T{
+        sing_all = function()
+            -- TODO: Set mode to short duration instrument
+            add_song_action(state.Song1.value)
+            add_song_action(state.Song2.value)
+            if state.CCSong.value ~= "None" then
+                add_ja_action("Clarion Call")
+                add_song_action(state.CCSong.value)
+            end
+            add_song_action(dummysongs[1])
+            add_song_action(state.Song3.value)
+            add_song_action(dummysongs[2])
+            add_song_action(state.Song4.value)
+            actions:start()
+        end,
+
+        dummy = function()
+            add_song_action(state.Song1.value)
+            add_song_action(state.Song2.value)
+            if state.CCSong.value ~= "None" then
+                add_ja_action("Clarion Call")
+                add_song_action(state.CCSong.value)
+            end
+            add_song_action(dummysongs[1])
+            add_song_action(dummysongs[2])
+            actions:start()
+        end,
+
+        refresh = function(target)
+            local target = target or "<me>"
+            if target ~= "<me>" then add_ja_action("Pianissimo") end
+            add_song_action(state.Song1.value, target)
+            if target ~= "<me>" then add_ja_action("Pianissimo") end
+            add_song_action(state.Song2.value, target)
+            if state.CCSong.value ~= "None" then
+                if target ~= "<me>" then add_ja_action("Pianissimo") end
+                add_song_action(state.CCSong.value, target)
+            end
+            if target ~= "<me>" then add_ja_action("Pianissimo") end
+            add_song_action(state.Song3.value, target)
+            if target ~= "<me>" then add_ja_action("Pianissimo") end
+            add_song_action(state.Song4.value, target)
+            actions:start()
+        end,
+
+        reset = function()
+            actions:cancel()
+        end,
+    }
+
+    commands.recover_all = function()
+        if (player.target.type == "PLAYER" or player.target.type == "SELF") and
+            player.target.isallymember then
+            commands.refresh(player.target.name)
+        end
+    end
+
+    commands["cancel"] = commands["reset"]
+    commands["stop"] = commands["reset"]
+    commands["rec"] = commands["recover"]
+    commands["re"] = commands["recover"]
+
+    -- Aliases
+    commands["singall"] = commands["sing_all"]
+
+    function song_self_command(commandArgs)
+        local commandArgs = commandArgs
+        if type(commandArgs) == 'string' then
+            commandArgs = T(commandArgs:split(' '))
+        end
+
+        if not commandArgs[1] or commandArgs[1] ~= "mgsongs" then
+            return false
+        end
+
+
+        -- Remove "mgsongs"
+        commandArgs:remove(1)
+
+        -- pop command name
+        local command = commandArgs:remove(1)
+        if command and commands[command] then
+            commands[command](unpack(commandArgs))
+            return true
+        end
+
+        print("Unknown mgsongs command: " .. (command or "nil"))
+        return false
+    end
+
+    -- Hook into self_command function
+    if self_command then
+        local orig_self_command = self_command
+        self_command = function(commandArgs)
+            if song_self_command(commandArgs) then
+                return
+            end
+            orig_self_command(commandArgs)
+        end
+    end
+
+    send_command("alias mgsongs gs c mgsongs")
+    send_command("alias ms gs c mgsongs")
+
 end
 
 return MG
