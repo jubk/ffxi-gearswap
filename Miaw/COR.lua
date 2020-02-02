@@ -252,18 +252,18 @@ function init_gear_sets()
 
     -- sets
     sets.base = {
-        head=ambu.head,
-        body=ambu.body,
-        hands=ambu.hands,
-        legs=ambu.legs,
-        feet=ambu.feet,
-        neck="Sanctity Necklace",
+        head="Malignance Chapeau",
+        body="Volte Jupon",
+        hands="Malignance Gloves",
+        legs="Malignance Tights",
+        feet=relic.feet,
+        neck="Loricate Torque +1",
         waist="Eschan Stone",
-        left_ear="Digni. Earring",
+        left_ear="Etiolation Earring",
         right_ear="Steelflash Earring",
-        left_ring="Cacoethic Ring +1",
-        right_ring="Arvina Ringlet +1",
-        back="Gunslinger's Cape",
+        left_ring="Vocane Ring",
+        right_ring="Defending Ring",
+        back="Solemnity Cape",
     };
 
     state.CombatWeapon = M{
@@ -385,7 +385,7 @@ function init_gear_sets()
         -- macc +56
         head=AF.head,
         -- macc +15
-        neck="Commodore Charm",
+        neck="Comm. Charm +2",
         -- macc +53
         hands=AF.hands,
         -- macc +50
@@ -453,6 +453,10 @@ function init_gear_sets()
             name="Samnuha Tights",
             augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}
         },
+        feet={
+            name="Taeon Boots",
+            augments={'Accuracy+22','"Dual Wield"+5','DEX+9',}
+        },
         -- Store TP +8
         neck="Iskur Gorget",
 
@@ -509,6 +513,8 @@ function init_gear_sets()
 
     -- Hybrid melee sets
     sets.engaged.Hybrid = set_combine(sets.engaged, {
+        head="Malignance Chapeau",
+        hands="Malignance Gloves",
         neck="Loricate Torque +1",
         legs="Malignance Tights",
         right_ring="Defending Ring",
