@@ -193,6 +193,10 @@ end
 
 function init_gear_sets()
 
+    -- We want enhancing magic duration on a lot of stuff that normally is skipped,
+    -- so reduce the list of skipped spells.
+    classes.NoSkillSpells = S{'Raise', 'Reraise',}
+
     sets.standard = {
         -- dt -20%
         main="Malignance Pole",
@@ -272,6 +276,7 @@ function init_gear_sets()
     sets.TH={
         body="Volte Jupon",
         waist="Chaac Belt",
+        feet="Volte Boots",
     }
 
     sets.resting = set_combine(
