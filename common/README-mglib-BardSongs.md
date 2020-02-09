@@ -69,22 +69,35 @@ or by using `/console mgsongs <command> [<args>]` from macros.
 There are currently the following commands:
 
 * `sing_all`
+
   Sings all available buff songs as AoE songs, using dummy songs to make sure
   the maximum number of songs is reached. Can be used for getting from 0 to 4
   songs by singing only 6 times.
+
   Aliases: `singall`
 * `dummy`
+
   Puts up dummy songs. The two initial songs will be Song1 and Song2. Can be
   used to put up dummy songs before overwriting everything with Nitro songs.
+
   Aliases: `dummies`
+
 * `refresh`
+
   Refresh the current songs with new versions. Can be used together with Nitro
   to overwrite everything with Nitro songs.
+
   Aliases: `
+
 * `recover_all`
+
   Requires a target player. Tries to recover all songs for the specified 
   target by singing songs and dummy songs using Pianissimo.
+
   Aliases: `re`, `rec`
+
 * `reset`
+
   Stops and cancels the current action queue.
+
   Aliases: `stop`, `cancel`
