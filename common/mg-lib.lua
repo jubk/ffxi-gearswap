@@ -988,7 +988,15 @@ MG.ActionSystem = function(name)
     return public
 end
 
+
+-- See the file "README-mglib-BardSongs" for documentation
+MG.BardSongsInitialized = false
 MG.BardSongs = function(options)
+    if MG.BardSongsInitialized then
+        return
+    end
+    MG.BardSongsInitialized = true
+
     local state = {}
 
     local SongChoices = T{
@@ -1022,6 +1030,11 @@ MG.BardSongs = function(options)
         "Ice Carol",
     }:update(options.DummySongs)
 
+    local extra_songs = options.NumberOfExtraSongs
+    if extra_songs == nil then
+        extra_songs = 2
+    end
+
     local process_available_songs = false
 
     function set_available_songs()
@@ -1035,10 +1048,14 @@ MG.BardSongs = function(options)
         local old_values = T{
             Song1 = state.Song1.value,
             Song2 = state.Song2.value,
-            Song3 = state.Song3.value,
-            Song4 = state.Song4.value,
             CCSong = state.CCSong.value,
         }
+        if extra_songs > 0 then
+            old_values.Song3 = state.Song3.value
+        end
+        if extra_songs > 1 then
+            old_values.Song4 = state.Song4.value
+        end
 
         local available_songs = T{}
         local used_songs = T{}
@@ -1077,17 +1094,25 @@ MG.BardSongs = function(options)
     end
 
     state.Song1 = M{['description'] = "Song 1", defaultsongs["Song1"]}
-	state.Song2 = M{['description'] = "Song 2", defaultsongs["Song2"]}
-	state.Song3 = M{['description'] = "Song 3", defaultsongs["Song3"]}
-	state.Song4 = M{['description'] = "Song 4", defaultsongs["Song4"]}
+    state.Song2 = M{['description'] = "Song 2", defaultsongs["Song2"]}
+    if extra_songs > 0 then
+        state.Song3 = M{['description'] = "Song 3", defaultsongs["Song3"]}
+    end
+    if extra_songs > 1 then
+        state.Song4 = M{['description'] = "Song 4", defaultsongs["Song4"]}
+    end
 	state.CCSong = M{['description'] = "Clarion Call Song", "None"}
 
 
     MG.hud:add_heading("Songs")
     MG.hud:add_mote_mode(state.Song1, {keybind=keybinds["Song1"],callback=set_available_songs})
     MG.hud:add_mote_mode(state.Song2, {keybind=keybinds["Song2"],callback=set_available_songs})
-    MG.hud:add_mote_mode(state.Song3, {keybind=keybinds["Song3"],callback=set_available_songs})
-    MG.hud:add_mote_mode(state.Song4, {keybind=keybinds["Song4"],callback=set_available_songs})
+    if extra_songs > 0 then
+        MG.hud:add_mote_mode(state.Song3, {keybind=keybinds["Song3"],callback=set_available_songs})
+    end
+    if extra_songs > 1 then
+        MG.hud:add_mote_mode(state.Song4, {keybind=keybinds["Song4"],callback=set_available_songs})
+    end
     MG.hud:add_mote_mode(state.CCSong, {keybind=keybinds["CCSong"],callback=set_available_songs})
 
     process_available_songs = true
@@ -1137,10 +1162,14 @@ MG.BardSongs = function(options)
                 add_ja_action("Clarion Call")
                 add_song_action(state.CCSong.value)
             end
-            add_song_action(dummysongs[1])
-            add_song_action(state.Song3.value)
-            add_song_action(dummysongs[2])
-            add_song_action(state.Song4.value)
+            if extra_songs > 0 then
+                add_song_action(dummysongs[1])
+                add_song_action(state.Song3.value)
+            end
+            if extra_songs > 1 then
+                add_song_action(dummysongs[2])
+                add_song_action(state.Song4.value)
+            end
             actions:start()
         end,
 
@@ -1151,8 +1180,12 @@ MG.BardSongs = function(options)
                 add_ja_action("Clarion Call")
                 add_song_action(state.CCSong.value)
             end
-            add_song_action(dummysongs[1])
-            add_song_action(dummysongs[2])
+            if extra_songs > 0 then
+                add_song_action(dummysongs[1])
+            end
+            if extra_songs > 1 then
+                add_song_action(dummysongs[2])
+            end
             actions:start()
         end,
 
@@ -1166,10 +1199,14 @@ MG.BardSongs = function(options)
                 if target ~= "<me>" then add_ja_action("Pianissimo") end
                 add_song_action(state.CCSong.value, target)
             end
-            if target ~= "<me>" then add_ja_action("Pianissimo") end
-            add_song_action(state.Song3.value, target)
-            if target ~= "<me>" then add_ja_action("Pianissimo") end
-            add_song_action(state.Song4.value, target)
+            if extra_songs > 0 then
+                if target ~= "<me>" then add_ja_action("Pianissimo") end
+                add_song_action(state.Song3.value, target)
+            end
+            if extra_songs > 1 then
+                if target ~= "<me>" then add_ja_action("Pianissimo") end
+                add_song_action(state.Song4.value, target)
+            end
             actions:start()
         end,
 
@@ -1185,10 +1222,11 @@ MG.BardSongs = function(options)
         end
     end
 
+    commands["dummies"] = commands["dummy"]
     commands["cancel"] = commands["reset"]
     commands["stop"] = commands["reset"]
-    commands["rec"] = commands["recover"]
-    commands["re"] = commands["recover"]
+    commands["rec"] = commands["recover_all"]
+    commands["re"] = commands["recover_all"]
 
     -- Aliases
     commands["singall"] = commands["sing_all"]

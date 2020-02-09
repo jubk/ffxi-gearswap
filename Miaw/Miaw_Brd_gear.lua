@@ -1,17 +1,6 @@
 -- MG library
 local MG = require("mg-lib")
 
-local mg_initialized = false
-
-function setup_mg()
-	if mg_initialized then return end
-
-	MG.hud.initialize({})
-	MG.BardSongs({})
-
-	mg_initialized = true
-end
-
 function user_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal','Acc')
@@ -40,7 +29,10 @@ function user_setup()
 
 	select_default_macro_book()
 
-	setup_mg()
+	MG.hud.initialize({})
+	MG.BardSongs({
+		NumberOfExtraSongs=2,
+	})
 end
 
 function init_gear_sets()
