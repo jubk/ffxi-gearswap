@@ -61,6 +61,9 @@ MG.BardSongs({
         "Ice Carol",
     },
 
+    -- Key used for switching between song groups
+    GroupKeyBind = "Ctrl-F12",
+
     -- Extra song group, can add more with SongGroup3, SongGroup4 etc.
     SongGroup2 = {
       name = "Ballads",
