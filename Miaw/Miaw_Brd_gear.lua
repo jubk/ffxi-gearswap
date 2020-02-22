@@ -32,7 +32,22 @@ function user_setup()
 	MG.hud.initialize({})
 	MG.BardSongs({
 		NumberOfExtraSongs=2,
+		DefaultGroupName = "Melee songs",
+		SongGroup2 = {
+			name = "Ballads",
+			songlist = {"Mage's Ballad III", "Mage's Ballad II", "Mage's Ballad"},
+			defaults = {
+				Song1 = "Mage's Ballad III",
+				Song2 = "Mage's Ballad II",
+				Song3 = "Mage's Ballad",
+				Song4 = "None",
+				CCSong = "None"
+			},
+			add_none_choice = true,
+		}
 	})
+
+	send_command("input /lockstyleset 5")
 end
 
 function init_gear_sets()

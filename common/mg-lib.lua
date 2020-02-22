@@ -997,7 +997,7 @@ MG.BardSongs = function(options)
     end
     MG.BardSongsInitialized = true
 
-    local state = {}
+    local state = T{}
 
     local SongChoices = T{
         "Honor March",
@@ -1023,12 +1023,15 @@ MG.BardSongs = function(options)
         Song2 = "Valor Minuet V",
         Song3 = "Valor Minuet IV",
         Song4 = "Blade Madrigal",
+        CCSong = "None",
     }:update(options.DefaultSongs or {})
 
     local dummysongs = T{
         "Fire Carol",
         "Ice Carol",
     }:update(options.DummySongs)
+
+    local group_keybind = options.GroupKeyBind or "Ctrl-F12"
 
     local extra_songs = options.NumberOfExtraSongs
     if extra_songs == nil then
@@ -1037,6 +1040,41 @@ MG.BardSongs = function(options)
 
     local process_available_songs = false
 
+    options.SongGroup1 = {
+        name = options.DefaultGroupName or "Default songs",
+        songlist = SongChoices,
+        defaults = defaultsongs,
+        values = T{}
+    }
+
+    -- Initialize list of songgroups
+    local current_songgroup_idx = 1
+    local song_groups = T{}
+    local current_group = options.SongGroup1
+    local group_state = nil
+
+    while options["SongGroup" .. current_songgroup_idx] do
+        local group = options["SongGroup" .. current_songgroup_idx]
+        group.values = T{}
+
+        group.values.Song1 = group.defaults["Song1"] or "None"
+        group.values.Song2 = group.defaults["Song2"] or "None"
+        if extra_songs > 0 then
+            group.values.Song3 = group.defaults["Song3"] or "None"
+        end
+        if extra_songs > 1 then
+            group.values.Song4 = group.defaults["Song4"] or "None"
+        end
+        group.values.CCSong = "None"
+
+        for k, v in pairs(group.defaults) do
+            group.values[k] = v
+        end
+
+        song_groups:append(group)
+        current_songgroup_idx = current_songgroup_idx + 1
+    end
+
     function set_available_songs()
 
         if not process_available_songs then
@@ -1044,17 +1082,9 @@ MG.BardSongs = function(options)
         end
         process_available_songs = false
 
-
-        local old_values = T{
-            Song1 = state.Song1.value,
-            Song2 = state.Song2.value,
-            CCSong = state.CCSong.value,
-        }
-        if extra_songs > 0 then
-            old_values.Song3 = state.Song3.value
-        end
-        if extra_songs > 1 then
-            old_values.Song4 = state.Song4.value
+        local old_values = T{}
+        for k, v in pairs(state) do
+            old_values[k] = current_group.values[k]
         end
 
         local available_songs = T{}
@@ -1063,12 +1093,14 @@ MG.BardSongs = function(options)
         for k, v in pairs(old_values) do
             used_songs[v] = true
             available_songs[k] = T{}
+            -- Any song that has "None" as default should have none
+            -- in the list of options
+            if current_group.defaults[k] == "None" then
+                available_songs[k]:append("None")
+            end
         end
 
-        -- Clarion Call song always has "None" as first option
-        available_songs.CCSong:append("None")
-
-        for i, song in ipairs(SongChoices) do
+        for i, song in ipairs(current_group.songlist) do
             if not used_songs[song] then
                 -- Append song to all lists
                 for k, avail_list in pairs(available_songs) do
@@ -1084,6 +1116,16 @@ MG.BardSongs = function(options)
             end
         end
 
+        -- Add an extra option of "None" to everything that does not already
+        -- have it. Useful for when you want to be able to reduce the number
+        -- of songs to sing.
+        if current_group.add_none_choice then
+            for k, v in pairs(state) do
+                if current_group.defaults[k] ~= "None" then
+                    available_songs[k]:append("None")
+                end
+            end
+        end
 
         for k, v in pairs(old_values) do
             state[k]:options(unpack(available_songs[k]))
@@ -1093,27 +1135,58 @@ MG.BardSongs = function(options)
         process_available_songs = true
     end
 
-    state.Song1 = M{['description'] = "Song 1", defaultsongs["Song1"]}
-    state.Song2 = M{['description'] = "Song 2", defaultsongs["Song2"]}
+    state.Song1 = M{['description'] = "Song 1", current_group.defaults["Song1"] or "None"}
+    state.Song2 = M{['description'] = "Song 2", current_group.defaults["Song2"] or "None"}
     if extra_songs > 0 then
-        state.Song3 = M{['description'] = "Song 3", defaultsongs["Song3"]}
+        state.Song3 = M{['description'] = "Song 3", current_group.defaults["Song3"] or "None"}
     end
     if extra_songs > 1 then
-        state.Song4 = M{['description'] = "Song 4", defaultsongs["Song4"]}
+        state.Song4 = M{['description'] = "Song 4", current_group.defaults["Song4"] or "None"}
     end
-	state.CCSong = M{['description'] = "Clarion Call Song", "None"}
+    state.CCSong = M{['description'] = "Clarion Call Song", "None"}
+    
+    -- If there is more than one song group, add a HUD element to change song groups
+    if song_groups:length() > 1 then
+        MG.hud:add_heading("Song group")
 
+        group_state = M{['description'] = "Current group", "None"}
+        local options = T{}
+        for i, group in ipairs(song_groups) do
+            options:append(group.name)
+        end
+        group_state:options(unpack(options))
 
+        MG.hud:add_mote_mode(group_state, {
+            keybind=group_keybind,
+            callback = function()
+                for i, group in ipairs(song_groups) do
+                    if group.name == group_state.value then
+                        current_group = group
+                        break
+                    end
+                end
+                -- Set every state to the current choice from the new group
+                process_available_songs = false
+                for k, v in pairs(state) do
+                    v:options(current_group.values[k])
+                    v:set(current_group.values[k])
+                end
+                process_available_songs = true
+                -- And then populate lists
+                set_available_songs()
+            end
+        })
+    end
+
+    -- Add hud elements for changing songs
     MG.hud:add_heading("Songs")
-    MG.hud:add_mote_mode(state.Song1, {keybind=keybinds["Song1"],callback=set_available_songs})
-    MG.hud:add_mote_mode(state.Song2, {keybind=keybinds["Song2"],callback=set_available_songs})
-    if extra_songs > 0 then
-        MG.hud:add_mote_mode(state.Song3, {keybind=keybinds["Song3"],callback=set_available_songs})
+    for i, k in ipairs(T{"Song1", "Song2", "Song3", "Song4", "CCSong"}) do
+        local v = state[k]
+        MG.hud:add_mote_mode(v, {keybind=keybinds[k],callback=function()
+            current_group.values[k] = v.value
+            set_available_songs()
+        end})
     end
-    if extra_songs > 1 then
-        MG.hud:add_mote_mode(state.Song4, {keybind=keybinds["Song4"],callback=set_available_songs})
-    end
-    MG.hud:add_mote_mode(state.CCSong, {keybind=keybinds["CCSong"],callback=set_available_songs})
 
     process_available_songs = true
     set_available_songs()
@@ -1133,7 +1206,13 @@ MG.BardSongs = function(options)
     end
 
     function add_song_action(songname, target)
+        if songname == "None" then
+            return
+        end
         local target = target or "<me>"
+        if target ~= "<me>" then
+            add_ja_action("Pianissimo")
+        end
         local action = actions:add_action(
             "Sing " .. songname, 
             string.format('input /ma "%s" %s', songname, target),
@@ -1153,58 +1232,82 @@ MG.BardSongs = function(options)
         )
     end
 
+    function resolve_target(target)
+        if target then
+            local player_target = windower.ffxi.get_mob_by_target(target)
+            if player_target and player_target.in_party then
+                return player_target.name
+            end
+        end
+        return "<me>"
+    end
+
     local commands = T{
-        sing_all = function()
-            -- TODO: Set mode to short duration instrument
-            add_song_action(state.Song1.value)
-            add_song_action(state.Song2.value)
+        test = function(target)
+            print(resolve_target(target))
+        end,
+        sing_all = function(target)
+            target = resolve_target(target)
+            add_song_action(state.Song1.value, target)
+            add_song_action(state.Song2.value, target)
             if state.CCSong.value ~= "None" then
                 add_ja_action("Clarion Call")
-                add_song_action(state.CCSong.value)
+                add_song_action(state.CCSong.value, target)
             end
             if extra_songs > 0 then
-                add_song_action(dummysongs[1])
-                add_song_action(state.Song3.value)
+                if state.Song3.value ~= "None" then
+                    add_song_action(dummysongs[1], target)
+                    add_song_action(state.Song3.value, target)
+                end
             end
             if extra_songs > 1 then
-                add_song_action(dummysongs[2])
-                add_song_action(state.Song4.value)
+                if state.Song4.value ~= "None" then
+                    add_song_action(dummysongs[2], target)
+                    add_song_action(state.Song4.value, target)
+                end
             end
             actions:start()
         end,
 
-        dummy = function()
-            add_song_action(state.Song1.value)
-            add_song_action(state.Song2.value)
+        dummy = function(target)
+            target = resolve_target(target)
+            add_song_action(state.Song1.value, target)
+            add_song_action(state.Song2.value, target)
             if state.CCSong.value ~= "None" then
                 add_ja_action("Clarion Call")
-                add_song_action(state.CCSong.value)
+                add_song_action(state.CCSong.value, target)
             end
             if extra_songs > 0 then
-                add_song_action(dummysongs[1])
+                add_song_action(dummysongs[1], target)
             end
             if extra_songs > 1 then
-                add_song_action(dummysongs[2])
+                add_song_action(dummysongs[2], target)
+            end
+            actions:start()
+        end,
+
+        dummy_only = function(target)
+            target = resolve_target(target)
+            if extra_songs > 0 then
+                add_song_action(dummysongs[1], target)
+            end
+            if extra_songs > 1 then
+                add_song_action(dummysongs[2], target)
             end
             actions:start()
         end,
 
         refresh = function(target)
-            local target = target or "<me>"
-            if target ~= "<me>" then add_ja_action("Pianissimo") end
+            target = resolve_target(target)
             add_song_action(state.Song1.value, target)
-            if target ~= "<me>" then add_ja_action("Pianissimo") end
             add_song_action(state.Song2.value, target)
             if state.CCSong.value ~= "None" then
-                if target ~= "<me>" then add_ja_action("Pianissimo") end
                 add_song_action(state.CCSong.value, target)
             end
             if extra_songs > 0 then
-                if target ~= "<me>" then add_ja_action("Pianissimo") end
                 add_song_action(state.Song3.value, target)
             end
             if extra_songs > 1 then
-                if target ~= "<me>" then add_ja_action("Pianissimo") end
                 add_song_action(state.Song4.value, target)
             end
             actions:start()
@@ -1215,21 +1318,15 @@ MG.BardSongs = function(options)
         end,
     }
 
-    commands.recover_all = function()
-        if (player.target.type == "PLAYER" or player.target.type == "SELF") and
-            player.target.isallymember then
-            commands.refresh(player.target.name)
-        end
-    end
+    -- aliases
+    commands.singall = commands.sing_all
+    commands.recover_all = commands.sing_all
+    commands.rec = commands.sing_all
+    commands.re = commands.sing_all
 
-    commands["dummies"] = commands["dummy"]
-    commands["cancel"] = commands["reset"]
-    commands["stop"] = commands["reset"]
-    commands["rec"] = commands["recover_all"]
-    commands["re"] = commands["recover_all"]
-
-    -- Aliases
-    commands["singall"] = commands["sing_all"]
+    commands.dummies = commands.dummy
+    commands.cancel = commands.reset
+    commands.stop = commands.reset
 
     function song_self_command(commandArgs)
         local commandArgs = commandArgs
