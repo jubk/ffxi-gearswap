@@ -62,19 +62,19 @@ MG.BardSongs({
     },
 
     -- Extra song group, can add more with SongGroup3, SongGroup4 etc.
-		SongGroup2 = {
-			name = "Ballads",
-			songlist = {"Mage's Ballad III", "Mage's Ballad II", "Mage's Ballad"},
-			defaults = {
-				Song1 = "Mage's Ballad III",
-				Song2 = "Mage's Ballad II",
-				Song3 = "Mage's Ballad",
-				Song4 = "None",
-				CCSong = "None"
-			},
+    SongGroup2 = {
+      name = "Ballads",
+      songlist = {"Mage's Ballad III", "Mage's Ballad II", "Mage's Ballad"},
+      defaults = {
+        Song1 = "Mage's Ballad III",
+        Song2 = "Mage's Ballad II",
+        Song3 = "Mage's Ballad",
+        Song4 = "None",
+        CCSong = "None"
+      },
       -- Whether "None" should be a choice for all song slots
-			add_none_choice = true,
-		}
+      add_none_choice = true,
+    }
 })
 ```
 
