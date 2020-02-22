@@ -540,22 +540,23 @@ function init_gear_sets()
 
     sets.acc = {}
     sets.acc.None = {
-        -- Baseline acc: 1132
+        -- Baseline acc: 1097
     }
     sets.acc.MediumAcc = {
-        -- Baseline acc: 1196
-        head={ name="Carmine Mask", augments={'Accuracy+15','Mag. Acc.+10','"Fast Cast"+3',}},
-        legs=ambu.legs,
+        -- Baseline acc: 1180
+        head="Malignance Chapeau",
+        legs="Malignance Tights",
         waist="Olseni Belt",
         left_ear="Digni. Earring",
     }
     sets.acc.HighAcc = {
-        -- Baseline acc: 1257
-        head={ name="Carmine Mask", augments={'Accuracy+15','Mag. Acc.+10','"Fast Cast"+3',}},
-        hands={ name="Adhemar Wrist. +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-        legs=ambu.legs,
+        -- Baseline acc: 1253
+        head="Malignance Chapeau",
+        hands="Malignance Gloves",
+        legs="Malignance Tights",
         -- TA +6, acc +35
         feet=herc_tp.feet,
+        neck="Combatant's Torque",
         waist="Olseni Belt",
         left_ear="Digni. Earring",
         left_ring="Cacoethic Ring +1",
