@@ -47,7 +47,7 @@ function user_setup()
 		}
 	})
 
-	send_command("input /lockstyleset 5")
+	send_command("pause 3; input /lockstyleset 5")
 end
 
 function init_gear_sets()
