@@ -854,13 +854,13 @@ MG.ActionSystem = function(name)
         }
 
         function action:perform()
+            self.done_time = os.clock() + self.delay
+            self.started = true
             if type(self.command) == "function" then
                 self.command(self)
             elseif type(self.command) == "string" then
                 windower.send_command(self.command)
             end
-            self.done_time = os.clock() + self.delay
-            self.started = true
         end
 
         function action:is_done(queue)
@@ -907,6 +907,18 @@ MG.ActionSystem = function(name)
 
         return action
     end
+
+    function public:insert_action(name, command, delay)
+        if action_queue[1] then
+            action_queue[1].started = false
+        end
+
+        local action = Action(name, command, delay)
+        action_queue:insert(1, action)
+
+        return action
+    end
+
 
     function public:cancel()
         clear_coroutine()
@@ -1224,10 +1236,28 @@ MG.BardSongs = function(options)
         return action
     end
 
+    local ja_last_used = T{}
+    local ja_recasts = T{pianissimo=5.5}
     function add_ja_action(name)
+        name = name or ""
+        local key = name:lower()
         actions:add_action(
             "Use job ability '" .. name .. "'", 
-            'input /ja "' .. name .. '" <me>',
+            function()
+                if ja_recasts[key] and ja_last_used[key] then
+                    local since_last_use = os.clock() - ja_last_used[key]
+                    if since_last_use < ja_recasts[key] then
+                        actions:insert_action(
+                            "Wait for recast",
+                            function() end,
+                            ja_recasts[key] - since_last_use
+                        )
+                        return
+                    end
+                end
+                send_command('input /ja "' .. name .. '" <me>')
+                ja_last_used[key] = os.clock()
+            end,
             1.1
         )
     end
@@ -1239,12 +1269,34 @@ MG.BardSongs = function(options)
                 return player_target.name
             end
         end
-        return "<me>"
+        -- Try to match up to party members name
+        target = target or ""
+        target = target:lower()
+        for i=2, 6 do
+            if party[i] then
+                if party[i].name:lower():startswith(target) then
+                    return party[i].name
+                end
+            else
+                break
+            end
+        end
+
+        -- Empty target means target self
+        if target == "" then
+            target = "<me>"
+        end
+
+        return target
     end
 
     local commands = T{
         test = function(target)
-            print(resolve_target(target))
+            add_ja_action("Pianissimo")
+            add_ja_action("Pianissimo")
+            add_ja_action("Pianissimo")
+            add_ja_action("Pianissimo")
+            actions:start()
         end,
         sing_all = function(target)
             target = resolve_target(target)
