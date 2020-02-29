@@ -94,7 +94,14 @@ Macro line 1: /target <stpc>
 Macro line 2: /console mgsongs singall <lastst>
 ```
 
-* `sing_all [target]` 
+If no target is specified target "<me>" will be used.
+
+Song groups can be specified as a number, as "SongGroupX" where X is the
+number or with the name given to the song groups, eg. "Ballads". 
+
+If no song group is specified the current song group will be used.
+
+* `sing_all [target] [song group]` 
 
   Sings all available buff songs as AoE songs, using dummy songs to make sure
   the maximum number of songs is reached. Can be used for getting from 0 to 4
@@ -102,19 +109,19 @@ Macro line 2: /console mgsongs singall <lastst>
 
   Aliases: `singall, recover_all, re, rec`
 
-* `dummy [target]` 
+* `dummy [target] [song group]` 
 
   Puts up dummy songs. The two initial songs will be Song1 and Song2. Can be
   used to put up dummy songs before overwriting everything with Nitro songs.
 
   Aliases: `dummies`
 
-* `dummy_extras [target]` 
+* `dummy_extras [target] [song group]`
 
   Put up only the "extra" dummy songs used for song slots 3 and 4. Good for
   recovering missing songs on people who got dispelled.
 
-* `refresh [target]`
+* `refresh [target] [song group]`
 
   Refresh the current songs with new versions. Can be used together with Nitro
   to overwrite everything with Nitro songs.

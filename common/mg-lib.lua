@@ -1290,6 +1290,47 @@ MG.BardSongs = function(options)
         return target
     end
 
+    local previous_songgroup = nil
+
+    function set_temporary_songgroup(group)
+        if not group then return end
+        if previous_songgroup then end
+
+        local found = false
+        for k, v in pairs(song_groups) do
+            local with_prefix = "SongGroup" .. k
+            if group == tostring(k) or group == with_prefix or group == v.name then
+                group = v.name
+                found = true
+                break
+            end
+        end
+        if not found then
+            return
+        end
+
+        if group_state.value == group then return end
+
+        previous_songgroup = group_state.value
+        group_state:set(group)
+    end
+
+    function restore_temporary_songgroup()
+        if previous_songgroup then
+            group_state:set(previous_songgroup)
+            previous_songgroup = nil
+        end
+    end
+
+    function sing_command(callback)
+        return function(target, temp_songgroup)
+            set_temporary_songgroup(temp_songgroup)
+            target = resolve_target(target)
+            callback(target)
+            restore_temporary_songgroup(temp_songgroup)
+        end
+    end
+
     local commands = T{
         test = function(target)
             add_ja_action("Pianissimo")
@@ -1298,8 +1339,7 @@ MG.BardSongs = function(options)
             add_ja_action("Pianissimo")
             actions:start()
         end,
-        sing_all = function(target)
-            target = resolve_target(target)
+        sing_all = sing_command(function(target)
             add_song_action(state.Song1.value, target)
             add_song_action(state.Song2.value, target)
             if state.CCSong.value ~= "None" then
@@ -1319,10 +1359,9 @@ MG.BardSongs = function(options)
                 end
             end
             actions:start()
-        end,
+        end),
 
-        dummy = function(target)
-            target = resolve_target(target)
+        dummy = sing_command(function(target)
             add_song_action(state.Song1.value, target)
             add_song_action(state.Song2.value, target)
             if state.CCSong.value ~= "None" then
@@ -1336,10 +1375,9 @@ MG.BardSongs = function(options)
                 add_song_action(dummysongs[2], target)
             end
             actions:start()
-        end,
+        end),
 
-        dummy_only = function(target)
-            target = resolve_target(target)
+        dummy_only = sing_command(function(target)
             if extra_songs > 0 then
                 add_song_action(dummysongs[1], target)
             end
@@ -1347,10 +1385,9 @@ MG.BardSongs = function(options)
                 add_song_action(dummysongs[2], target)
             end
             actions:start()
-        end,
+        end),
 
-        refresh = function(target)
-            target = resolve_target(target)
+        refresh = sing_command(function(target)
             add_song_action(state.Song1.value, target)
             add_song_action(state.Song2.value, target)
             if state.CCSong.value ~= "None" then
@@ -1363,7 +1400,7 @@ MG.BardSongs = function(options)
                 add_song_action(state.Song4.value, target)
             end
             actions:start()
-        end,
+        end),
 
         reset = function()
             actions:cancel()
