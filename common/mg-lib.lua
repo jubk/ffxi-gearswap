@@ -1263,7 +1263,7 @@ MG.BardSongs = function(options)
     end
 
     function resolve_target(target)
-        if target then
+        if target and target ~= "<me>" then
             local player_target = windower.ffxi.get_mob_by_target(target)
             if player_target and player_target.in_party then
                 return player_target.name
@@ -1272,13 +1272,15 @@ MG.BardSongs = function(options)
         -- Try to match up to party members name
         target = target or ""
         target = target:lower()
-        for i=2, 6 do
-            if party[i] then
-                if party[i].name:lower():startswith(target) then
-                    return party[i].name
+        if target ~= "" then
+            for i=2, 6 do
+                if party[i] then
+                    if party[i].name:lower():startswith(target) then
+                        return party[i].name
+                    end
+                else
+                    break
                 end
-            else
-                break
             end
         end
 
