@@ -22,6 +22,14 @@ function get_sets()
         back="Kayapa Cape",
     }
 
+    sets.unassigned = {
+        main="Aganoshe{'\"Store TP\"+6','DEX+8','Accuracy+21','Attack+2','DMG:+26'}",
+        sub="Utu grip",
+    }
+    sets.unassigned2 = {
+        main="Jokushuono",
+    }
+
     sets.fastcast = {
         -- fast cast 2
         ammo="Sapience Orb",

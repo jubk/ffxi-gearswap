@@ -286,9 +286,10 @@ function init_gear_sets()
         -- WS boost
         neck="Fotia Gorget",
 
+        head="Herculean Helm{'Weapon skill damage +4%','DEX+9','Rng.Acc.+6','Rng.Atk.+10'}",
         legs=herc_ratk_gear.legs,
         feet=herc_ratk_gear.feet,
-
+        
         -- WS boost
         waist="Fotia Belt",
         -- WSD +2
@@ -346,6 +347,15 @@ function init_gear_sets()
             left_ring="Prolix Ring",
         }
     );
+
+    sets.unassigned = {
+        main="Perun +1",
+        head="Orion Beret +2",
+        legs="Hunter's Braccae",
+        feet="Scout's Socks",
+        waist="Sarissapho. Belt",
+        right_ear="Sherida Earring",
+    }
 
     set_has_hachirin_no_obi(true);
     -- COR can't equip Twilight Cape

@@ -884,6 +884,12 @@ function init_gear_sets()
         sets.base, { hands=relic.hands }
     )
 
+    sets.midcast["Hyoton: Ichi"] = {
+        body="Volte Jupon",
+        waist="Chaac Belt",
+        feet="Volte Boots",
+    }
+
     set_has_hachirin_no_obi(true);
     -- COR can't equip Twilight Cape
     set_has_twilight_cape(false);

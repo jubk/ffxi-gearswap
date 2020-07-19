@@ -50,6 +50,18 @@ function get_sets()
         back="Sacro Mantle",
     }
 
+    sets.unassigned = {
+        main={ name="Skullrender", augments={'DMG:+15','Pet: Accuracy+20','Pet: Attack+20',}},
+        sub="Charmer's Merlin",
+        head={ name="Valorous Mask", augments={'Pet: Accuracy+30 Pet: Rng. Acc.+30','Pet: DEX+6',}},
+        neck="Empath Necklace",
+        left_ear="Ferine Earring",
+        right_ear="Steelflash Earring",
+        right_ring="Varar Ring",
+        right_rihg="Tali'ah Ring",
+        left_ear="Hija earring"
+    }
+
     sets.call_beast = set_combine(
         sets.base,
         {

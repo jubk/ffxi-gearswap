@@ -40,7 +40,7 @@ capes = {
 function get_sets()
     local base = {
         -- cure pot II +2, cure pot 10, cure spellcasting time -7
-        main="Queller Rod",
+        main="Yagrush",
         -- cure pot +3, cure spellcasting time -3
         sub="Sors Shield",
 
@@ -226,10 +226,8 @@ function get_sets()
         legs=relic.legs,
     });
     sets.healing_magic = set_combine(base, {
-        -- cure pot II +2, cure pot 10, cure spellcasting time -7
-        main="Queller Rod",
-        -- TODO: cure pot +3, cure spellcasting time -3
-        -- sub="Sors Shield",
+        main="Yagrush",
+        sub="Sors Shield",
         -- Healing magic skill +15
         body=empy.body,
         -- Healing magic skill +17

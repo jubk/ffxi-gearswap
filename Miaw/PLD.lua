@@ -15,6 +15,40 @@ local mg_lib = require("mg-lib")
 
 function get_sets()
     mg_lib.hud.initialize({})
+
+
+    local AF = {
+        head="Rev. Coronet +1",
+        body="Rev. Surcoat +3",
+        hands="Gallant Gauntlets",
+        legs="Rev. Breeches +1",
+        feet="Gallant Leggings",
+    }
+
+    local relic = {
+        head={ name="Cab. Coronet +1", augments={'Enhances "Iron Will" effect',}},
+        body={ name="Cab. Surcoat +1", augments={'Enhances "Fealty" effect',}},
+        hands={ name="Cab. Gauntlets +1", augments={'Enhances "Chivalry" effect',}},
+        legs={ name="Cab. Breeches", augments={'Enhances "Invincible" effect',}},
+        feet={ name="Cab. Leggings +1", augments={'Enhances "Guardian" effect',}},
+    }
+
+    local empy = {
+        -- head = "",
+        -- body = "",
+        hands="Crd. Gauntlets +2",
+        legs="Creed Cuisses +2",
+        feet="Creed Sabatons +2",
+    }
+
+    local Souveran = {
+        head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+        -- body = "",
+        hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+        legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+        feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+    }
+
     sird_spells = T{
         'Flash',
         'Blind',
@@ -23,6 +57,10 @@ function get_sets()
         "Soporific",
         "Blank Gaze",
         "Geist Wall",
+        "Cocoon",
+        "Crusade",
+        "Phalanx",
+        "Enlight II"
     }
 
     -- sets
@@ -55,6 +93,22 @@ function get_sets()
         feet = "Souveran Schuhs +1",
 
         -- Souveran +1 set bonus (3 pieces): -6 dt
+    }
+
+    sets.weapons = {
+        ["Aegis"] = {
+            main="Burtgang",
+            sub="Aegis"
+        },
+        ["Ochain"] = {
+            main="Burtgang",
+            sub="Ochain"
+        }
+    }
+
+    sets.unassigned = {
+        left_ear="Odnowa Earring",
+        right_ear="Odnowa Earring +1"
     }
 
     sets.enmity = set_combine(
@@ -320,6 +374,18 @@ function get_sets()
     }
     MidCastGear = {}
     AfterCastGear = {}
+
+    sets.JA = {
+        ["Holy Circle"] =   {feet="Gallant Leggings"},
+        ["Sentinel"]    =   {feet="Cab. Leggings +1"},
+        ["Cover"]       =   {body="Cab. Surcoat +1",
+                             head="Rev. Coronet +1"},
+        ["Fealty"]      =   {body="Cab. Surcoat +1"},
+        ["Shield Bash"] =   {hands="Cab. Gauntlets +1"},
+        ["Chivalry"]    =   {hands="Cab. Gauntlets +1"},
+        ["Rampart"]     =   {head="Cab. Coronet +1"},
+        ["Invincible"]  =   {legs="Cab. Breeches"},
+    }
 
     set_has_hachirin_no_obi(true);
 end

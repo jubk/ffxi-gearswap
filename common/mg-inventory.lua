@@ -649,7 +649,7 @@ return (function ()
     function MGInventory.export_summary(sets)
         local path = export_dir() ..
                      "/" .. player.name ..
-                     "_summary_" .. os.date('%Y-%m-%d_%H%m%S') ..
+                     "_summary_" .. os.date('%Y-%m-%d_%H%M%S') ..
                      ".lua"
         local result = {}
         local db = MGInventory.database

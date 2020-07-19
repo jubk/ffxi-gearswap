@@ -249,6 +249,10 @@ function init_gear_sets()
 
     sets.idle.Field = set_combine(sets.standard, {
         -- Refresh +1
+        ammo="Homiliary",
+        -- Refresh +1
+        head="Befouled Crown",
+        -- Refresh +1
         feet="Volte Gaiters"
     });
     sets.idle.Town = set_combine(sets.standard, {});
@@ -352,8 +356,8 @@ function init_gear_sets()
                 '"Mag.Atk.Bns."+4',
             }
         },
-        -- Fast cast +1
-        left_ear="Etiolation Earring",
+        -- Fast cast +4
+        left_ear="Malignance Earring",
         -- Fast cast +2
         right_ear="Loquac. Earring",
         -- Fast cast +4
@@ -365,8 +369,8 @@ function init_gear_sets()
         -- left_ear="Barkaro. Earring",
 
 
-        -- Total: 89%
-        -- Total under grimoire: (total - 24) = 65%
+        -- Total: 92%
+        -- Total under grimoire: (total - 24) = 58%
 
         -- cap with non-fast-cast sub: 80
         -- cap with RDM sub: 65
@@ -593,7 +597,7 @@ function init_gear_sets()
     )
 
     sets.midcast['Enfeebling Magic'].Dia = set_combine(
-        sets.midcast['Enfeebling Magic'].Dia,
+        sets.midcast['Enfeebling Magic'],
         sets.TH
     )
 
@@ -690,6 +694,18 @@ function init_gear_sets()
             neck="Nodens Gorget",
         }
     );
+
+    sets.day_weather_bonuses = {
+        waist="Hachirin-no-Obi",
+        back="Twilight Cape",
+    }
+
+    sets.special = {
+        ["grimore_and_JAs"] = {legs="Arbatel Pants +1"},
+        ["weather_and_JAs"] = {feet="Peda. Loafers +3"},
+        ["klimaform"]       = {feet="Arbatel Loafers +1"}
+    }
+
 end
 
 

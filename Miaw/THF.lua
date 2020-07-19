@@ -136,6 +136,13 @@ function get_sets()
     engaged_modes = {'StoreTP', 'Damage', 'TH'}
     engaged_idx = 1
 
+    sets.weapons = {
+        ["TH"] = {
+            main="Sandung",
+            sub="Taming Sari"
+        }
+    }
+
 end
 
 function cycle_engaged()

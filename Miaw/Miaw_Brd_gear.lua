@@ -35,7 +35,7 @@ function user_setup()
 		DefaultGroupName = "Melee songs",
 		SongGroup2 = {
 			name = "Ballads",
-			songlist = {"Mage's Ballad III", "Mage's Ballad II", "Mage's Ballad"},
+			songlist = {"Mage's Ballad III", "Mage's Ballad II", "Mage's Ballad", "Sentinel's Scherzo"},
 			defaults = {
 				Song1 = "Mage's Ballad III",
 				Song2 = "Mage's Ballad II",
@@ -44,6 +44,23 @@ function user_setup()
 				CCSong = "None"
 			},
 			add_none_choice = true,
+		},
+		SongGroup3 = {
+			name = "Ranged",
+			songlist = {
+				"Honor March",
+				"Valor Minuet V",
+				"Valor Minuet IV",
+				"Hunter's Prelude",
+				"Archer's Prelude",
+			},
+			defaults = {
+				Song1 = "Honor March",
+				Song2 = "Valor Minuet V",
+				Song3 = "Hunter's Prelude",
+				Song4 = "Archer's Prelude",
+				CCSong = "None"
+			},
 		}
 	})
 
@@ -62,9 +79,9 @@ function init_gear_sets()
 	}
 
 	local relic = {
-		body="Bihu Jstcorps +1",
+		body="Bihu Jstcorps. +3",
 		hands="Bihu Cuffs +1",
-		legs="Bihu Cannions +1",
+		legs="Bihu Cannions +2",
 		feet="Bihu Slippers +1",
 	}
 
@@ -84,6 +101,27 @@ function init_gear_sets()
 		feet="Aya. Gambieras +2",
 	}
 
+	local capes = {
+		fastcast={
+			name="Intarabus's Cape",
+			augments={
+				'CHR+20',
+				'Mag. Acc+20 /Mag. Dmg.+20',
+				'Mag. Acc.+10',
+				'"Fast Cast"+10',
+			}
+		},
+		macc={
+			name="Intarabus's Cape",
+			augments={
+				'CHR+20',
+				'Mag. Acc+20 /Mag. Dmg.+20',
+				'Mag. Acc.+10',
+				'"Fast Cast"+10',
+			}
+		},
+	}
+
 	-- Weapons sets
 	sets.weapons.Aeneas = {
 		--main="Aeneas",
@@ -98,7 +136,7 @@ function init_gear_sets()
 		--main="Vampirism",
 		--sub="Vampirism"
 		main="Naegling",
-		sub="Demers. Degen +1",
+		sub="Blurred Knife +1",
 	}
 	sets.weapons.DualNukeWeapons = {
 		main={ name="Malevolence", augments={'INT+9','Mag. Acc.+10','"Mag.Atk.Bns."+9','"Fast Cast"+4',}},
@@ -138,8 +176,8 @@ function init_gear_sets()
 		left_ring="Prolix Ring",
 		-- fc +4
 		right_ring="Kishar Ring",
-		-- fc +3
-		back="Swith Cape +1",
+		-- fc +10
+		back=capes.fastcast,
 	}
 
 	sets.precast.FC.Cure = set_combine(sets.precast.FC, {
@@ -184,7 +222,8 @@ function init_gear_sets()
 		range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby'].AoE = {
-		range="Gjallarhorn"
+		--range="Gjallarhorn",
+		range="Daurdabla",
 	}
 	sets.precast.FC['Horde Lullaby II'] = {
 		range="Marsyas"
@@ -193,7 +232,8 @@ function init_gear_sets()
 		range="Gjallarhorn"
 	}
 	sets.precast.FC['Horde Lullaby II'].AoE = {
-		range="Gjallarhorn"
+		--range="Gjallarhorn",
+		range="Daurdabla",
 	}
 		
 	sets.precast.FC.Mazurka = set_combine(sets.precast.FC.BardSong,{
@@ -268,7 +308,7 @@ function init_gear_sets()
 		--hands="Leyline Gloves",
 		ring2="Kishar Ring",
 		--ring1="Lebeche Ring",
-		--back="Intarabus's Cape",
+		back=capes.fastcast,
 		--waist="Witful Belt",
 		legs=ambu.legs,
 		--feet="Gende. Galosh. +1"
@@ -331,12 +371,12 @@ function init_gear_sets()
 		main="Kali",
 		sub="Genmei Shield",
 		head=AF.head,
-		neck="Moonbow whistle",
+		neck="Mnbw. Whistle +1",
 		ear2="Loquacious Earring",
 		--ear1="Musical earring",
 		body=empy.body,
 		hands=empy.hands,
-		--back="Intarabus's cape",
+		back=capes.macc,
 		--waist="Harfner's sash",
 		legs="Inyanga Shalwar +2",
 		feet=AF.feet,
@@ -346,19 +386,20 @@ function init_gear_sets()
 
 	-- For song defbuffs (duration primary, accuracy secondary)
 	sets.midcast.SongDebuff = {
-		ain="Kali",
+		main="Kali",
 		sub="Ammurapi Shield",
 		range="Marsyas",
-		--ammo=empty,
 		head=ambu.head,
-		neck="Moonbow Whistle",
-		--ear1="Gwati Earring",
-		ear2="Digni. Earring",
+		neck="Mnbw. Whistle +1",
+		left_ear="Digni. Earring",
+        right_ear="Regal Earring",
 		body=empy.body,
-		--hands="Inyan. Dastanas +2",
+		hands="Inyan. Dastanas +2",
+		left_ring="Etana Ring",
+		right_ring="Kishar Ring",
 		--ring1="Stikini Ring",
 		--ring2="Stikini Ring",
-		--back="Intarabus's Cape",
+		back=capes.macc,
 		waist="Luminary Sash",
 		legs="Inyanga Shalwar +2",
 		feet=AF.feet,
@@ -371,14 +412,16 @@ function init_gear_sets()
 		range="Gjallarhorn",
 		--ammo=empty,
 		head=ambu.head,
-		neck="Moonbow Whistle",
+		neck="Mnbw. Whistle +1",
 		--ear1="Gwati Earring",
 		ear2="Digni. Earring",
 		body="Inyanga Jubbah +2",
-		--hands="Inyan. Dastanas +2",
+		hands="Inyan. Dastanas +2",
+		left_ring="Etana Ring",
+		right_ring="Kishar Ring",
 		--ring1="Stikini Ring",
 		--ring2="Stikini Ring",
-		--back="Intarabus's Cape",
+		back=capes.macc,
 		waist="Luminary Sash",
 		legs="Inyanga Shalwar +2",
 		feet=ambu.feet,
@@ -398,7 +441,7 @@ function init_gear_sets()
 		--hands="Gendewitha Gages +1",
 		ring2="Kishar Ring",
 		ring1="Prolix Ring",
-		--back="Intarabus's Cape",
+		back=capes.fastcast,
 		--waist="Witful Belt",
 		legs=empy.legs,
 		feet=ambu.feet,
@@ -462,7 +505,7 @@ function init_gear_sets()
 		hands="Telchine Gloves",
 		--ring1="Stikini Ring",
 		--ring2="Stikini Ring",
-		--back="Intarabus's Cape",
+		back=capes.fastcast,
 		--waist="Witful Belt",
 		legs="Telchine Braconi",
 		feet="Telchine Pigaches"
@@ -487,7 +530,7 @@ function init_gear_sets()
 		hands="Volte Gloves",
 		ring1="Shiva Ring +1",
 		ring2="Shiva Ring +1",
-		--back="Toro Cape",
+		back=capes.macc,
 		--waist="Sekhmet Corset",
 		legs="Gyve Trousers",
 		feet=gear.chironic_nuke_feet
@@ -505,7 +548,7 @@ function init_gear_sets()
 		hands="Volte Gloves",
 		ring1="Shiva Ring +1",
 		--ring2="Shiva Ring +1",
-		--back="Toro Cape",
+		back=capes.macc,
 		--waist="Yamabuki-no-Obi",
 		legs="Gyve Trousers",
 		feet=gear.chironic_nuke_feet
@@ -542,7 +585,7 @@ function init_gear_sets()
 	}
 	
 	sets.idle = {
-		main="Naegling",
+		main="Sangoma",
 		sub="Genmei Shield",
 		head=ambu.head,
 		legs=ambu.legs,
@@ -562,7 +605,7 @@ function init_gear_sets()
 	}
 
 	sets.idle.PDT ={
-		main="Naegling",
+		main="Sangoma",
 		sub="Genmei Shield",
 		legs=ambu.legs,
 		feet=ambu.feet,
@@ -584,7 +627,7 @@ function init_gear_sets()
 	-- Defense sets
 
 	sets.defense.PDT = {
-		main="Naegling",
+		main="Sangoma",
 		sub="Genmei Shield",
 		--main="Terra's Staff",
 		--sub="Umbra Strap",
@@ -609,7 +652,7 @@ function init_gear_sets()
 	}
 
 	sets.defense.MDT = {
-		main="Naegling",
+		main="Sangoma",
 		sub="Genmei Shield",
 		--main="Terra's Staff",
 		--sub="Umbra Strap",
