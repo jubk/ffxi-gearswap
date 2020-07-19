@@ -215,6 +215,12 @@ return (function ()
                 end
                 orig_self_command(unpack(arg))
             end
+        else
+            self_command = function(...)
+                if MGInventory.self_command(unpack(arg)) then
+                    return
+                end
+            end
         end
     end
     
